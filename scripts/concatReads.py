@@ -124,18 +124,7 @@ if __name__ == '__main__':
 
     #downsample
     if args.downrate:
-        try:
-            downsampleReads(fwd, rev, rFormat, qFormat[0])
-        except:
-            print("ERROR: 'downsampleReads' failure")
+        downsampleReads(fwd, rev, rFormat, ".fastq.gz")
     else:
         #call the bash 'cat' function
-        try:
-            outFwd, outRev = concatReads(fwd, rev, rFormat, qFormat[0])
-        except:
-            print("ERROR: 'concatReads' failure")
-
-
-
-
-
+        outFwd, outRev = concatReads(fwd, rev, rFormat, ".fastq.gz")
