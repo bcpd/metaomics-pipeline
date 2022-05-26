@@ -73,7 +73,7 @@ include: "workflow/rules/qc/atlas_qc.smk"
 # ---- Assembly rules
 include: "workflow/rules/assembly/atlas_assembly.smk"
 include: "workflow/rules/assembly/atlas_binning.smk"
-
+include: "workflow/rules/assembly/atlas_coassembly.smk"
 
 # ---- Contig annotation rules
 include: "workflow/rules/annotation/atlas_annotation.smk"
