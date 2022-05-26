@@ -79,6 +79,7 @@ include: "workflow/rules/assembly/atlas_binning.smk"
 include: "workflow/rules/annotation/atlas_annotation.smk"
 include: "workflow/rules/annotation/dram_annotation.smk"
 include: "workflow/rules/annotation/bakta_annotations.smk"
+include: "workflow/rules/annotation/atlas_taxonomy.smk"
 #include: "workflow/rules/annotation/integrate_annotations.smk"
 
 
