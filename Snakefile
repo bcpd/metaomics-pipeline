@@ -30,75 +30,9 @@ now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
 # ANNOTATION_DATABASES = config["ANNOTATION_DATABASES"]
 
-# # Experimental design
-
-
-# samples_table = pd.read_csv(config["samples"], sep="\t")
-# sampleID_list = samples_table["SampleID"]
-
-
-# EXP_METADATA = config["METADATA"]
-# EXP_DESIGN = config["EXP_DESIGN"]
-# EXP_CONTRAST = config["EXP_CONTRAST"]
-
-# # Computational resources
-# N_CORES = config["N_CORES"]
-# MAX_MEMORY = config["MAX_MEMORY"]
-
-# #
-
-# METAGENOMICS_INPUT_FOLDER = config["MAX_MEMORY"]
-# METATRANSCRIPTOMICS_INPUT_FOLDER = config["MAX_MEMORY"]
-
-# OUTPUT_FOLDER = config["OUTPUT_FOLDER"]
-
-
-
-# Begin Snakemake 
-
-# # ---- Targets rules
-# include: "workflow/rules/targets/targets.smk"
-
-# # ---- Quality control rules
-# include: "workflow/rules/qc/atlas_init.smk"
-# include: "workflow/rules/qc/atlas_qc.smk"
-
-# # ---- Assembly rules
-# include: "workflow/rules/assembly/atlas_assembly.smk"
-# include: "workflow/rules/assembly/atlas_binning.smk"
-# include: "workflow/rules/assembly/atlas_coassembly.smk"
-
-# # ---- Contig annotation rules
-# include: "workflow/rules/annotation/atlas_annotation.smk"
-# include: "workflow/rules/annotation/dram_annotation.smk"
-# include: "workflow/rules/annotation/bakta_annotations.smk"
-# include: "workflow/rules/annotation/atlas_taxonomy.smk"
-# #include: "workflow/rules/annotation/integrate_annotations.smk"
-
-
-# # ---- Metatranscriptomics rules
-  
-# include: "workflow/rules/metatranscriptomics/praxis_quality_control.smk"
-
-#  # Use this option is a link to an NCBI genome is provided
-# if GENOME_REFERENCES == "referemnce_url":
-#     include: "workflow/rules/metatranscriptomics/praxis_download.smk"
-#     annotate: false
-# elif GENOME_REFERENCES == "referemnce_file":     
-#       annotate: false
-# # Use this option if you want to make a denove metranscriptome assembly
-# elif GENOME_REFERENCES == "assemble_metatranscriptome":  
-#     include: "workflow/rules/metatranscriptomics/praxis_assemble.smk"
-# # Use this option if you want to find close relatives with grist
-# else GENOME_REFERENCES == "find_relatives":
-#     include: "workflow/rules/metatranscriptomics/grist.smk"
-#      annotate: false
-
-# include: "workflow/rules/metatranscriptomics/praxis_index_align.smk"
-# include: "workflow/rules/metatranscriptomics/praxis_quantify.smk"
-# include: "workflow/rules/metatranscriptomics/praxis_transcript_annotate.smk"
 
 #M5P CONFIG
+working_dir   = "/home/mixtures/DAVIDDEV/M5P_output"
 fastq_dir     = "/home/mixtures/test_data_d1/mtg"
 database_dir  = "/home/mixtures/databases/atlas/atlas"
 THREADS       = 16
@@ -109,18 +43,19 @@ bin_all       = True
 
 def COLLECT_ALL_INPUT():
     INPUTS = []
-    INPUTS.append("samples.tsv") #rule atlas_init
+    INPUTS.append(os.path.join(working_dir, "samples.tsv")) #rule atlas_init
     if merged_reads:
-        INPUTS.append("logs/concatReads.log")
-    INPUTS.append("logs/formatSamples.log")
-    INPUTS.append("finished_QC")
+        INPUTS.append(os.path.join(working_dir, "logs/concatReads.log"))
+    INPUTS.append(os.path.join(working_dir, "logs/formatSamples.log"))
+    INPUTS.append(os.path.join(working_dir, "finished_QC"))
+    INPUTS.append(os.path.join(working_dir, "finished_assembly"))
     return INPUTS
 
 def COLLECT_INIT_INPUT():
     INPUTS = []
     INPUTS.append(fastq_dir)
     if merged_reads:
-        INPUTS.append("logs/concatReads.log")
+        INPUTS.append(os.path.join(working_dir, "logs/concatReads.log"))
     return INPUTS
 
 def COLLECT_FORMAT_ARGS():
@@ -129,9 +64,9 @@ def COLLECT_FORMAT_ARGS():
     else:
         binarg = ""
     if metadata_path:
-        return f"-s samples.tsv -m {metadata_path} {binarg}"
+        return f"-s {os.path.join(working_dir, 'samples.tsv')} -m {metadata_path} {binarg}"
     else:
-        return f"-s samples.tsv {binarg}"
+        return f"-s {os.path.join(working_dir, 'samples.tsv')} {binarg}"
 
 # ---- Rule all: run all targets
 rule all:
@@ -146,8 +81,8 @@ rule concatReads:
     input: 
         fastq_dir = fastq_dir
     output: expand(os.path.join(fastq_dir, "{merged_prefix}_R{n}.fastq.gz"), merged_prefix = merged_prefix, n = [1,2])
-    log: "logs/concatReads.log"
-    benchmark: "benchmarks/concatReads.bmk"
+    log: os.path.join(working_dir, "logs/concatReads.log")
+    benchmark: os.path.join(working_dir, "benchmarks/concatReads.bmk")
     params:
         prefix = os.path.join(fastq_dir, f"{merged_prefix}"),
         d = 0,
@@ -167,26 +102,27 @@ rule init_atlas:
     ''' 
     input: COLLECT_INIT_INPUT()
     output:
-        samples = "samples.tsv",
-        config  = "config.yaml",
-    log: "logs/init_atlas.log"
-    benchmark: "benchmarks/init_atlas.bmk"
+        samples = os.path.join(working_dir, "samples.tsv"),
+        config  = os.path.join(working_dir, "config.yaml"),
+    log: os.path.join(working_dir, "logs/init_atlas.log")
+    benchmark: os.path.join(working_dir, "benchmarks/init_atlas.bmk")
     params:
         fastq_dir    = fastq_dir,
-        database_dir = database_dir
+        database_dir = database_dir,
+        working_dir  = working_dir
     threads: THREADS
     shell:
-        "(atlas init --threads {threads} --db-dir {params.database_dir} {params.fastq_dir}) 2> {log}"
+        "(atlas init --threads {threads} -w {params.working_dir} --db-dir {params.database_dir} {params.fastq_dir}) 2> {log}"
 
 
 rule formatSamples:
     '''
     Use formatSamples.py to adjust samples.tsv file  
     '''
-    input: "samples.tsv"
-    output: "logs/formatSamples.log"
-    log: "logs/formatSamples.log"
-    benchmark: "benchmarks/formatSamples.bmk"
+    input: os.path.join(working_dir, "samples.tsv")
+    output: os.path.join(working_dir, "logs/formatSamples.log")
+    log: os.path.join(working_dir, "logs/formatSamples.log")
+    benchmark: os.path.join(working_dir, "benchmarks/formatSamples.bmk")
     params:
         args = COLLECT_FORMAT_ARGS(),
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
@@ -204,14 +140,39 @@ rule atlas_qc:
     Stats dir 
     ''' 
     input: 
-        config = "config.yaml",
-        format_proof = "logs/formatSamples.log"
-    output: "finished_QC"
-    log: "logs/atlas_qc.log"
-    benchmark: "benchmarks/atlas_qc.bmk"
+        config = os.path.join(working_dir, "config.yaml"),
+        format_proof = os.path.join(working_dir, "logs/formatSamples.log")
+    output: os.path.join(working_dir, "finished_QC")
+    log: os.path.join(working_dir, "logs/atlas_qc.log")
+    benchmark: os.path.join(working_dir, "benchmarks/atlas_qc.bmk")
     threads: THREADS
     params: 
+        working_dir = working_dir,
         mem = 128
     shell:
-        "(atlas run qc -j {threads} --max-mem {params.mem} --config-file {input.config}) 2> {log};"
+        "(atlas run qc -j {threads} -w {params.working_dir} --max-mem {params.mem} --config-file {input.config}) 2> {log};"
+        "touch {output}"
+
+
+rule atlas_assembly:
+    '''
+    Run atlas assembly. Provide path for
+    Config file explicitly. 
+    Ensure QC step is complete.
+    Creates <sample name>_contigs.fasta files in
+    Sample dirs 
+    Outputs: finished_assembly
+    ''' 
+    input: 
+        config = os.path.join(working_dir, "config.yaml"),
+        qc_proof = os.path.join(working_dir, "finished_QC")
+    output: os.path.join(working_dir, "finished_assembly")
+    log: os.path.join(working_dir, "logs/atlas_assembly.log")
+    benchmark: os.path.join(working_dir, "benchmarks/atlas_assembly.bmk")
+    threads: THREADS
+    params: 
+        working_dir = working_dir,
+        mem = 128
+    shell:
+        "(atlas run assembly -j {threads} -w {params.working_dir} --max-mem {params.mem} --config-file {input.config}) 2> {log};"
         "touch {output}"
