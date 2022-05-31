@@ -7,73 +7,7 @@
 #----------------------------------------------------------------------------#
 
 
-# Module Imports
-#----------------------------------------------------------------------------#
-
-import os, sys, re, itertools, argparse, psutil, copy, yaml, configparser
-import pandas as pd
-from pathlib import Path
-from datetime import datetime
-now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-
-
-# Configuration 
-#----------------------------------------------------------------------------#
-
-# EXPERIMENT_TYPE = config["EXPERIMENT_TYPE"]
-
-# MAG_ANNOTATION = config["MAG_ANNOTATION"]
-
-# ASSEMBLY_STRATEGY = config["ASSEMBLY_STRATEGY"]
-
-# GENOME_REFERENCES = config["GENOME_REFERENCES"]
-
-# ANNOTATION_DATABASES = config["ANNOTATION_DATABASES"]
-
-
-#M5P CONFIG
-working_dir   = "/home/mixtures/DAVIDDEV/M5P_output"
-fastq_dir     = "/home/mixtures/test_data_d1/mtg"
-database_dir  = "/home/mixtures/databases/atlas/atlas"
-THREADS       = 16
-merged_reads  = True
-merged_prefix = "MergedReads-001"
-metadata_path = None
-bin_all       = True
-
-def COLLECT_ALL_INPUT():
-    INPUTS = []
-    INPUTS.append(os.path.join(working_dir, "samples.tsv")) #rule atlas_init
-    if merged_reads:
-        INPUTS.append(os.path.join(working_dir, "logs/concatReads.log"))
-    INPUTS.append(os.path.join(working_dir, "logs/formatSamples.log"))
-    INPUTS.append(os.path.join(working_dir, "finished_QC"))
-    INPUTS.append(os.path.join(working_dir, "finished_assembly"))
-    return INPUTS
-
-def COLLECT_INIT_INPUT():
-    INPUTS = []
-    INPUTS.append(fastq_dir)
-    if merged_reads:
-        INPUTS.append(os.path.join(working_dir, "logs/concatReads.log"))
-    return INPUTS
-
-def COLLECT_FORMAT_ARGS():
-    if bin_all:
-        binarg = "--all"
-    else:
-        binarg = ""
-    if metadata_path:
-        return f"-s {os.path.join(working_dir, 'samples.tsv')} -m {metadata_path} {binarg}"
-    else:
-        return f"-s {os.path.join(working_dir, 'samples.tsv')} {binarg}"
-
-# ---- Rule all: run all targets
-rule all:
-    input: COLLECT_ALL_INPUT()
-
-
-# ---- Assembly Rules
+# ---- Atlas Assembly Rules
 rule concatReads:
     '''
     Use concatReads.py to merge read files  
@@ -175,4 +109,50 @@ rule atlas_assembly:
         mem = 128
     shell:
         "(atlas run assembly -j {threads} -w {params.working_dir} --max-mem {params.mem} --config-file {input.config}) 2> {log};"
+        "touch {output}"
+
+
+
+rule atlas_binning:
+    '''
+    Run atlas binning. Provide path for
+    Config file explicitly. 
+    Ensure assembly step is complete.
+    Sample dirs 
+    Outputs: finished_bining
+    ''' 
+    input: 
+        config = os.path.join(working_dir, "config.yaml"),
+        assembly_proof = os.path.join(working_dir, "finished_assembly")
+    output: os.path.join(working_dir, "finished_binning")
+    log: os.path.join(working_dir, "logs/atlas_binning.log")
+    benchmark: os.path.join(working_dir, "benchmarks/atlas_binning.bmk")
+    threads: THREADS
+    params: 
+        working_dir = working_dir,
+        mem = 128
+    shell:
+        "(atlas run binning -j {threads} -w {params.working_dir} --max-mem {params.mem} --config-file {input.config}) 2> {log};"
+        "touch {output}"
+
+
+rule atlas_genecatalog:
+    '''
+    Run atlas annotation. Provide path for
+    Config file explicitly. 
+    Ensure binning step is complete.
+    Outputs: annotation files
+    ''' 
+    input: 
+        config = os.path.join(working_dir, "config.yaml"),
+        assembly_proof = os.path.join(working_dir, "finished_binning")
+    output: os.path.join(working_dir, "finished_genecatalog")
+    log: os.path.join(working_dir, "logs/atlas_genecatalog.log")
+    benchmark: os.path.join(working_dir, "benchmarks/atlas_genecatalog.bmk")
+    threads: THREADS
+    params: 
+        working_dir = working_dir,
+        mem = 128
+    shell:
+        "(atlas run genecatalog -j {threads} -w {params.working_dir} --max-mem {params.mem} --config-file {input.config}) 2> {log};"
         "touch {output}"
