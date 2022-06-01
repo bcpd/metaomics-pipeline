@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
     #As an alterative strategy, set only one bin group 
     if args.all:
-        samples["BinGroup"] == "BinGroup1"
+        samples["BinGroup"] = "BinGroup1"
 
     #Overwrite file
     samples.to_csv(args.samples, sep="\t", index = False)
