@@ -23,7 +23,7 @@ rule concatReads:
         r = 0,
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
     shell:
-        "scripts/concatReads.py -i {input} -o {params.prefix} -d {params.d} -r {params.r};"
+        "python scripts/concatReads.py -i {input} -o {params.prefix} -d {params.d} -r {params.r};"
         'echo Created merged reads files: {output} at {params.now} > {log}'
 
 
