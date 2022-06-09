@@ -57,6 +57,7 @@ def main():
     parser.add_argument("-r", "--merged_reads", default= True, type=bool, help="Merge reads for co-assembly (True or False)")
     parser.add_argument("-m", "--metadata_path", type=str, help="Metadata file (path)")
     parser.add_argument("-t", "--threads", default= 2, type = int, help="The number of threads the pipeline is allowed to use (integer)")
+    parser.add_argument("-M", "--max_memory", type = int, help = "The amount of memory provided to the assembler. Enter in byte format.")
     parser.add_argument("-p", "--merged_prefix", default="MergedReads-001", type=str, help="Prefix for merged reads files (string)")
     parser.add_argument("-b", "--bin_all", type=bool, default = True, help="Put all reads files in same bin group (bool)")
     parser.add_argument("-j", "--jobs", default = 2, type = str, help = "number of jobs")
@@ -80,6 +81,12 @@ def main():
                     threads = val
                 else:
                     raise Exception("Number of threads requested exceeds number of available cores.")
+            elif arg == "max_memory":
+                val = getattr(args, arg)
+                if val <= psutil.virtual_memory()[1]:
+                    max_memory = val
+                else:
+                    raise Exception("Requested memory exceeds available memory")
 #           elif getattr(args, arg) is not None:
 #                if arg == "a flag":
 #                    val = getattr(args, arg)
