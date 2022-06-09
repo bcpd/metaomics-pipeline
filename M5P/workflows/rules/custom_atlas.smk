@@ -23,7 +23,7 @@ rule concatReads:
         r = 0,
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
     shell:
-        "python scripts/concatReads.py -i {input} -o {params.prefix} -d {params.d} -r {params.r};"
+        "python workflows/scripts/concatReads.py -i {input} -o {params.prefix} -d {params.d} -r {params.r};"
         'echo Created merged reads files: {output} at {params.now} > {log}'
 
 
@@ -63,7 +63,7 @@ rule formatSamples:
         args = COLLECT_FORMAT_ARGS(),
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
     shell:
-        "python scripts/formatSamples.py {params.args};"
+        "python workflows/scripts/formatSamples.py {params.args};"
         'echo Modified bin groups in {input} at {params.now} > {log}'
 
 
