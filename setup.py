@@ -1,5 +1,6 @@
 import io
 from os.path import dirname, join
+from glob import glob
 from setuptools import setup
 
 __author__  = "Levy-Booth, Cardenas, Dimitriu"
@@ -29,7 +30,12 @@ setup(
             "M5P/*",
         ]
     },
-    data_files=[(".", ["README.md"])],
+    data_files=[
+        (".", ["M5P/Snakefile", "README.md"]),
+        ('workflows/envs', glob('M5P/workflows/envs/*', recursive=True)),
+        ('workflows/rules', glob('M5P/workflows/rules/*', recursive=True)),
+        ('workflows/scripts', glob('M5P/workflows/scripts/*', recursive=True))
+        ],
     include_package_data=True,
     install_requires=[],
     # install via conda: atlas

@@ -110,9 +110,9 @@ def main():
         "--configfile {configfile}"
     ).format(
         snakefile=get_snakefile(),
-        jobs=jobs,
+        jobs=args.jobs,
         configfile=configfile),
-    logging.info(f"Executing: {cmd}")
+    print(f"Executing: {cmd}")
 
     #run snakemake command
     try:    
