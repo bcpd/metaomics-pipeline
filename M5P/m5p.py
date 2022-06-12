@@ -72,7 +72,7 @@ def main():
     stream = open(configfile, "r")
     original_data = yaml.load(stream, yaml.FullLoader)
     new_data = copy.deepcopy(original_data)
-    print(original_data)
+
     # Check for corect values for the arguments
     for arg in vars(args):
         if getattr(args, arg) is not None:
@@ -126,3 +126,4 @@ def main():
 
 if __name__ == ' __main__':
     main()
+
