@@ -12,6 +12,8 @@
 import M5P
 
 import os, sys, re, itertools, time, argparse, psutil, copy, yaml, configparser, subprocess
+from snakemake.utils import validate
+
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
@@ -66,6 +68,11 @@ def main():
 
     if args.configfile:
         configfile = args.configfile
+        try:
+            validate(config, configfile)
+        except:
+            raise ImportError(f"ERROR: confirm config file {configfile} path and formatting")
+
 
     # Open and create an image of the Snakemake config
     stream = open(configfile, "r")
@@ -101,14 +108,7 @@ def main():
         with open(configfile, 'w') as yaml_file:
             yaml_file.write(yaml.dump(new_data, default_flow_style=False))
 
-
-    #threads = 16
-    #snakefile = "~/DAVIDDEV/metaomics-pipeline/M5P/Snakefile"
-
-
-    #Actually running snakemake
-#    cmd = f"snakemake -s {snakefile} -j{threads} --rerun-incomplete --use-conda"
-
+    #Build snakemake command
     cmd = (
         "snakemake -s {snakefile} "
         "-j {jobs} --rerun-incomplete "
@@ -118,9 +118,9 @@ def main():
         snakefile=get_snakefile(),
         jobs=jobs,
         configfile=configfile),
-    logging.info("Executing: %s" % cmd)
+    logging.info(f"Executing: {cmd}")
 
-
+    #run snakemake command
     try:    
         subprocess.check_call(cmd, shell=True)
     except subprocess.CalledProcessError as e:
