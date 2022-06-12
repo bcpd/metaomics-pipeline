@@ -80,14 +80,18 @@ def main():
                 val = getattr(args, arg)
                 if val <= psutil.cpu_count():
                     threads = val
+                    new_data["threads"] = val
                 else:
                     raise Exception("Number of threads requested exceeds number of available cores.")
             elif arg == "max_memory":
                 val = getattr(args, arg)
                 if val <= psutil.virtual_memory()[1]:
                     max_memory = val
+                    new_data["max_memory"] = val
                 else:
                     raise Exception("Requested memory exceeds available memory")
+            else: #Uncomment to allow 
+                new_data[arg] = val
 #           elif getattr(args, arg) is not None:
 #                if arg == "a flag":
 #                    val = getattr(args, arg)
@@ -101,7 +105,8 @@ def main():
     if original_data != new_data:
         with open(configfile, 'w') as yaml_file:
             yaml_file.write(yaml.dump(new_data, default_flow_style=False))
-
+    
+    print(configfile)
     #Build snakemake command
     cmd = (
         "snakemake -s {snakefile} "

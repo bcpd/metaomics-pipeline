@@ -13,6 +13,8 @@ def COLLECT_ALL_INPUT():
         INPUTS.append(os.path.join(working_dir, "logs/concatReads.log"))
     INPUTS.append(os.path.join(working_dir, "logs/formatSamples.log"))
     INPUTS.append(os.path.join(working_dir, "finished_genecatalog"))
+    INPUTS.append(os.path.join(working_dir, "finished_genomes"))
+
     return INPUTS
 
 def COLLECT_INIT_INPUT():
