@@ -12,7 +12,6 @@
 import M5P
 
 import os, sys, re, itertools, time, argparse, psutil, copy, yaml, configparser, subprocess
-from snakemake.utils import validate
 
 import pandas as pd
 from pathlib import Path
@@ -68,11 +67,6 @@ def main():
 
     if args.configfile:
         configfile = args.configfile
-        try:
-            validate(config, configfile)
-        except:
-            raise ImportError(f"ERROR: confirm config file {configfile} path and formatting")
-
 
     # Open and create an image of the Snakemake config
     stream = open(configfile, "r")
