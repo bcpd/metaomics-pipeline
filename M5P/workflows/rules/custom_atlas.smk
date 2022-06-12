@@ -23,7 +23,7 @@ rule concatReads:
         r = 0,
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
     shell:
-        "scripts/concatReads.py -i {input} -o {params.prefix} -d {params.d} -r {params.r};"
+        "python workflows/scripts/concatReads.py -i {input} -o {params.prefix} -d {params.d} -r {params.r};"
         'echo Created merged reads files: {output} at {params.now} > {log}'
 
 
@@ -40,6 +40,8 @@ rule init_atlas:
         config  = os.path.join(working_dir, "config.yaml"),
     log: os.path.join(working_dir, "logs/init_atlas.log")
     benchmark: os.path.join(working_dir, "benchmarks/init_atlas.bmk")
+    conda:
+        'atlas'
     params:
         fastq_dir    = fastq_dir,
         database_dir = database_dir,
@@ -61,7 +63,7 @@ rule formatSamples:
         args = COLLECT_FORMAT_ARGS(),
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
     shell:
-        "python scripts/formatSamples.py {params.args};"
+        "python workflows/scripts/formatSamples.py {params.args};"
         'echo Modified bin groups in {input} at {params.now} > {log}'
 
 
@@ -79,6 +81,8 @@ rule atlas_qc:
     output: os.path.join(working_dir, "finished_QC")
     log: os.path.join(working_dir, "logs/atlas_qc.log")
     benchmark: os.path.join(working_dir, "benchmarks/atlas_qc.bmk")
+    conda:
+        'atlas'
     threads: THREADS
     params: 
         working_dir = working_dir,
@@ -103,6 +107,8 @@ rule atlas_assembly:
     output: os.path.join(working_dir, "finished_assembly")
     log: os.path.join(working_dir, "logs/atlas_assembly.log")
     benchmark: os.path.join(working_dir, "benchmarks/atlas_assembly.bmk")
+    conda:
+        'atlas'
     threads: THREADS
     params: 
         working_dir = working_dir,
@@ -127,6 +133,8 @@ rule atlas_binning:
     output: os.path.join(working_dir, "finished_binning")
     log: os.path.join(working_dir, "logs/atlas_binning.log")
     benchmark: os.path.join(working_dir, "benchmarks/atlas_binning.bmk")
+    conda:
+        'atlas'
     threads: THREADS
     params: 
         working_dir = working_dir,
@@ -149,6 +157,8 @@ rule atlas_genecatalog:
     output: os.path.join(working_dir, "finished_genecatalog")
     log: os.path.join(working_dir, "logs/atlas_genecatalog.log")
     benchmark: os.path.join(working_dir, "benchmarks/atlas_genecatalog.bmk")
+    conda:
+        'atlas'
     threads: THREADS
     params: 
         working_dir = working_dir,

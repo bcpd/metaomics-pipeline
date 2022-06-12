@@ -6,7 +6,7 @@ rule get_dram:
         " "
         "docker exec DRAM mkdir -p data out scripts logs"
         " "
-        "docker cp ../scripts/DRAM_setup.sh DRAM:/scripts"
+        "docker cp workflows/scripts/DRAM_setup.sh DRAM:/scripts"
         " "
         "docker exec DRAM /bin/bash /scripts/DRAM_setup.sh"
 
@@ -14,7 +14,7 @@ rule annotate_genomes:
     shell:
         "docker cp /MAGs/fasta/*fasta DRAM:/genomes/"
         " "
-        "docker cp ../scripts/annotate_genomes.sh DRAM:/scripts"
+        "docker cp workflows//scripts/annotate_genomes.sh DRAM:/scripts"
         " "
         "docker exec -t DRAM /bin/bash /scripts/annotate_genomes.sh"
 

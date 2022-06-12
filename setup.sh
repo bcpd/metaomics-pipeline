@@ -37,14 +37,16 @@ activate bakta
 conda install -c conda-forge -c bioconda bakta
 
 
-### Praxis
+## Praxis
 git clone https://github.com/davidlevybooth/Praxis.git
 cd Praxis
 conda env create --name Praxis --file envs/environment.yaml
 conda activate Praxis
 python setup.py install
+cd ..
 
-#@ Grist
+
+## Grist
 conda create -y -n grist python=3.9 pip
 conda activate grist
 python -m pip install genome-grist
@@ -52,5 +54,7 @@ curl -JLO https://osf.io/9gpck/download
 curl -JLO https://osf.io/k2u8s/download
 curl -JLO https://osf.io/ubt7p/download
 
+## M5P enviroment
+conda env create --name M5P --file M5P/workflows/envs/environment.yaml
 
 

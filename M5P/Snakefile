@@ -9,8 +9,8 @@
 
 # Module Imports
 #----------------------------------------------------------------------------#
-
 import os, sys, re, itertools, argparse, psutil, copy, yaml, configparser
+
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
@@ -19,15 +19,20 @@ now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
 # Configuration 
 #----------------------------------------------------------------------------#
-#M5P CONFIG
-working_dir   = "/home/mixtures/DAVIDDEV/M5P_output"
-fastq_dir     = "/home/mixtures/test_data_d1/mtg"
-database_dir  = "/home/mixtures/databases/atlas/atlas"
-THREADS       = 16
-merged_reads  = True
-merged_prefix = "MergedReads-001"
-metadata_path = None
-bin_all       = True
+
+#Load config from M5P yaml
+if config:
+    #M5P CONFIG
+    working_dir   = config["working_dir"]
+    fastq_dir     = config["fastq_dir"]
+    database_dir  = config["database_dir"]
+    THREADS       = config["threads"]
+    merged_reads  = config["merged_reads"]
+    merged_prefix = config["merged_prefix"]
+    metadata_path = config["metadata_path"]
+    bin_all       = config["bin_all"]
+else:
+    raise ImportError("Error: no config parameters were provided.")
 
 # ---- Import Snakemake rules
 include: "workflows/rules/common.smk"
@@ -37,4 +42,3 @@ include: "workflows/rules/dram_modified.smk"
 # ---- Rule all: run all targets
 rule all:
     input: COLLECT_ALL_INPUT()
-

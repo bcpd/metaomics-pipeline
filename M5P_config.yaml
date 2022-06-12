@@ -1,0 +1,30 @@
+#M5P_config.yml
+
+# General configuration
+
+# Input/output
+fastq_dir: "input_mg/"
+fastq_dir2: "input_mt/"
+working_dir: "./"
+experiment_type: metagenomics # Options are: metagenomics, metatranscriptomics, or paired.
+mag_annotation: dram # Options are:  bakta or dram 
+database_dir: "~/database/atlas" # Folder where atlas databases are installed
+merged_reads: true #Merge reads for co-assembly (True or False)
+merged_prefix: MergedReads-001 # Prefix for merged reads files
+bin_all: true #Put all reads files in same bin group (boolean)
+
+
+# Metatranscriptomics options mapping
+genome:
+    genome_url: reference_url #reference_url <url>
+    genome_file: reference_file #<folder_path>, find_relatives
+    find_genome_relative: false # If true, we will use genome seeker
+
+metadata_path: "metadata.txt"
+
+experimental_design: ~treatment
+experimental_contrast: none
+
+# Computational resources
+threads: 8 #The number of threads the pipeline is allowed to use (integer)
+max_memory: 1280000000000 # bytes, 128GB
