@@ -72,7 +72,7 @@ def main():
     stream = open(configfile, "r")
     original_data = yaml.load(stream, yaml.FullLoader)
     new_data = copy.deepcopy(original_data)
-
+    print(original_data)
     # Check for corect values for the arguments
     for arg in vars(args):
         if getattr(args, arg) is not None:
@@ -80,14 +80,18 @@ def main():
                 val = getattr(args, arg)
                 if val <= psutil.cpu_count():
                     threads = val
+                    new_data["threads"] = val
                 else:
                     raise Exception("Number of threads requested exceeds number of available cores.")
             elif arg == "max_memory":
                 val = getattr(args, arg)
                 if val <= psutil.virtual_memory()[1]:
                     max_memory = val
+                    new_data["max_memory"] = val
                 else:
                     raise Exception("Requested memory exceeds available memory")
+            else: #Uncomment to allow 
+                new_data[arg] = val
 #           elif getattr(args, arg) is not None:
 #                if arg == "a flag":
 #                    val = getattr(args, arg)
@@ -122,4 +126,3 @@ def main():
 
 if __name__ == ' __main__':
     main()
-
