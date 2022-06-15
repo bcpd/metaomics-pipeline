@@ -6,7 +6,8 @@ rule create_folder_structure_metagenomics:
     after running Atlas QC, assembly, binning, and annotation
     ''' 
     input: 
-        config = os.path.join(working_dir, "logs/atlas_genecatalog.log")
+        atlas_genecatalog_log = os.path.join(working_dir, "logs/atlas_genecatalog.log")
+        atlas_gtdbtk = os.path.join(working_dir, "genomes/taxonomy/gtdb.log")
     output: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     log: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     params: 
@@ -18,6 +19,8 @@ rule create_folder_structure_metagenomics:
         mkdir metagenomics/MAGs metagenomics/MAGS/reports metagenomics/MAGS/fasta
         mkdir metagenomics/functional_annotations metagenomics/functional_annotations/GFF3
         mkdir metagenomics/taxonomic_annotations
+        mkdir metagenomics/taxonomic_annotations/refseeker
+        mkdir metagenomics/taxonomic_annotations/gtdb-tk/
         mkdir metagenomics/assemblies
         """
 
@@ -48,6 +51,8 @@ rule reorganize_files_metagenomics:
     ''' 
     input: 
         gene_catalog_log = os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
+        atlas_gtdbtk_log = os.path.join(working_dir, "genomes/taxonomy/gtdb.log")
+        refseeker_file = os.path.join(working_dir, "refseeker.tsv")
     output: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
     log: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
     benchmark: os.path.join(working_dir, "benchmarks/Atlas_metagenomics_cleanup.bmk")
@@ -56,7 +61,7 @@ rule reorganize_files_metagenomics:
     shell:
         """
         cd {working_dir}
-        # Copy quality-controlled reads
+        # Copy quality-controlled reads	
         cp */sequence_quality_control/*fastq.gz metagenomics/trimmed_reads/
         cp genome/checkm/* metagenomics/MAGs/fasta
         # Copy genome bins and related reports
@@ -68,6 +73,9 @@ rule reorganize_files_metagenomics:
         cp Genecatalog/*f?a metagenomics/functional_annotations
         cp Genecatalog/counts/ metagenomics/functional_annotations
         gunzip metagenomics/functional_annotations/*gz 
+        # Copying taxonomic annotations
+        cp genomes/taxonomy/gtdb/classify/*summary.tsv metagenomics/taxonomic_annotations/gtdb-tk/
+        cp {refseeker_file} metagenomics/taxonomic_annotations/refseeker
         # Copy stats from atlas process
         cp -r stats logs/
         cp logs/benchmarks/*bmk benchmarks
