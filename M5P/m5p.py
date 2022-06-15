@@ -105,7 +105,8 @@ def main():
     if original_data != new_data:
         with open(configfile, 'w') as yaml_file:
             yaml_file.write(yaml.dump(new_data, default_flow_style=False))
-
+    
+    print(configfile)
     #Build snakemake command
     cmd = (
         "snakemake -s {snakefile} "

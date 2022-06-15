@@ -133,8 +133,8 @@ rule atlas_binning:
     output: os.path.join(working_dir, "finished_binning")
     log: os.path.join(working_dir, "logs/atlas_binning.log")
     benchmark: os.path.join(working_dir, "benchmarks/atlas_binning.bmk")
-    conda:
-        'atlas'
+    # conda:
+    #     'atlas'
     threads: THREADS
     params: 
         working_dir = working_dir,
@@ -166,3 +166,30 @@ rule atlas_genecatalog:
     shell:
         "(atlas run genecatalog -j {threads} -w {params.working_dir} --max-mem {params.mem} --config-file {input.config}) 2> {log};"
         "touch {output}"
+
+
+rule atlas_genomes:
+    '''
+    Run atlas genome. Provide path for
+    Config file explicitly. 
+    Ensure genecatalog step is complete.
+    Outputs: genome files
+     - remove dram from this step
+    '''
+    input: 
+        config = os.path.join(working_dir, "config.yaml"),
+        genecatalog_proof = os.path.join(working_dir, "finished_genecatalog")
+    output: os.path.join(working_dir, "finished_genomes")
+    log: os.path.join(working_dir, "logs/atlas_genomes.log")
+    benchmark: os.path.join(working_dir, "benchmarks/atlas_genomes.bmk")
+    conda:
+        'atlas'
+    threads: THREADS
+    params: 
+        working_dir = working_dir,
+        mem = 128
+    message: "removing 'dram' from default annotations, please run 'dram' annotation in its own rule."
+    shell:
+        'sed -i "s/^- dram/# - dram/" {input.config};'
+        'sed -i "s/^- kegg_modules/# - kegg_modules/" {input.config};'
+        '(atlas run genomes -j {threads} -w {params.working_dir} --max-mem {params.mem} --omit-from run_dram --config-file {input.config}) 2> {log};'
