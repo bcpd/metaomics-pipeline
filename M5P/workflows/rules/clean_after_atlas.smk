@@ -70,6 +70,7 @@ rule reorganize_files_metagenomics:
         gunzip metagenomics/functional_annotations/*gz 
         # Copy stats from atlas process
         cp -r stats logs/
+        cp logs/benchmarks/*bmk benchmarks
         echo 'Copied metagenomics files to final folder' > {log}
         """
 
@@ -81,7 +82,7 @@ rule reorganize_files_transcriptomic:
     input: os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log")
     output: os.path.join(working_dir, "logs/Praxis_cleanup.log")
     log: os.path.join(working_dir, "logs/Praxis_cleanup.log")
-    benchmark: os.path.join(working_dir, "benchmarks//Praxis_cleanup.bmk")
+    benchmark: os.path.join(working_dir, "benchmarks/Praxis_cleanup.bmk")
     params: 
         working_dir = working_dir,
     shell:
