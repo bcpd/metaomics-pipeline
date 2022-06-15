@@ -1,51 +1,92 @@
-rule create_folder_structure:
+#!/usr/bin/python3
+
+rule create_folder_structure_metagenomics:
     '''
     Creates and organized folder structure to store the important files
     after running Atlas QC, assembly, binning, and annotation
     ''' 
     input: 
-        config = os.path.join(working_dir, "M5P_config.yaml"),
-    log: os.path.join(working_dir, "logs/Atlas_cleanup.log")
-    benchmark: os.path.join(working_dir, "benchmarks/Atlas_cleanup.bmk")
+        config = os.path.join(working_dir, "logs/atlas_genecatalog.log")
+    output: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
+    log: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     params: 
         working_dir = working_dir,
-        mem = 128
-    shell:
-        """
-        cd working_dir
-        mkdir metagenomics metagenomics/trimmed_reads
-        mkdir metagenomics/MAGs metagenomics/MAGS/reports
-        mkdir metagenomics/functional_annotations
-        mkdir metagenomics/taxonomic_annotations
-        mkdir metatranscriptomics metatranscriptomics/trimmed_reads
-        mkdir metatranscriptomics/grist
-        metatranscriptomics/transcript_counts
-        metatranscriptomics/interleaved_reads
-        mkdir logs benchmarks
-        """
-
-rule reorganize_files_metagenomics:
-    '''
-    Create organized folder structure to store the important files
-    after running Atlas QC, assemlby. 
-    ''' 
-    input: 
-        config = os.path.join(working_dir, "M5P_config.yaml"),
-    log: os.path.join(working_dir, "logs/Atlas_cleanup.log")
-    benchmark: os.path.join(working_dir, "benchmarks/Atlas_cleanup.bmk")
-    params: 
-        working_dir = working_dir,
-        mem = 128
     shell:
         """
         cd {working_dir}
         mkdir metagenomics metagenomics/trimmed_reads
-        mkdir metagenomics/MAGs metagenomics/MAGS/reports
-        mkdir metagenomics/functional_annotations
+        mkdir metagenomics/MAGs metagenomics/MAGS/reports metagenomics/MAGS/fasta
+        mkdir metagenomics/functional_annotations metagenomics/functional_annotations/GFF3
         mkdir metagenomics/taxonomic_annotations
-        mkdir metatranscriptomics metatranscriptomics/trimmed_reads
+        mkdir metagenomics/assemblies
+        """
+
+rule create_folder_structure_metatranscriptomics:
+    '''
+    Creates and organized folder structure to store the important files
+    after running praxis
+    ''' 
+    input: 
+        config = os.path.join(working_dir, "logs/praxis.log")
+    output: os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log")
+    params: 
+        working_dir = working_dir,
+    shell:
+        """
+        cd {working_dir}
+        mkdir metatranscriptomics
+        mkdir metatranscriptomics/trimmed_reads
         mkdir metatranscriptomics/grist
-        metatranscriptomics/transcript_counts
-        metatranscriptomics/interleaved_reads
-        mkdir logs benchmarks
+        mkdir metatranscriptomics/transcript_counts
+        mkdir metatranscriptomics/interleaved_reads
+        """
+
+
+rule reorganize_files_metagenomics:
+    '''
+    Copied important files from Atlas 
+    ''' 
+    input: 
+        gene_catalog_log = os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
+    output: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
+    log: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
+    benchmark: os.path.join(working_dir, "benchmarks/Atlas_metagenomics_cleanup.bmk")
+    params: 
+        working_dir = working_dir
+    shell:
+        """
+        cd {working_dir}
+        # Copy quality-controlled reads
+        cp */sequence_quality_control/*fastq.gz metagenomics/trimmed_reads/
+        cp genome/checkm/* metagenomics/MAGs/fasta
+        # Copy genome bins and related reports
+        cp */binning/DASTool/*.eval  metagenomics/MAGs/reports
+        cp */binning/DASTool/*DASTool_summary.tsv metagenomics/MAGs/reports
+        # Copy assemblies, predicted genes, predicted proteins, and related annotations
+        cp */assembly/*final_contigs.fasta metagenomics/assemblies/
+        cp */annotation/predicted_genes/*gff metagenomics/functional_annotations/GFF3
+        cp Genecatalog/*f?a metagenomics/functional_annotations
+        cp Genecatalog/counts/ metagenomics/functional_annotations
+        gunzip metagenomics/functional_annotations/*gz 
+        # Copy stats from atlas process
+        cp -r stats logs/
+        echo 'Copied metagenomics files to final folder' > {log}
+        """
+
+
+rule reorganize_files_transcriptomic:
+    '''
+    Copied important files from Praxis process 
+    ''' 
+    input: os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log")
+    output: os.path.join(working_dir, "logs/Praxis_cleanup.log")
+    log: os.path.join(working_dir, "logs/Praxis_cleanup.log")
+    benchmark: os.path.join(working_dir, "benchmarks//Praxis_cleanup.bmk")
+    params: 
+        working_dir = working_dir,
+    shell:
+        """
+        cd {working_dir}
+        # Copy files
+        echo 'Copied metatranscriptomics files to final folder' > {log}
         """
