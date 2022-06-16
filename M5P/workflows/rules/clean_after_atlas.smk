@@ -49,6 +49,8 @@ rule reorganize_files_metagenomics:
         gene_catalog_log = os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
         atlas_gtdbtk_log = os.path.join(working_dir, "genomes/taxonomy/gtdb.log")
         refseeker_file = os.path.join(working_dir, "refseeker.tsv")
+        bakta_file = os.path.join(working_dir, "batka.tsv")
+        dram_file = os.path.join(working_dir, "dram/dram.tsv")
     output: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
     log: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
     benchmark: os.path.join(working_dir, "benchmarks/Atlas_metagenomics_cleanup.bmk")
@@ -59,21 +61,25 @@ rule reorganize_files_metagenomics:
         cd {params.working_dir}
         # Copy quality-controlled reads	
         cp */sequence_quality_control/*fastq.gz metagenomics/trimmed_reads/
-        cp genomes/checkm/* metagenomics/MAGs/fasta
-        cp */binning/DASTool/bins/*fasta  metagenomics/MAGs/fasta
         # Copy genome bins and related reports
-        cp */binning/DASTool/*.eval  metagenomics/MAGs/reports
-        cp */binning/DASTool/bins/*fasta  metagenomics/MAGs/fasta
-        cp */binning/DASTool/*DASTool_summary.tsv metagenomics/MAGs/reports
+        cp genomes/genomes/*fasta metagenomics/MAGs/fasta
+        cp genomes/checkm/completeness.tsv metagenomics/MAGs/reports
+        cp genome/counts/* metagenomics/MAGs/reports
+
         # Copy assemblies, predicted genes, predicted proteins, and related annotations
         cp */assembly/*final_contigs.fasta metagenomics/assemblies/
-        cp */annotation/predicted_genes/*gff metagenomics/functional_annotations/GFF3
-        cp Genecatalog/*f?a metagenomics/functional_annotations
-        cp Genecatalog/counts/ metagenomics/functional_annotations
-        gunzip metagenomics/functional_annotations/*gz 
+        #cp */annotation/predicted_genes/*gff metagenomics/functional_annotations/GFF3
+        cp {input.dram_file} metagenomics/functional_annotations
+        cp {input.nbakta_file} metagenomics/functional_annotations
+        cp genome/annotations/genes/MAG*f?a metagenomics/functional_annotations
+        #cp Genecatalog/*f?a metagenomics/functional_annotations
+        #cp Genecatalog/counts/ metagenomics/functional_annotations
+        #gunzip metagenomics/functional_annotations/*gz 
+
         # Copying taxonomic annotations
         cp genomes/taxonomy/gtdb/classify/*summary.tsv metagenomics/taxonomic_annotations/gtdb-tk/
-        cp {refseeker_file} metagenomics/taxonomic_annotations/referenceseeker
+        cp {input.refseeker_file} metagenomics/taxonomic_annotations/referenceseeker
+        
         # Copy stats from atlas process
         cp -r stats logs/
         cp logs/benchmarks/*bmk benchmarks
@@ -85,7 +91,9 @@ rule reorganize_files_transcriptomic:
     '''
     Copied important files from Praxis process 
     ''' 
-    input: os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log")
+    input:
+      creation_log = os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log"),
+      praxis_log = (working_dir, "logs/praxis.log")
     output: os.path.join(working_dir, "logs/Praxis_cleanup.log")
     log: os.path.join(working_dir, "logs/Praxis_cleanup.log")
     benchmark: os.path.join(working_dir, "benchmarks/Praxis_cleanup.bmk")
