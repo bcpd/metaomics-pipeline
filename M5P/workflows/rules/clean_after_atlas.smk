@@ -15,14 +15,12 @@ rule create_folder_structure_metagenomics:
         working_dir = working_dir,
     shell:
         """
-        cd {working_dir}
-        mkdir metagenomics metagenomics/trimmed_reads
-        mkdir metagenomics/MAGs metagenomics/MAGS/reports metagenomics/MAGS/fasta
-        mkdir metagenomics/functional_annotations metagenomics/functional_annotations/GFF3
-        mkdir metagenomics/taxonomic_annotations
-        mkdir metagenomics/taxonomic_annotations/referenceseeker
-        mkdir metagenomics/taxonomic_annotations/gtdb-tk/
-        mkdir metagenomics/assemblies
+        cd {params.working_dir}
+        mkdir metagenomics
+        mkdir metagenomics/{trimmed_reads,assemblies,MAGs,taxonomic_annotations,functional_annotations}
+        mkdir metagenomics/MAGs/{fasta,reports}
+        mkdir metagenomics/taxonomic_annotations/{referenceseeker,gtdb-tk}
+        mkdir metagenomics/functional_annotations/{GFF3}
         """
 
 rule create_folder_structure_metatranscriptomics:
@@ -37,12 +35,9 @@ rule create_folder_structure_metatranscriptomics:
         working_dir = working_dir,
     shell:
         """
-        cd {working_dir}
+        cd {params.working_dir}
         mkdir metatranscriptomics
-        mkdir metatranscriptomics/trimmed_reads
-        mkdir metatranscriptomics/grist
-        mkdir metatranscriptomics/transcript_counts
-        mkdir metatranscriptomics/interleaved_reads
+        mkdir metatranscriptomics/{trimmed_reads,grist,transcript_counts,interleaved_reads}
         """
 
 
@@ -61,12 +56,14 @@ rule reorganize_files_metagenomics:
         working_dir = working_dir
     shell:
         """
-        cd {working_dir}
+        cd {params.working_dir}
         # Copy quality-controlled reads	
         cp */sequence_quality_control/*fastq.gz metagenomics/trimmed_reads/
-        cp genome/checkm/* metagenomics/MAGs/fasta
+        cp genomes/checkm/* metagenomics/MAGs/fasta
+        cp */binning/DASTool/bins/*fasta  metagenomics/MAGs/fasta
         # Copy genome bins and related reports
         cp */binning/DASTool/*.eval  metagenomics/MAGs/reports
+        cp */binning/DASTool/bins/*fasta  metagenomics/MAGs/fasta
         cp */binning/DASTool/*DASTool_summary.tsv metagenomics/MAGs/reports
         # Copy assemblies, predicted genes, predicted proteins, and related annotations
         cp */assembly/*final_contigs.fasta metagenomics/assemblies/
@@ -96,7 +93,7 @@ rule reorganize_files_transcriptomic:
         working_dir = working_dir,
     shell:
         """
-        cd {working_dir}
+        cd {params.working_dir}
         # Copy files
         echo 'Copied metatranscriptomics files to final folder' > {log}
         """
