@@ -43,16 +43,22 @@ cd Praxis
 conda env create --name Praxis --file envs/environment.yaml
 conda activate Praxis
 python setup.py install
-cd ..
+cd ~
 
 
 ## Grist
 conda create -y -n grist python=3.9 pip
 conda activate grist
 python -m pip install genome-grist
+mkdir -p ~/databases/
+mkdir -p ~/databases/grist
+cd ~/databases/grist
+
+# GTDB R07-RS207 all genomes (318k)
 curl -JLO https://osf.io/9gpck/download
-curl -JLO https://osf.io/k2u8s/download
+curl -JLO https://osf.io/k2u8s/download  # 31K-mer database
 curl -JLO https://osf.io/ubt7p/download
+cd ~
 
 ## M5P enviroment
 conda env create --name M5P --file M5P/workflows/envs/environment.yaml
