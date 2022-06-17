@@ -18,7 +18,7 @@ rule create_grist_config_file:
         log = os.path.join(working_dir, "log/create_grist_config_file.log")
     shell:
         "mkdir -p {params.grist_output_folder};"
-        "python workflows/scripts/create_grist_config_file.py -s {input.samples_folder} -d {grist_database_dir} -o {output.grist_config} -w {working_dir} -m {max_memory} 2> {log}"
+        "python workflows/scripts/create_grist_config_file.py -s {input.samples_folder} -d {grist_database_dir} -o {output.grist_config} -m {max_memory} 2> {log}"
 
 rule run_grist:
     '''
