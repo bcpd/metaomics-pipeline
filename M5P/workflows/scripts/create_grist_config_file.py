@@ -4,11 +4,9 @@
 
 import os
 import sys
-import time
 import argparse
 import yaml
 from datetime import datetime
-
 
 usage = '''
 Usage:
@@ -16,10 +14,8 @@ Usage:
          -s <samples folder>
          -d <grist database folder>
          -o <grist_configuration_file.yaml>
-         -w <working directory>
          -m <maximum_memory
 '''
-
 
 def main():
     # Import sample names using pandas
@@ -29,8 +25,6 @@ def main():
     parser.add_argument("-o", dest="output_fp", type=str,
                         default="grist_config.yaml",
                         help="Directory containing fastq files (path)")
-    parser.add_argument("-w", dest="working_dir", type=str,
-                        help="Workinf directory")
     parser.add_argument("-m", dest="max_memory", type=int, default=10e9,
                         help="Maximum RAM memory")
 
@@ -52,16 +46,14 @@ def main():
         print("There were no files in the samples folder ")
         print(usage)
         sys.exit(0)
-    #    samples = []
+    samples = []
 
     # Create temporary folder
-    working_dir = args.working_dir
-    working_dir = working_dir.rstrip('/')
-    grist_dir = working_dir + '/grist'
-    raw_files_dir = working_dir + '/grist/raw'
+    grist_dir = 'grist'
+    raw_files_dir = 'grist/raw'
 
-    os.system('mkdir -p ' + working_dir + '/grist')
-    os.system('mkdir -p ' + working_dir + '/grist/raw')
+    os.system('mkdir -p grist')
+    os.system('mkdir -p grist/raw')
 
     fastq_counts = 0
     for myfile in sample_list:
@@ -84,7 +76,7 @@ def main():
                 original_basename = i.rsplit('_', 1)[0]
                 file_basename = original_basename.replace(".", "_")
                 file_basename = file_basename.replace("-", "_")
-                samples.append(raw_files_dir  + '/' + file_basename)
+                samples.append(file_basename)
                 os.system('cp ' +
                           args.samples_folder + '/' +
                           original_basename + '_1.fastq.gz ' +
@@ -99,7 +91,7 @@ def main():
                 original_basename = i.rsplit('_', 2)[0]
                 file_basename = original_basename.replace(".", "_")
                 file_basename = file_basename.replace("-", "_")
-                samples.append(raw_files_dir  + '/' + file_basename)
+                samples.append(file_basename)
                 os.system('cp ' +
                           args.samples_folder + '/' +
                           original_basename + '_R1_001.fastq.gz ' +
@@ -114,6 +106,7 @@ def main():
                 # If the fastq is the second pair
                 continue
 
+    print("Will use theese samples")
     print(samples)
 
     # Find databases in folder
@@ -139,6 +132,7 @@ def main():
             sys.exit(0)
 
     # Write results into yaml file
+    # Samples should be stored inside the raw folder inside the grist folder
     # Expected grist config_file
     """
     # example config file #
