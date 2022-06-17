@@ -5,16 +5,20 @@ rule get_dram:
     input:
         atlas_complete: os.path.join(working_dir, "finished_genomes")
     output:
-        os.path.join(working_dir, "logs/get_dram.log")
+        os.path.join(working_dir, "logs/dram_setup_complete.log")
+    params:
+        log_folder: os.path.join(working_dir, "logs/")
     log:
         os.path.join(working_dir, "logs/get_dram.log")
     shell:
         """
-        docker pull continuumio/miniconda3 > {log}
+        docker pull continuumio/miniconda3
         docker run -i -d --name DRAM continuumio/miniconda3
         docker exec DRAM mkdir -p data out scripts logs 
         docker cp workflows/scripts/DRAM_setup.sh DRAM:/scripts
         docker exec DRAM /bin/bash /scripts/DRAM_setup.sh
+        docker exec DRAM touch /logs/dram_setup_complete.log
+        docker cp DRAM:/logs/dram_setup_complete.log {log_folder}
         echo 'Created dram container and setup databases' > {log}
         """
 
