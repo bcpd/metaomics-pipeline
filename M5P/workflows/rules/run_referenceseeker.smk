@@ -7,6 +7,8 @@ rule run_referenceseeker:
     input: os.path.join(working_dir, "finished_binning")
     output: os.path.join(working_dir, "refseeker.tsv")
     benchmark: os.path.join(working_dir, "benchmarks/refseeker.bmk")
+    conda:
+        'referenceseeker'
     params:
         output_dir    = output_dir,
         database_dir = database_dir
