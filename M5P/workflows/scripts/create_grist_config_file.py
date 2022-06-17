@@ -37,47 +37,61 @@ def main():
     parser.add_argument("-d", dest="databases_folder",
                         default='~/databases/grist/', type=str,
                         help="Directory containing grist databases (path)")
-    (opts, args) = parser.parse_args()
+    args = parser.parse_args()
 
     now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     print(now)
     print('Initializing...')
-    print('Using files in: ' + opts.samples_folder)
-    print('Databases in: ' + opts.samples_folder)
-    print('Writing to: ' + opts.output_fp)
+    print('Using files in: ' + args.samples_folder)
+    print('Databases in: ' + args.databases_folder)
+    print('Writing to: ' + args.output_fp)
 
     # Find samples and modify them if needed
-    sample_list = os.listdir(opts.samples_folder)
+    sample_list = os.listdir(args.samples_folder)
     if len(sample_list) == 0:
         print("There were no files in the samples folder ")
         print(usage)
         sys.exit(0)
-
-    samples = {}
+    #    samples = []
 
     # Create temporary folder
-    working_dir = opts.working_dir
-    working_dir = working_dir.rstrip('/', 1)
+    working_dir = args.working_dir
+    working_dir = working_dir.rstrip('/')
     grist_dir = working_dir + '/grist'
     raw_files_dir = working_dir + '/grist/raw'
 
     os.system('mkdir -p ' + working_dir + '/grist')
     os.system('mkdir -p ' + working_dir + '/grist/raw')
 
+    fastq_counts = 0
+    for myfile in sample_list:
+        if myfile.endswith('.fastq.gz'):
+            fastq_counts = fastq_counts + 1
+        else:
+            continue
+    if fastq_counts == 0:
+        print("Did not find any fastq.gz files")
+        sys.exit(0)
+    else:
+        if fastq_counts % 2 != 0:
+            print("The fastq.gz files did not come in pairs")
+            sys.exit(0)
+
     for i in sample_list:
         if i.endswith('.fastq.gz'):
+            print(i)
             if i.endswith('_1.fastq.gz'):
                 original_basename = i.rsplit('_', 1)[0]
                 file_basename = original_basename.replace(".", "_")
                 file_basename = file_basename.replace("-", "_")
-                samples.append(opts.sample_folder + '/' + file_basename)
+                samples.append(raw_files_dir  + '/' + file_basename)
                 os.system('cp ' +
-                          opts.sample_folder + '/' +
+                          args.samples_folder + '/' +
                           original_basename + '_1.fastq.gz ' +
                           raw_files_dir + '/' +
                           file_basename + '_1.fastq.gz')
                 os.system('cp ' +
-                          opts.sample_folder + '/' +
+                          args.samples_folder + '/' +
                           original_basename + '_2.fastq.gz ' +
                           raw_files_dir + '/' +
                           file_basename + '_2.fastq.gz')
@@ -85,31 +99,28 @@ def main():
                 original_basename = i.rsplit('_', 2)[0]
                 file_basename = original_basename.replace(".", "_")
                 file_basename = file_basename.replace("-", "_")
-                samples.append(opts.sample_folder + '/' + file_basename)
+                samples.append(raw_files_dir  + '/' + file_basename)
                 os.system('cp ' +
-                          opts.sample_folder + '/' +
+                          args.samples_folder + '/' +
                           original_basename + '_R1_001.fastq.gz ' +
                           raw_files_dir + '/' +
                           file_basename + '_1.fastq.gz')
                 os.system('cp ' +
-                          opts.sample_folder + '/' +
+                          args.samples_folder + '/' +
                           original_basename + '_R2_001.fastq.gz ' +
                           raw_files_dir + '/' +
                           file_basename + '_2.fastq.gz')
             else:
-                print("There were no fastq files in the samples folder ")
-                print("I expected fastq.gz files")
-                print(usage)
-                sys.exit(0)
-        else:
-            continue
+                # If the fastq is the second pair
+                continue
+
     print(samples)
 
     # Find databases in folder
     # If no databases are found report an error
 
-    databases_folder = opts.databases_folder
-    databases_folder = databases_folder.rstrip('/', 1)
+    databases_folder = args.databases_folder
+    databases_folder = databases_folder.rstrip('/')
     dbs_list = os.listdir(databases_folder)
     # Check that the folder is not empty
     if len(dbs_list) == 0:
@@ -120,7 +131,7 @@ def main():
     my_grist_databases = []
     for db in dbs_list:
         if db.endswith('.zip'):
-            my_grist_databases.append(opts.databases_folder + '/' + db)
+            my_grist_databases.append(databases_folder + '/' + db)
             continue
         else:
             print("I was expecting zip files for databases files")
@@ -148,14 +159,13 @@ def main():
 
     grist_data = {
             'samples': samples,
-            'outdir': opts.output_fp,
+            'outdir': args.output_fp,
             'sourmash_databases': my_grist_databases,
             'prevent_sra_download': 'true', 
             'outdir': grist_dir
             }
 
-    with open(opts.output_fp, 'w') as outfile:
+    with open(args.output_fp, 'w') as outfile:
         yaml.dump(grist_data, outfile, default_flow_style=False)
 
-if __name__ == ' __main__':
-    main()
+main()
