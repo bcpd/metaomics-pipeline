@@ -51,8 +51,8 @@ def main():
     grist_dir = 'grist'
     raw_files_dir = 'grist/raw'
 
-    os.system('mkdir -p grist')
     os.system('mkdir -p grist/raw')
+
 
     fastq_counts = 0
     for myfile in sample_list:
@@ -152,10 +152,9 @@ def main():
 
     grist_data = {
             'samples': samples,
-            'outdir': 'grist',
+            'outdir': grist_dir
             'sourmash_databases': my_grist_databases,
             'prevent_sra_download': 'true', 
-            'outdir': grist_dir
             }
 
     with open(args.output_fp, 'w') as outfile:
