@@ -5,7 +5,7 @@ rule get_dram:
     input:
         atlas_complete: os.path.join(working_dir, "finished_genomes")
     output:
-        os.path.join(working_dir, "logs/dram_setup_complete.log")
+        os.path.join(working_dir, "logs/get_dram.log")
     params:
         log_folder: os.path.join(working_dir, "logs/")
     log:
