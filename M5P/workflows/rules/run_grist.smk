@@ -10,15 +10,13 @@ rule create_grist_config_file:
     params:
         grist_output_folder = os.path.join(working_dir, "grist"),
         max_memory = max_memory
-    output:
-        grist_config = os.path.join(working_dir, "grist_config.yaml")
+    output: os.path.join(working_dir, "grist_config.yaml")
     conda:
        'M5P'
-    log:
-        log = os.path.join(working_dir, "log/create_grist_config_file.log")
+    log: os.path.join(working_dir, "log/create_grist_config_file.log")
     shell:
         "mkdir -p {params.grist_output_folder};"
-        "python workflows/scripts/create_grist_config_file.py -s {input.samples_folder} -d {grist_database_dir} -o {output.grist_config} -m {max_memory} 2> {log}"
+        "python workflows/scripts/create_grist_config_file.py -s {input.samples_folder} -d {grist_database_dir} -o {output} -m {max_memory} 2> {log}"
 
 rule run_grist:
     '''
