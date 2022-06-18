@@ -22,10 +22,8 @@ rule run_grist:
     '''
     Runs grist using raw sequences
     ''' 
-    input:
-        grist_config = os.path.join(working_dir, "grist_config.yaml")
-    output:
-        gris_reports = os.path.join(working_dir, "grist/reports")
+    input: os.path.join(working_dir, "grist_config.yaml")
+    output: os.path.join(working_dir, "grist/reports")
     conda: 'grist'
     log: os.path.join(working_dir, "logs/run_grist.log")
     params:
@@ -33,5 +31,4 @@ rule run_grist:
         database_dir = database_dir,
     threads: threads
     shell:
-        "(genome-grist run {input.grist_config} summarize_gather summarize_mapping -j {threads} -p) 2> {log}"
-
+        "(genome-grist run {input} summarize_gather summarize_mapping -j {threads} -p) 2> {log}"
