@@ -29,8 +29,7 @@ rule annotate_genomes:
     input:
        dram_setup_complete: os.path.join(working_dir, "logs/get_dram.log"),
        atlas_genomme_complete: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log") 
-    output:
-        log:
+    output: os.path.join(working_dir, "logs/DRAM_annotate.log")
     log: os.path.join(working_dir, "logs/DRAM_annotate.log")
     shell:
         """
