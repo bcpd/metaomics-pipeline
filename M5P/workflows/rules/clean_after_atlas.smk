@@ -17,10 +17,16 @@ rule create_folder_structure_metagenomics:
         """
         cd {params.working_dir}
         mkdir metagenomics
-        mkdir metagenomics/{trimmed_reads,assemblies,MAGs,taxonomic_annotations,functional_annotations}
-        mkdir metagenomics/MAGs/{fasta,reports}
-        mkdir metagenomics/taxonomic_annotations/{referenceseeker,gtdb-tk}
-        mkdir metagenomics/functional_annotations/{GFF3}
+        mkdir metagenomics/trimmed_reads
+        mkdir metagenomics/assemblies
+        mkdir metagenomics/MAGs
+        mkdir metagenomics/taxonomic_annotations
+        mkdir metagenomics/taxonomic_annotations/gtdb-tk
+        mkdir metagenomics/taxonomic_annotations/referenceseeker
+        mkdir metagenomics/MAGs/fasta
+        mkdir metagenomics/MAGs/reports
+        mkdir metagenomics/functional_annotations
+        mkdir metagenomics/functional_annotations/GFF3
         """
 
 rule create_folder_structure_metatranscriptomics:
@@ -37,7 +43,10 @@ rule create_folder_structure_metatranscriptomics:
         """
         cd {params.working_dir}
         mkdir metatranscriptomics
-        mkdir metatranscriptomics/{trimmed_reads,grist,transcript_counts,interleaved_reads}
+        mkdir metatranscriptomics/trimmed_reads
+        mkdir metatranscriptomics/grist
+        mkdir metatranscriptomics/transcript_counts
+        mkdir metatranscriptomics/interleaved_reads
         """
 
 
@@ -70,7 +79,7 @@ rule reorganize_files_metagenomics:
         cp */assembly/*final_contigs.fasta metagenomics/assemblies/
         #cp */annotation/predicted_genes/*gff metagenomics/functional_annotations/GFF3
         cp {input.dram_file} metagenomics/functional_annotations
-        cp {input.nbakta_file} metagenomics/functional_annotations
+        cp {input.bakta_file} metagenomics/functional_annotations
         cp genome/annotations/genes/MAG*f?a metagenomics/functional_annotations
         #cp Genecatalog/*f?a metagenomics/functional_annotations
         #cp Genecatalog/counts/ metagenomics/functional_annotations
