@@ -24,10 +24,9 @@ def main():
                         help="Folder with metatranscriptomics fastq(path)")
     parser.add_argument("-o", dest="output_fp", type=str,
                         default="grist_config.yaml",
-                        help="Directory containing fastq files (path)")
+                        help="Config file used to run grist")
     parser.add_argument("-m", dest="max_memory", type=int, default=10e9,
                         help="Maximum RAM memory")
-
     parser.add_argument("-d", dest="databases_folder",
                         default='~/databases/grist/', type=str,
                         help="Directory containing grist databases (path)")
@@ -153,7 +152,7 @@ def main():
 
     grist_data = {
             'samples': samples,
-            'outdir': args.output_fp,
+            'outdir': 'grist',
             'sourmash_databases': my_grist_databases,
             'prevent_sra_download': 'true', 
             'outdir': grist_dir
