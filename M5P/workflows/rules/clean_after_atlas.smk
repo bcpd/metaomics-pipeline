@@ -39,6 +39,7 @@ rule create_folder_structure_metatranscriptomics:
     output: os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log")
     params: 
         working_dir = working_dir,
+    log: os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log")
     shell:
         """
         cd {params.working_dir}
@@ -47,6 +48,7 @@ rule create_folder_structure_metatranscriptomics:
         mkdir metatranscriptomics/grist
         mkdir metatranscriptomics/transcript_counts
         mkdir metatranscriptomics/interleaved_reads
+		touch {log}
         """
 
 
