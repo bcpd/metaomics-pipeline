@@ -12,6 +12,8 @@ rule run_referenceseeker:
         output_dir    = output_dir,
         #database_dir = database_dir
         working_dir  = working_dir
+    conda:
+        'referenceseeker'
     threads: THREADS
     shell:
         "(workflows/scripts/run_referenceseeker.sh -i {input} -d ~/M5P_databases/referenceseeker -o {params.output_dir}) 2> {log}"
