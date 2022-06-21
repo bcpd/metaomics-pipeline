@@ -16,15 +16,15 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 sh get-docker.sh
 
 
-
-# Install conda environments
-## These environments are the core of the pipeline. We can run the rules and point to them directly.
-
 # Databases location
 ## We use a folder in the main home directory to store the databases files used by the different programs.
 ## This folder is called  M5P_databases 
 
 mkdir ~/M5P_databases
+
+
+# Install conda environments
+## These environments are the core of the pipeline. We can run the rules and point to them directly.
 
 ## Atlas
 conda install -c bioconda -c conda-forge metagenome-atlas
@@ -53,7 +53,7 @@ cd ~
 conda create -y -n grist python=3.9 pip
 conda activate grist
 python -m pip install genome-grist
-mkdir -p ~/M5P_databases/
+mkdir ~/M5P_databases/grist
 cd ~/M5P_databases/grist
 # Get Grist database GTDB R07-RS207 all genomes (318k)
 curl -JLO https://osf.io/k2u8s/download  # 31K-mer database
@@ -66,6 +66,7 @@ conda env create -n referenceseeker
 conda activate referenceseeker
 conda install -c bioconda referenceseeker
 mkdir ~/M5P_databases/referenceseeker
+cd    ~/M5P_databases/referenceseeker
 wget -L https://zenodo.org/record/4415843/files/bacteria-refseq.tar.gz
 tar -xzf *
 conda deactivate
