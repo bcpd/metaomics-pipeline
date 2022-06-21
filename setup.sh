@@ -72,6 +72,5 @@ conda deactivate
 cd ~
 
 
-
 ## M5P enviroment
 conda env create --name M5P --file M5P/workflows/envs/environment.yaml
