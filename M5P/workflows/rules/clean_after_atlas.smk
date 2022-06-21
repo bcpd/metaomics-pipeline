@@ -61,7 +61,7 @@ rule reorganize_files_metagenomics:
         atlas_gtdbtk_log = os.path.join(working_dir, "genomes/taxonomy/gtdb.log")
         refseeker_file = os.path.join(working_dir, "refseeker.tsv")
         bakta_file = os.path.join(working_dir, "batka.tsv")
-        dram_file = os.path.join(working_dir, "dram/dram.tsv")
+        dram_file = os.path.join(working_dir, "logs/DRAM_copy_results.log")
     output: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
     log: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
     benchmark: os.path.join(working_dir, "benchmarks/Atlas_metagenomics_cleanup.bmk")
