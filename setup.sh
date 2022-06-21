@@ -26,16 +26,23 @@ sh get-docker.sh
 
 # Install conda environments
 # THse environments are the core of the pipeline. We can run the rules and point to them directly.
-# The alternative is to create enviroment files (yml) so conda can create them as needed, though these environments are not automatically purged after use. 
+# The alternative is to create enviroment files (yml) so conda can create them as needed, though these environments are not automatically purged after use.
 
 ## Atlas
 conda install -c bioconda -c conda-forge metagenome-atlas
 
 ## Bakta
-conda env create -n bakta
-activate bakta
 conda install -c conda-forge -c bioconda bakta
+## download bakta db
+bakta_db download --output {database_dir}
 
+## referenceseeker
+conda install -c bioconda referenceseeker
+
+mkdir -p {database_dir}
+cd {database_dir}
+wget https://zenodo.org/record/4415843/files/bacteria-refseq.tar.gz
+tar -xzf bacteria-refseq.tar.gz
 
 ## Praxis
 git clone https://github.com/davidlevybooth/Praxis.git
@@ -62,5 +69,3 @@ cd ~
 
 ## M5P enviroment
 conda env create --name M5P --file M5P/workflows/envs/environment.yaml
-
-
