@@ -44,11 +44,11 @@ rule init_atlas:
         'atlas'
     params:
         fastq_dir    = fastq_dir,
-        database_dir = database_dir,
+        #database_dir = database_dir,
         working_dir  = working_dir
     threads: THREADS
     shell:
-        "(atlas init --threads {threads} -w {params.working_dir} --db-dir {params.database_dir} {params.fastq_dir}) 2> {log}"
+        "(atlas init --threads {threads} -w {params.working_dir} --db-dir ~/M5P_databases {params.fastq_dir}) 2> {log}"
 
 
 rule formatSamples:

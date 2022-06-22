@@ -3,12 +3,12 @@
 # General configuration
 
 # Input/output
-fastq_dir: "input_mg/"
-fastq_dir2: "input_mt/"
+fastq_metagenomics: "input_mg/"
+fastq_metatranscriptomics: "input_mt/"
 working_dir: "./"
 experiment_type: metagenomics # Options are: metagenomics, metatranscriptomics, or paired.
 mag_annotation: dram # Options are:  bakta or dram 
-database_dir: "~/database/atlas" # Folder where atlas databases are installed
+database_dir: "~/M5P_databases/" # Folder where atlas databases are installed
 merged_reads: true #Merge reads for co-assembly (True or False)
 merged_prefix: MergedReads-001 # Prefix for merged reads files
 bin_all: true #Put all reads files in same bin group (boolean)

@@ -62,8 +62,9 @@ def main():
 
     parser = argparse.ArgumentParser(description='pipeline configuration')
     parser.add_argument("-w", "--working_dir", default="./", type=str, help ="working directory (path)")
-    parser.add_argument("-i", "--fastq_dir", type=str, help="Directory containing fastq files (path)")
-    parser.add_argument("-d", "--database_dir", type= str, help="Directory containing ATLAS databases (path)")
+    parser.add_argument("-i", "--fastq_metagenomics", type=str, help="Directory containing metagenomics fastq files (path)")
+    parser.add_argument("-x", "--fastq_metatranscriptomics", type=str, help="Directory containing metatranscriptomics fastq files (path)")
+#    parser.add_argument("-d", "--database_dir", type= str, help="Directory containing ATLAS databases (path)")
     parser.add_argument("-r", "--merged_reads", default= True, type=bool, help="Merge reads for co-assembly (True or False)")
     parser.add_argument("-m", "--metadata_path", type=str, help="Metadata file (path)")
     parser.add_argument("-t", "--threads", default= 2, type = int, help="The number of threads the pipeline is allowed to use (integer)")

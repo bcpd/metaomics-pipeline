@@ -11,10 +11,10 @@ from datetime import datetime
 usage = '''
 Usage:
      pyton create_grist_config_file.py
-         -s <samples folder>
-         -d <grist database folder>
-         -o <grist_configuration_file.yaml>
-         -m <maximum_memory
+        -s <samples folder>
+        -d <grist database folder>
+        -o <grist_configuration_file.yaml>
+        -m <maximum_memory
 '''
 
 def main():
