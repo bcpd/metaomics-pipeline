@@ -23,7 +23,9 @@ Snakemake-based workflow for the taxonomic and functional annotation of metageno
 - OS: Linux (Ubuntu >= 14.04 LTS). 
 - Disk space: M5P requires at least 200GB of disk space for databases and sequencing files.
 - Memory: Both metagenomics and metatranscriptomics analyses can be done with 128 GB of RAM or less.
-- Time: This is largely dependent on the size of the metagenome, number of samples, and anlysis mode, but expect a few hours for the metagenomics-only mode. The processing of multiple data sets can be done in parallel (see below).
+- Time:
+  - *Installation and setup*: several hours.
+  - *Analysis*: largely dependent on the size of the metagenome, number of samples, and anlysis mode, but expect a few hours for the metagenomics-only mode. The processing of multiple data sets can be done in parallel (see below).
 
 
 ## Usage:
