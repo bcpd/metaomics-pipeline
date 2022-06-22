@@ -29,6 +29,7 @@ Snakemake-based workflow for the taxonomic and functional annotation of metageno
 
 
 ## Usage:
+```
 M5P [-h] [-w WORKING_DIR] [-i FASTQ_DIR] [-d DATABASE_DIR] [-r MERGED_READS] [-m METADATA_PATH] [-t THREADS]
            [-p MERGED_PREFIX] [-b BIN_ALL] [-c CONFIGFILE]
 
@@ -69,4 +70,4 @@ options:
                         optional yaml file containing all of the above configuration details. Default="M5P_config.yaml"
 
   -j JOBS, --jobs JOBS
-                        Number of jobs to run, default=2
+                        Number of jobs to run, default=2```
