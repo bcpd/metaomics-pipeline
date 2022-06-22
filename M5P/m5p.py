@@ -11,10 +11,20 @@
 #----------------------------------------------------------------------------#
 import M5P
 
-import os, sys, re, itertools, time, argparse, psutil, copy, yaml, configparser, subprocess
+try: 
+    import os, sys, re, itertools, time, argparse, copy,  configparser, subprocess, psutil, yaml
+    import pandas as pd
+    from pathlib import Path
+except ModuleNotFoundError:
+    print("")
+    print("\033[93mLooks like a module wasn't found. Are you sure you've activated your conda environment?\033[0m")
+    print("\033[93mSuggestion: `conda actviate M5P`\033[0m")
+    print("")
 
-import pandas as pd
-from pathlib import Path
+finally:
+    sys.exit(1)
+
+
 from datetime import datetime
 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
@@ -24,7 +34,6 @@ def get_snakefile(file="Snakefile"):
     if not os.path.exists(sf):
         sys.exit("Unable to locate the Snakemake workflow file; tried %s" % sf)
     return sf
-
 
 
 def main():
