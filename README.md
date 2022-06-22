@@ -12,7 +12,8 @@ Dependencies:
 - [DRAM](https://github.com/shafferm/DRAM)
 - [Bakta](https://github.com/oschwengers/bakta)
 - [Referenceseeker](https://github.com/oschwengers/referenceseeker)
-
+- [sourmash](https://github.com/sourmash-bio/sourmash)
+- [genome-grist](https://github.com/dib-lab/genome-grist)
 
 Installation:
 - Run `bash setup.sh` to create environments and download databases
