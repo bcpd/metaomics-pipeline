@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 
 rule get_dram:
-    """
+    '''
     Installs DRAM in a docker image. This is to avoid issues with older versions of Ubuntu.    
     Once the program and the database are installed, it copies a log file to the databases directory.
     This log file (dram_setup_complete.log) is the output of the rule, so if it DRAM needs
     to be run again, we do not need to redownload the databases.
-    """
+    '''
     input:
         atlas_complete= os.path.join(working_dir, "finished_genomes")
     output:
@@ -30,9 +30,9 @@ rule get_dram:
         """
 
 rule annotate_genomes:
-    """
+    '''
     Run DRAM inside the conda image, uses the predicted proteins as input
-    """
+    '''
     input:
        dram_setup_complete: os.path.join("~/M5P_databases/dram_setup_complete.log"),
        atlas_genome_complete: os.path.join(working_dir, "logs/atlas_genomes.log")
@@ -51,9 +51,9 @@ rule annotate_genomes:
 
 
 rule copy_DRAM_annotations:
-    """
-    Copies the DRAM files from the docker image
-    """
+    '''
+    Copies the DRAM output files from the docker image to the local directory
+    '''
     input: os.path.join(working_dir, "logs/DRAM_annotate.log")
     output: os.path.join(working_dir, "logs/DRAM_copy_results.log")
     params:
