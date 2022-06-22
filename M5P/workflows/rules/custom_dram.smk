@@ -37,13 +37,11 @@ rule annotate_genomes:
        dram_setup_complete: os.path.join("~/M5P_databases/dram_setup_complete.log"),
        atlas_genome_complete: os.path.join(working_dir, "logs/atlas_genomes.log")
     output: os.path.join(working_dir, "logs/DRAM_annotate.log")
-    params: output_folder: os.path.join(working_dir, "DRAM")
     log: os.path.join(working_dir, "logs/DRAM_annotate.log")
     shell:
         """
         docker restart DRAM
         docker exec DRAM rm /genomes/*
-        mkdir {params.output_folder}
         for i in genome/annotations/genes/MAG*faa; do docker cp $i DRAM:/genomes;done
         docker cp workflows/scripts/DRAM_annotate_proteins.sh DRAM:/scripts
         docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_proteins.sh 2> {log}
@@ -61,6 +59,7 @@ rule copy_DRAM_annotations:
     log: os.path.join(working_dir, "logs/DRAM_copy_results.log")
     shell:
         """
+        mkdir {params.output_folder}
         docker cp DRAM:out/annotations {params.output_folder}
         docker cp DRAM:logs/* /logs/
         docker stop DRAM    
