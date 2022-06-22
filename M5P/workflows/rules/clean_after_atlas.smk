@@ -8,7 +8,7 @@ rule create_folder_structure_metagenomics:
     input: 
         atlas_genecatalog_log = os.path.join(working_dir, "logs/atlas_genecatalog.log")
         atlas_gtdbtk = os.path.join(working_dir, "genomes/taxonomy/gtdb.log")
-        refseeker_file = os.path.join(working_dir, "referenceseeker.tsv")
+        refseeker_file = os.path.join(working_dir, "refseeker.tsv")
     output: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     log: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     params: 
