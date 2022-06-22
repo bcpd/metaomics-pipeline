@@ -81,7 +81,6 @@ rule reorganize_files_metagenomics:
 
         # Copy assemblies, predicted genes, predicted proteins, and related annotations
         cp */assembly/*final_contigs.fasta metagenomics/assemblies/
-        cp {input.dram_file} metagenomics/functional_annotations
         cp {input.bakta_file} metagenomics/functional_annotations
         cp genome/annotations/genes/MAG*f?a metagenomics/functional_annotations
         cp DRAM/annotations/annotations.tsv  metagenomics/functional_annotations/dram_annotations.tsv
