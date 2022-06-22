@@ -5,8 +5,10 @@ rule run_bakta:
     Outputs one annotation file for all the MAGs.
     '''
     input: os.path.join(working_dir, "finished_binning")
-    output: os.path.join(working_dir, "working_dir/metagenomics/functional_annotations/bakta.tsv")
+    output: os.path.join(working_dir, "metagenomics/functional_annotations/bakta.tsv")
     benchmark: os.path.join(working_dir, "benchmarks/bakta.bmk")
+    conda:
+        'bakta'
     log: os.path.join(working_dir, "log/run_bakta.log")
     params:
         output_dir   = output_dir,
