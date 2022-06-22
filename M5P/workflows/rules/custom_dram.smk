@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 rule get_dram:
     """
     Installs DRAM in a docker image. This is to avoid issues with older versions of Ubuntu.    
@@ -6,7 +8,7 @@ rule get_dram:
     to be run again, we do not need to redownload the databases.
     """
     input:
-        atlas_complete: os.path.join(working_dir, "finished_genomes")
+        atlas_complete= os.path.join(working_dir, "finished_genomes")
     output:
         os.path.join(working_dir, "logs/dram_setup_complete.log")
     params:
@@ -17,13 +19,13 @@ rule get_dram:
         """
         docker pull continuumio/miniconda3
         docker run -i -d --name DRAM continuumio/miniconda3
-        docker exec DRAM mkdir -p data out scripts logs 
+        docker exec DRAM mkdir -p data out scripts logs genomes proteins
         docker cp workflows/scripts/DRAM_setup.sh DRAM:/scripts
         docker exec DRAM /bin/bash /scripts/DRAM_setup.sh
         docker exec DRAM touch /logs/dram_setup_complete.log
         docker cp DRAM:/logs/dram_setup_complete.log {log_folder}
         docker cp DRAM:/logs/dram_setup_complete.log ~/M5P_databases
-        echo 'Created dram container and setup databases' > {log}
+        echo 'Created DRAM container and setup databases' > {log}
         docker stop DRAM
         """
 
@@ -33,15 +35,18 @@ rule annotate_genomes:
     """
     input:
        dram_setup_complete: os.path.join("~/M5P_databases/dram_setup_complete.log"),
-       atlas_genome_complete: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log") 
+       atlas_genome_complete: os.path.join(working_dir, "logs/atlas_genomes.log")
     output: os.path.join(working_dir, "logs/DRAM_annotate.log")
+    params: output_folder: os.path.join(working_dir, "DRAM")
     log: os.path.join(working_dir, "logs/DRAM_annotate.log")
     shell:
         """
         docker restart DRAM
-        docker cp metagenomics/MAGs/fasta/*fasta DRAM:/genomes/
-        docker cp workflows/scripts/annotate_genomes.sh DRAM:/scripts
-        docker exec -t DRAM /bin/bash /scripts/annotate_genomes.sh 2> {log}
+        docker exec DRAM rm /genomes/*
+        mkdir {params.output_folder}
+        for i in genome/annotations/genes/MAG*faa; do docker cp $i DRAM:/genomes;done
+        docker cp workflows/scripts/DRAM_annotate_proteins.sh DRAM:/scripts
+        docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_proteins.sh 2> {log}
         """
 
 
@@ -49,13 +54,15 @@ rule copy_DRAM_annotations:
     """
     Copies the DRAM files from the docker image
     """
-   input: os.path.join(working_dir, "logs/DRAM_annotate.log")
-   output: os.path.join(working_dir, "logs/DRAM_copy_results.log") 
-   log: os.path.join(working_dir, "logs/DRAM_copy_results.log")
-   shell:
-       """
-       docker cp DRAM:out/ metagenomics/functional_annotations/"
-       docker cp DRAM:logs/* /logs/"
-       docker stop DRAM    
-       touch {log}
-       """
+    input: os.path.join(working_dir, "logs/DRAM_annotate.log")
+    output: os.path.join(working_dir, "logs/DRAM_copy_results.log")
+    params:
+        output_folder: os.path.join(working_dir, "DRAM")
+    log: os.path.join(working_dir, "logs/DRAM_copy_results.log")
+    shell:
+        """
+        docker cp DRAM:out/annotations {params.output_folder}
+        docker cp DRAM:logs/* /logs/
+        docker stop DRAM    
+        touch {log}
+        """
