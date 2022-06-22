@@ -83,6 +83,7 @@ rule reorganize_files_metagenomics:
         cp {input.dram_file} metagenomics/functional_annotations
         cp {input.bakta_file} metagenomics/functional_annotations
         cp genome/annotations/genes/MAG*f?a metagenomics/functional_annotations
+        cp -r DRAM/* metagenomics/functional_annotations
         #cp Genecatalog/*f?a metagenomics/functional_annotations
         #cp Genecatalog/counts/ metagenomics/functional_annotations
         #gunzip metagenomics/functional_annotations/*gz 
