@@ -1,10 +1,8 @@
-# metaomics-pipeline
-
-**MBI Microbial Mixtures Metagenomics and Metatranscriptomics pipeline**
+# M5P: **MBI Microbial Mixtures Metagenomics and Metatranscriptomics pipeline**
 
 Snakemake-based workflow for the taxonomic and functional annotation of metagenomics and metatranscriptomics datasets.
 
-Dependencies:
+## Dependencies:
 - Docker
 - Miniconda
 - [atlas-metagenome](https://github.com/metagenome-atlas/atlas)
@@ -15,13 +13,21 @@ Dependencies:
 - [sourmash](https://github.com/sourmash-bio/sourmash)
 - [genome-grist](https://github.com/dib-lab/genome-grist)
 
-Installation:
+## Installation:
 - Run `bash setup.sh` to create environments and download databases
 - Clone the M5P repo, ie: `gh repo clone MicrobiomeInsights/metaomics-pipeline`
 - Change into the repo: `cd metaomics-pipeline`
 - Install the M5P CLI: `python setup.py install`
 
-usage: M5P [-h] [-w WORKING_DIR] [-i FASTQ_DIR] [-d DATABASE_DIR] [-r MERGED_READS] [-m METADATA_PATH] [-t THREADS]
+## Resource requirements:
+- OS: Linux (Ubuntu >= 14.04 LTS). 
+- Disk space: M5P requires at least 200GB of disk space for databases and sequencing files.
+- Memory: Both metagenomics and metatranscriptomics analyses can be done with 128 GB of RAM or less.
+- Time: This is largely dependent on the size of the metagenome, number of samples, and anlysis mode, but expect a few hours for the metagenomics-only mode. The processing of multiple data sets can be done in parallel (see below).
+
+
+## Usage:
+M5P [-h] [-w WORKING_DIR] [-i FASTQ_DIR] [-d DATABASE_DIR] [-r MERGED_READS] [-m METADATA_PATH] [-t THREADS]
            [-p MERGED_PREFIX] [-b BIN_ALL] [-c CONFIGFILE]
 
 pipeline configuration
