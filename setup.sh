@@ -52,6 +52,8 @@ python setup.py install
 conda deactivate
 cd ~
 
+## Sourmash
+pip install sourmash
 
 ## Grist
 conda create -y -n grist python=3.9 pip
