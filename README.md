@@ -70,4 +70,5 @@ options:
                         optional yaml file containing all of the above configuration details. Default="M5P_config.yaml"
 
   -j JOBS, --jobs JOBS
-                        Number of jobs to run, default=2```
+                        Number of jobs to run, default=2
+   ```
