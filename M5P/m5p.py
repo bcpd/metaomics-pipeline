@@ -6,10 +6,8 @@
 #
 #----------------------------------------------------------------------------#
 
-
 # Module Imports
 #----------------------------------------------------------------------------#
-import M5P
 
 try: 
     import os, sys, re, itertools, time, argparse, copy,  configparser, subprocess, psutil, yaml
@@ -20,10 +18,7 @@ except ModuleNotFoundError:
     print("\033[93mLooks like a module wasn't found. Are you sure you've activated your conda environment?\033[0m")
     print("\033[93mSuggestion: `conda actviate M5P`\033[0m")
     print("")
-
-finally:
     sys.exit(1)
-
 
 from datetime import datetime
 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -32,7 +27,9 @@ now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 def get_snakefile(file="Snakefile"):
     sf = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), file)
     if not os.path.exists(sf):
-        sys.exit("Unable to locate the Snakemake workflow file; tried %s" % sf)
+        sf = os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
+        if not os.path.exists(sf):
+            sys.exit("Unable to locate the Snakemake workflow file; tried %s" % sf)
     return sf
 
 
@@ -99,8 +96,8 @@ def main():
                     new_data["max_memory"] = val
                 else:
                     raise Exception("Requested memory exceeds available memory")
-            else: #Uncomment to allow 
-                new_data[arg] = val
+#            else: #Uncomment to allow 
+#                new_data[arg] = val
 #           elif getattr(args, arg) is not None:
 #                if arg == "a flag":
 #                    val = getattr(args, arg)
@@ -115,16 +112,21 @@ def main():
         with open(configfile, 'w') as yaml_file:
             yaml_file.write(yaml.dump(new_data, default_flow_style=False))
     
-    print(configfile)
+    #Set paths (to pass on to snakemake as config)   
+    snakepath = Path(get_snakefile())
+    parent_dir = snakepath.parent.absolute()
+ 
     #Build snakemake command
     cmd = (
         "snakemake -s {snakefile} "
         "-j {jobs} --rerun-incomplete "
         "--use-conda "
+        "--config parent_dir={parent_dir} "
         "--configfile {configfile}"
     ).format(
-        snakefile=get_snakefile(),
+        snakefile=snakepath,
         jobs=args.jobs,
+        parent_dir=parent_dir,
         configfile=configfile),
     print(f"Executing: {cmd}")
 
@@ -134,6 +136,5 @@ def main():
     except subprocess.CalledProcessError as e:
         exit(1)
 
-if __name__ == ' __main__':
+if __name__ == '__main__':
     main()
-

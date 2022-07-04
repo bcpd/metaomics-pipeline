@@ -16,7 +16,6 @@ from pathlib import Path
 from datetime import datetime
 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-
 # Configuration 
 #----------------------------------------------------------------------------#
 
@@ -37,7 +36,7 @@ else:
 # ---- Import Snakemake rules
 include: "workflows/rules/common.smk"
 include: "workflows/rules/custom_atlas.smk"
-include: "workflows/rules/dram_modified.smk"
+#include: "workflows/rules/custom_dram.smk"
 
 # ---- Rule all: run all targets
 rule all:
