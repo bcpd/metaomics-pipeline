@@ -3,11 +3,11 @@ rule get_dram:
     Installs DRAM in a docker image. This is to avoid issues with older versions of Ubuntu.    
     """
     input:
-        atlas_complete: os.path.join(working_dir, "finished_genomes")
+        atlas_complete = os.path.join(working_dir, "finished_genomes")
     output:
         os.path.join(working_dir, "logs/get_dram.log")
     params:
-        log_folder: os.path.join(working_dir, "logs/")
+        log_folder = os.path.join(working_dir, "logs/")
     log:
         os.path.join(working_dir, "logs/get_dram.log")
     shell:
@@ -27,8 +27,8 @@ rule annotate_genomes:
     Run DRAM inside the conda image, uses the MAGs as input
     """
     input:
-       dram_setup_complete: os.path.join(working_dir, "logs/get_dram.log"),
-       atlas_genomme_complete: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log") 
+        dram_setup_complete = os.path.join(working_dir, "logs/get_dram.log"),
+        atlas_genomme_complete = os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log") 
     output: os.path.join(working_dir, "logs/DRAM_annotate.log")
     log: os.path.join(working_dir, "logs/DRAM_annotate.log")
     shell:
@@ -43,13 +43,14 @@ rule copy_DRAM_annotations:
     """
     Copies the DRAM files from the docker image
     """
-   input: os.path.join(working_dir, "logs/DRAM_annotate.log")
-   output: os.path.join(working_dir, "logs/DRAM_copy_results.log") 
-   log: os.path.join(working_dir, "logs/DRAM_copy_results.log")
-   shell:
-       """
-       docker cp DRAM:out/ metagenomics/functional_annotations/"
-       docker cp DRAM:logs/* /logs/"
-       docker stop DRAM    
-       touch {log}
-       """
+    input: os.path.join(working_dir, "logs/DRAM_annotate.log")
+    output: os.path.join(working_dir, "logs/DRAM_copy_results.log") 
+    log: os.path.join(working_dir, "logs/DRAM_copy_results.log")
+    shell:
+        """
+        docker cp DRAM:out/ metagenomics/functional_annotations/"
+        docker cp DRAM:logs/* /logs/"
+        docker stop DRAM    
+        touch {log}
+        """
+

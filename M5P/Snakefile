@@ -36,8 +36,12 @@ else:
 # ---- Import Snakemake rules
 include: "workflows/rules/common.smk"
 include: "workflows/rules/custom_atlas.smk"
-#include: "workflows/rules/custom_dram.smk"
+include: "workflows/rules/custom_dram.smk"
+include: "workflows/rules/run_grist.smk"
+#include: "workflows/rules/bakta.smk"
+#include: "workflows/rules/referenceseeker.smk"
 
 # ---- Rule all: run all targets
 rule all:
     input: COLLECT_ALL_INPUT()
+

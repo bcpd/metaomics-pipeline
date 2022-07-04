@@ -8,12 +8,17 @@
 
 def COLLECT_ALL_INPUT():
     INPUTS = []
-    INPUTS.append(os.path.join(working_dir, "samples.tsv")) #rule atlas_init
-    if merged_reads:
-        INPUTS.append(os.path.join(working_dir, "logs/concatReads.log"))
-    INPUTS.append(os.path.join(working_dir, "logs/formatSamples.log"))
-    INPUTS.append(os.path.join(working_dir, "finished_genecatalog"))
-    INPUTS.append(os.path.join(working_dir, "finished_genomes"))
+    if config["experiment_type"] == "metagenomics":
+        #Config outputs for metagenomics
+        INPUTS.append(os.path.join(working_dir, "samples.tsv")) #rule atlas_init
+        if merged_reads:
+            INPUTS.append(os.path.join(working_dir, "logs/concatReads.log"))
+        INPUTS.append(os.path.join(working_dir, "logs/formatSamples.log"))
+        INPUTS.append(os.path.join(working_dir, "finished_genecatalog"))
+        INPUTS.append(os.path.join(working_dir, "finished_genomes"))
+    if config["experiment_type"] == "metatranscriptomics":
+        #Config outputs for metatranscriptomics
+        INPUTS.append(os.path.join(working_dir, "grist/reports")) #grist
 
     return INPUTS
 
