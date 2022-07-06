@@ -38,11 +38,6 @@ mkdir ~/M5P_databases/bakta
 bakta_db download --output ~/M5P_databases/bakta
 conda deactivate
 
-mkdir -p {database_dir}
-cd {database_dir}
-wget https://zenodo.org/record/4415843/files/bacteria-refseq.tar.gz
-tar -xzf bacteria-refseq.tar.gz
-
 ## Praxis
 git clone https://github.com/davidlevybooth/Praxis.git
 cd Praxis
@@ -71,7 +66,7 @@ conda env create -n referenceseeker
 conda activate referenceseeker
 conda install -c bioconda referenceseeker
 mkdir ~/M5P_databases/referenceseeker
-cd    ~/M5P_databases/referenceseeker
+cd ~/M5P_databases/referenceseeker
 wget -L https://zenodo.org/record/4415843/files/bacteria-refseq.tar.gz
 tar -xzf *
 conda deactivate
