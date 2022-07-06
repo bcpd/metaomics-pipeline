@@ -44,7 +44,7 @@ def main():
     if len(sample_list) == 0:
         print("There were no files in the samples folder ")
         print(usage)
-        sys.exit(0)
+        sys.exit(1)
     samples = []
 
     # Create temporary folder
@@ -62,11 +62,11 @@ def main():
             continue
     if fastq_counts == 0:
         print("Did not find any fastq.gz files")
-        sys.exit(0)
+        sys.exit(1)
     else:
         if fastq_counts % 2 != 0:
             print("The fastq.gz files did not come in pairs")
-            sys.exit(0)
+            sys.exit(1)
 
     for i in sample_list:
         if i.endswith('.fastq.gz'):
@@ -118,7 +118,7 @@ def main():
     if len(dbs_list) == 0:
         print("There were no databases in the folder ")
         print(usage)
-        sys.exit(0)
+        sys.exit(1)
     # Create empty list to store names of databases
     my_grist_databases = []
     for db in dbs_list:
@@ -128,7 +128,7 @@ def main():
         else:
             print("I was expecting zip files for databases files")
             print(usage)
-            sys.exit(0)
+            sys.exit(1)
 
     # Write results into yaml file
     # Samples should be stored inside the raw folder inside the grist folder
@@ -152,7 +152,7 @@ def main():
 
     grist_data = {
             'samples': samples,
-            'outdir': grist_dir
+            'outdir': grist_dir,
             'sourmash_databases': my_grist_databases,
             'prevent_sra_download': 'true', 
             }
