@@ -34,8 +34,8 @@ rule annotate_genomes:
     Run DRAM inside the conda image, uses the predicted proteins as input
     '''
     input:
-       dram_setup_complete: os.path.join("~/M5P_databases/dram_setup_complete.log"),
-       atlas_genome_complete: os.path.join(working_dir, "logs/atlas_genomes.log")
+       dram_setup_complete = os.path.join("~/M5P_databases/dram_setup_complete.log"),
+       atlas_genome_complete = os.path.join(working_dir, "logs/atlas_genomes.log")
     output: os.path.join(working_dir, "logs/DRAM_annotate.log")
     log: os.path.join(working_dir, "logs/DRAM_annotate.log")
     shell:
@@ -55,7 +55,7 @@ rule copy_DRAM_annotations:
     input: os.path.join(working_dir, "logs/DRAM_annotate.log")
     output: os.path.join(working_dir, "logs/DRAM_copy_results.log")
     params:
-        output_folder: os.path.join(working_dir, "DRAM")
+        output_folder= os.path.join(working_dir, "DRAM")
     log: os.path.join(working_dir, "logs/DRAM_copy_results.log")
     shell:
         """
