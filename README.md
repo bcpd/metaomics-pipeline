@@ -20,7 +20,7 @@ Snakemake-based workflow for the taxonomic and functional annotation of metageno
 - Install the M5P CLI: `python setup.py install`
 
 ## Resource requirements:
-- OS: Linux (Ubuntu >= 14.04 LTS). 
+- OS: Linux (Ubuntu >= 14.04 LTS).
 - Disk space: M5P requires at least 200GB of disk space for databases and sequencing files.
 - Memory: Both metagenomics and metatranscriptomics analyses can be done with 128 GB of RAM or less.
 - Time:
@@ -30,12 +30,11 @@ Snakemake-based workflow for the taxonomic and functional annotation of metageno
 
 ## Usage:
 ```
-M5P [-h] [-w WORKING_DIR] [-i FASTQ_DIR] [-d DATABASE_DIR] [-r MERGED_READS] [-m METADATA_PATH] [-t THREADS]
+M5P [-h] [-w WORKING_DIR] [-i FASTQ_DIR] [-x FASTQ_DIR_METATRANSCRIPTOMICS] [-d DATABASE_DIR] [-r MERGED_READS] [-m METADATA_PATH] [-t THREADS]
            [-p MERGED_PREFIX] [-b BIN_ALL] [-c CONFIGFILE]
 
-pipeline configuration
+Pipeline configuration options:
 
-options:
   -h, --help            show this help message and exit
 
   -w WORKING_DIR, --working_dir WORKING_DIR
@@ -59,7 +58,6 @@ options:
   -M MAXIMUM_MEMORY, --max_memory MAXIMUM_MEMORY
                         The amount of memory provided to the assembler. Enter in byte format
 
-
   -p MERGED_PREFIX, --merged_prefix MERGED_PREFIX
                         Prefix for merged reads files (string)
 
@@ -72,3 +70,4 @@ options:
   -j JOBS, --jobs JOBS
                         Number of jobs to run, default=2
    ```
+## Instructions
