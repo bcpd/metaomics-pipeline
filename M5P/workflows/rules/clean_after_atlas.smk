@@ -6,9 +6,11 @@ rule create_folder_structure_metagenomics:
     after running Atlas QC, assembly, binning, and annotation
     ''' 
     input: 
-        atlas_genecatalog_log = os.path.join(working_dir, "logs/atlas_genecatalog.log")
-        atlas_gtdbtk = os.path.join(working_dir, "genomes/taxonomy/gtdb.log")
-        refseeker_file = os.path.join(working_dir, "refseeker.tsv")
+        atlas_genecatalog_log = os.path.join(working_dir, "logs/atlas_genecatalog.log"),
+        atlas_gtdbtk = os.path.join(working_dir, "genomes/taxonomy/gtdb.log"),
+        refseeker_completed = os.path.join(working_dir, "refseeker.tsv"),
+        bakta_completed = os.path.join(working_dir, "batka.tsv")
+        dram_completed = os.path.join(working_dir, "logs/DRAM_copy_results.log")
     output: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     log: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     params: 
@@ -60,8 +62,8 @@ rule reorganize_files_metagenomics:
         gene_catalog_log = os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
         atlas_gtdbtk_log = os.path.join(working_dir, "genomes/taxonomy/gtdb.log")
         refseeker_file = os.path.join(working_dir, "refseeker.tsv")
-        bakta_file = os.path.join(working_dir, "batka.tsv")
-        dram_file = os.path.join(working_dir, "logs/DRAM_copy_results.log")
+        bakta_file = os.path.join(working_dir, "bakta.tsv")
+        dram_file = os.path.join(working_dir, "/DRAM_copy_results.log")
     output: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
     log: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
     benchmark: os.path.join(working_dir, "benchmarks/Atlas_metagenomics_cleanup.bmk")
@@ -79,13 +81,11 @@ rule reorganize_files_metagenomics:
 
         # Copy assemblies, predicted genes, predicted proteins, and related annotations
         cp */assembly/*final_contigs.fasta metagenomics/assemblies/
-        #cp */annotation/predicted_genes/*gff metagenomics/functional_annotations/GFF3
-        cp {input.dram_file} metagenomics/functional_annotations
         cp {input.bakta_file} metagenomics/functional_annotations
         cp genome/annotations/genes/MAG*f?a metagenomics/functional_annotations
-        #cp Genecatalog/*f?a metagenomics/functional_annotations
-        #cp Genecatalog/counts/ metagenomics/functional_annotations
-        #gunzip metagenomics/functional_annotations/*gz 
+        cp DRAM/annotations/annotations.tsv  metagenomics/functional_annotations/dram_annotations.tsv
+        cp DRAM/annotations/distill/product.tsv  metagenomics/functional_annotations/dram_product.tsv
+        cp DRAM/annotations/distill/metabolism_summary.xlsx metagenomics/functional_annotations/dram_metabolism_summary.xlsx
 
         # Copying taxonomic annotations
         cp genomes/taxonomy/gtdb/classify/*summary.tsv metagenomics/taxonomic_annotations/gtdb-tk/
