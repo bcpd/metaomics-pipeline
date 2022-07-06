@@ -7,6 +7,8 @@ rule run_bakta:
     input: os.path.join(working_dir, "finished_binning")
     output: os.path.join(working_dir, "bakta.tsv")
     benchmark: os.path.join(working_dir, "benchmarks/bakta.bmk")
+    conda:
+        'bakta'
     log: os.path.join(working_dir, "log/run_bakta.log")
     params:
         output_dir   = output_dir,

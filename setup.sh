@@ -38,6 +38,10 @@ mkdir ~/M5P_databases/bakta
 bakta_db download --output ~/M5P_databases/bakta
 conda deactivate
 
+mkdir -p {database_dir}
+cd {database_dir}
+wget https://zenodo.org/record/4415843/files/bacteria-refseq.tar.gz
+tar -xzf bacteria-refseq.tar.gz
 
 ## Praxis
 git clone https://github.com/davidlevybooth/Praxis.git
@@ -48,6 +52,8 @@ python setup.py install
 conda deactivate
 cd ~
 
+## Sourmash
+pip install sourmash
 
 ## Grist
 conda create -y -n grist python=3.9 pip
@@ -60,7 +66,6 @@ curl -JLO https://osf.io/k2u8s/download  # 31K-mer database
 conda deactivate
 cd ~
 
-
 ## Referenceseeker
 conda env create -n referenceseeker
 conda activate referenceseeker
@@ -71,7 +76,6 @@ wget -L https://zenodo.org/record/4415843/files/bacteria-refseq.tar.gz
 tar -xzf *
 conda deactivate
 cd ~
-
 
 ## M5P enviroment
 conda env create --name M5P --file M5P/workflows/envs/environment.yaml
