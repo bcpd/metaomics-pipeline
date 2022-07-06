@@ -1,6 +1,6 @@
 # The M5P pipeline uses three main hard drive spaces. Here is how they can be removed if not needed anymore. 
 
-## Remove Conda environments. 
+## 1. Remove Conda environments. 
 
 conda env remove -n M5P
 conda env remove -n Praxis
@@ -8,8 +8,9 @@ conda env remove -n bakta
 conda env remove -n referenceseeker
 conda env remove -n grist
 
-## Remove database files
-###  We store the required databases in the ~/M5P_databases folder. You can remove the corresponding folder. 
+## 2. Remove database files
+###  We store the required databases in the ~/M5P_databases folder. You can need to remove different folder corresponding to each tool and then the master folder.
+### If you are sure you do not need any of the tools/databases just remove the main databases folder directly. 
 
 rm -fr ~/M5P_databases/atlas
 rm -fr ~/M5P_databases/bakta
@@ -19,7 +20,7 @@ rm -fr ~/M5P_databases/
 
 
 ## 3. Remove the DRAM docker image and container. 
-### DRAM runs in a separate docker container that include its own databases.
+### DRAM runs in a separate docker container that includes its own databases.
 ### You need to stop the container, remove it, and then remove the image
 
 ### Removing container
@@ -34,6 +35,7 @@ docker container rm DRAM
 ### Then we use that id with the docker image rm command
 
 docker image ls
+
 ### then use the corresponding ID below
 docker image rm <ID>
 
