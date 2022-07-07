@@ -7,7 +7,7 @@ bash  Miniconda3-py37_4.11.0-Linux-x86_64.sh
 
 # Get Snakemake using recommended distributions
 
-conda install -n base -c conda-forge mamba
+conda install -y -n base -c conda-forge mamba
 conda activate base
 mamba create -c conda-forge -c bioconda -n snakemake snakemake
 
@@ -27,13 +27,13 @@ mkdir ~/M5P_databases
 ## These environments are the core of the pipeline. We can run the rules and point to them directly.
 
 ## Atlas
-conda install -c bioconda -c conda-forge metagenome-atlas
+conda install -y -c bioconda -c conda-forge metagenome-atlas
 
 
 ## Bakta
 conda create -n bakta
 conda activate bakta
-conda install -c conda-forge -c bioconda bakta
+conda install -y -c conda-forge -c bioconda bakta
 mkdir ~/M5P_databases/bakta
 bakta_db download --output ~/M5P_databases/bakta
 conda deactivate
@@ -64,7 +64,7 @@ cd ~
 ## Referenceseeker
 conda create -n referenceseeker
 conda activate referenceseeker
-conda install -c bioconda referenceseeker
+conda install -y -c bioconda referenceseeker
 mkdir ~/M5P_databases/referenceseeker
 cd ~/M5P_databases/referenceseeker
 wget -L https://zenodo.org/record/4415843/files/bacteria-refseq.tar.gz
