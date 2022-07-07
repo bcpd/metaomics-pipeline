@@ -31,7 +31,7 @@ conda install -c bioconda -c conda-forge metagenome-atlas
 
 
 ## Bakta
-conda env create -n bakta
+conda create -n bakta
 conda activate bakta
 conda install -c conda-forge -c bioconda bakta
 mkdir ~/M5P_databases/bakta
@@ -62,7 +62,7 @@ conda deactivate
 cd ~
 
 ## Referenceseeker
-conda env create -n referenceseeker
+conda create -n referenceseeker
 conda activate referenceseeker
 conda install -c bioconda referenceseeker
 mkdir ~/M5P_databases/referenceseeker
