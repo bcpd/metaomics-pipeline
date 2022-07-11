@@ -62,9 +62,10 @@ rule formatSamples:
     benchmark: os.path.join(working_dir, "benchmarks/formatSamples.bmk")
     params:
         args = COLLECT_FORMAT_ARGS(),
-        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+        script = os.path.join(config["parent_dir"], "workflows/scripts/formatSamples.py")
     shell:
-        "python workflows/scripts/formatSamples.py {params.args};"
+        "python {params.script} {params.args};"
         'echo Modified bin groups in {input} at {params.now} > {log}'
 
 
