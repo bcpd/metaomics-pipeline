@@ -21,7 +21,7 @@ rule concatReads:
         prefix = os.path.join(fastq_dir, f"{merged_prefix}"),
         d = 0,
         r = 0,
-        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     shell:
         "python workflows/scripts/concatReads.py -i {input} -o {params.prefix} -d {params.d} -r {params.r};"
         'echo Created merged reads files: {output} at {params.now} > {log}'
@@ -37,7 +37,7 @@ rule init_atlas:
     input: COLLECT_INIT_INPUT()
     output:
         samples = os.path.join(working_dir, "samples.tsv"),
-        config  = os.path.join(working_dir, "config.yaml"),
+        config  = os.path.join(working_dir, "config.yaml")
     log: os.path.join(working_dir, "logs/init_atlas.log")
     benchmark: os.path.join(working_dir, "benchmarks/init_atlas.bmk")
     conda:
@@ -61,7 +61,7 @@ rule formatSamples:
     benchmark: os.path.join(working_dir, "benchmarks/formatSamples.bmk")
     params:
         args = COLLECT_FORMAT_ARGS(),
-        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     shell:
         "python workflows/scripts/formatSamples.py {params.args};"
         'echo Modified bin groups in {input} at {params.now} > {log}'
