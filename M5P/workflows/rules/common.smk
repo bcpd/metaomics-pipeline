@@ -38,3 +38,12 @@ def COLLECT_FORMAT_ARGS():
         return f"-s {os.path.join(working_dir, 'samples.tsv')} -m {metadata_path} {binarg}"
     else:
         return f"-s {os.path.join(working_dir, 'samples.tsv')} {binarg}"
+
+def COLLECT_SALMON_REFERENCE:
+    INPUTS=[]
+    if "metagenomics" in config["experiment_type"]:
+        #Config outputs for metagenomics
+        INPUTS.append(os.path.join(working_dir, "Genecatalog/gene_catalog.fna")) #rule atlas_genecatalog
+    elif config["experiment_type"] == "metatranscriptomics":
+        #Config outputs for metatranscriptomics
+        INPUTS.append(os.path.join(working_dir, "grist/reports/*.fna")) #grist
