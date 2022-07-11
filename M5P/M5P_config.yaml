@@ -1,5 +1,5 @@
 bin_all: true
-database_dir: ~/M5P_database/atlas
+database_dir: ~/M5P_databases
 experiment_type: metagenomics
 experimental_contrast: none
 experimental_design: ~treatment
