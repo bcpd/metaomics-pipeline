@@ -12,7 +12,8 @@ rule get_dram:
     output:
         os.path.join(working_dir, "logs/dram_setup_complete.log")
     params:
-        log_folder = os.path.join(working_dir, "logs/")
+        log_folder = os.path.join(working_dir, "logs/"),
+        script = os.path.join(config["parent_dir"], "workflows/scripts/DRAM_setup.sh")
     log:
         os.path.join(working_dir, "logs/get_dram.log")
     shell:
@@ -20,7 +21,7 @@ rule get_dram:
         docker pull continuumio/miniconda3
         docker run -i -d --name DRAM continuumio/miniconda3
         docker exec DRAM mkdir -p data out scripts logs genomes proteins
-        docker cp workflows/scripts/DRAM_setup.sh DRAM:/scripts
+        docker cp {params.script} DRAM:/scripts
         docker exec DRAM /bin/bash /scripts/DRAM_setup.sh
         docker exec DRAM touch /logs/dram_setup_complete.log
         docker cp DRAM:/logs/dram_setup_complete.log {log_folder}
