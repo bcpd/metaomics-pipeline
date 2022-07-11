@@ -38,13 +38,15 @@ rule annotate_genomes:
        dram_setup_complete = os.path.join("~/M5P_databases/dram_setup_complete.log"),
        atlas_genome_complete = os.path.join(working_dir, "logs/atlas_genomes.log")
     output: os.path.join(working_dir, "logs/DRAM_annotate.log")
+    params:
+        script = os.path.join(config["parent_dir"], "workflows/scripts/DRAM_annotate_proteins.sh")
     log: os.path.join(working_dir, "logs/DRAM_annotate.log")
     shell:
         """
         docker restart DRAM
         docker exec DRAM rm /genomes/*
         for i in genome/annotations/genes/MAG*faa; do docker cp $i DRAM:/genomes;done
-        docker cp workflows/scripts/DRAM_annotate_proteins.sh DRAM:/scripts
+        docker cp {params.script} DRAM:/scripts
         docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_proteins.sh 2> {log}
         """
 
