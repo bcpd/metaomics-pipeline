@@ -22,7 +22,7 @@ rule concatReads:
         prefix = os.path.join(fastq_dir, f"{merged_prefix}"),
         d = 0,
         r = 0,
-        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     shell:
         "python {params.concat_reads} -i {input} -o {params.prefix} -d {params.d} -r {params.r};"
         'echo Created merged reads files: {output.merged_out} at {params.now} > {log}'
@@ -38,18 +38,18 @@ rule init_atlas:
     input: COLLECT_INIT_INPUT()
     output:
         samples = os.path.join(working_dir, "samples.tsv"),
-        config  = os.path.join(working_dir, "config.yaml"),
+        config  = os.path.join(working_dir, "config.yaml")
     log: os.path.join(working_dir, "logs/init_atlas.log")
     benchmark: os.path.join(working_dir, "benchmarks/init_atlas.bmk")
     conda:
         "atlas"
     params:
         fastq_dir    = fastq_dir,
-        database_dir = database_dir,
+        #database_dir = database_dir,
         working_dir  = working_dir
     threads: THREADS
     shell:
-        "(atlas init --threads {threads} -w {params.working_dir} --db-dir {params.database_dir} {params.fastq_dir}) 2> {log}"
+        "(atlas init --threads {threads} -w {params.working_dir} --db-dir ~/M5P_databases {params.fastq_dir}) 2> {log}"
 
 
 rule formatSamples:
@@ -62,7 +62,7 @@ rule formatSamples:
     benchmark: os.path.join(working_dir, "benchmarks/formatSamples.bmk")
     params:
         args = COLLECT_FORMAT_ARGS(),
-        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     shell:
         "python workflows/scripts/formatSamples.py {params.args};"
         'echo Modified bin groups in {input} at {params.now} > {log}'

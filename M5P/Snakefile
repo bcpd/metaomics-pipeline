@@ -23,7 +23,8 @@ now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 if config:
     #M5P CONFIG
     working_dir   = config["working_dir"]
-    fastq_dir     = config["fastq_dir"]
+    fastq_metagenomics        = config["fastq_metagenomics"]
+    fastq_metatranscriptomics = config["fastq_metatranscriptomics"]
     database_dir  = config["database_dir"]
     THREADS       = config["threads"]
     merged_reads  = config["merged_reads"]
@@ -37,11 +38,11 @@ else:
 include: "workflows/rules/common.smk"
 include: "workflows/rules/custom_atlas.smk"
 include: "workflows/rules/custom_dram.smk"
+include: "workflows/rules/clean_after_atlas.smk"
+include: "workflows/rules/run_bakta.smk"
 include: "workflows/rules/run_grist.smk"
-#include: "workflows/rules/bakta.smk"
-#include: "workflows/rules/referenceseeker.smk"
+include: "workflows/rules/run_referenceseeker.smk"
 
 # ---- Rule all: run all targets
 rule all:
     input: COLLECT_ALL_INPUT()
-

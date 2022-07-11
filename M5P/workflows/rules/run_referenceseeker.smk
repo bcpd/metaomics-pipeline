@@ -11,9 +11,9 @@ rule run_referenceseeker:
         'referenceseeker'
     log: os.path.join(working_dir, "log/run_referenceseeker.log")
     params:
-        output_dir    = output_dir,
-        database_dir = database_dir
         working_dir  = working_dir
+    conda:
+        'referenceseeker'
     threads: THREADS
     shell:
-        "(workflows/scripts/run_referenceseeker.sh -i {input} -d {params.database_dir} -o {params.output_dir}) 2> {log}"
+        "(workflows/scripts/run_referenceseeker.sh -i {input} -d ~/M5P_databases/referenceseeker -o {params.working_dir}) 2> {log}"

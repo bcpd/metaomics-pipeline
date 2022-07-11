@@ -11,10 +11,10 @@ from datetime import datetime
 usage = '''
 Usage:
      pyton create_grist_config_file.py
-         -s <samples folder>
-         -d <grist database folder>
-         -o <grist_configuration_file.yaml>
-         -m <maximum_memory
+        -s <samples folder>
+        -d <grist database folder>
+        -o <grist_configuration_file.yaml>
+        -m <maximum_memory
 '''
 
 def main():
@@ -44,7 +44,7 @@ def main():
     if len(sample_list) == 0:
         print("There were no files in the samples folder ")
         print(usage)
-        sys.exit(0)
+        sys.exit(1)
     samples = []
 
     # Create temporary folder
@@ -62,11 +62,11 @@ def main():
             continue
     if fastq_counts == 0:
         print("Did not find any fastq.gz files")
-        sys.exit(0)
+        sys.exit(1)
     else:
         if fastq_counts % 2 != 0:
             print("The fastq.gz files did not come in pairs")
-            sys.exit(0)
+            sys.exit(1)
 
     for i in sample_list:
         if i.endswith('.fastq.gz'):

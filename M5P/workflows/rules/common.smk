@@ -24,7 +24,7 @@ def COLLECT_ALL_INPUT():
 
 def COLLECT_INIT_INPUT():
     INPUTS = []
-    INPUTS.append(fastq_dir)
+    INPUTS.append(fastq_metagenomics)
     if merged_reads:
         INPUTS.append(os.path.join(working_dir, "logs/concatReads.log"))
     return INPUTS

@@ -1,10 +1,10 @@
 bin_all: true
-database_dir: ~/database/atlas
+database_dir: ~/M5P_database/atlas
 experiment_type: metagenomics
 experimental_contrast: none
 experimental_design: ~treatment
-fastq_dir: input_mg/
-fastq_dir2: input_mt/
+fastq_metagenomics: input_mg
+fastq_metatranscriptomics: input_mt/
 genome:
   find_genome_relative: false
   genome_file: reference_file

@@ -15,7 +15,3 @@ then
 else
    DRAM.py distill --input_file /out/annotations/annotations.tsv --trna_path /out/annotations/trnas.tsv --output_dir /out/annotations/distill  &> /logs/dram_distil.log
 fi
-
-# This part did not work
-#cd /out/annotations/
-#python /scripts/DRAM_get_all_modules_mod.py annotations.tsv kegg_modules.tsv /logs/get_all_modules.log
