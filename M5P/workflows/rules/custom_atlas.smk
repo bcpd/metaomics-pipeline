@@ -6,25 +6,26 @@
 #
 #----------------------------------------------------------------------------#
 
-
 # ---- Atlas Assembly Rules
 rule concatReads:
     '''
     Use concatReads.py to merge read files  
     '''
-    input: 
-        fastq_dir = fastq_dir
-    output: expand(os.path.join(fastq_dir, "{merged_prefix}_R{n}.fastq.gz"), merged_prefix = merged_prefix, n = [1,2])
+    input: fastq_dir
+    output: 
+        log = os.path.join(working_dir, "logs/concatReads.log"),
+        merged_out = expand(os.path.join(fastq_dir, "{merged_prefix}_R{n}.fastq.gz"), merged_prefix = merged_prefix, n = [1,2])
     log: os.path.join(working_dir, "logs/concatReads.log")
     benchmark: os.path.join(working_dir, "benchmarks/concatReads.bmk")
     params:
+        concat_reads = os.path.join(config["parent_dir"], "workflows/scripts/concatReads.py"),
         prefix = os.path.join(fastq_dir, f"{merged_prefix}"),
         d = 0,
         r = 0,
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     shell:
-        "python workflows/scripts/concatReads.py -i {input} -o {params.prefix} -d {params.d} -r {params.r};"
-        'echo Created merged reads files: {output} at {params.now} > {log}'
+        "python {params.concat_reads} -i {input} -o {params.prefix} -d {params.d} -r {params.r};"
+        'echo Created merged reads files: {output.merged_out} at {params.now} > {log}'
 
 
 rule init_atlas:
@@ -41,7 +42,7 @@ rule init_atlas:
     log: os.path.join(working_dir, "logs/init_atlas.log")
     benchmark: os.path.join(working_dir, "benchmarks/init_atlas.bmk")
     conda:
-        'atlas'
+        "atlas"
     params:
         fastq_dir    = fastq_dir,
         #database_dir = database_dir,
@@ -133,8 +134,8 @@ rule atlas_binning:
     output: os.path.join(working_dir, "finished_binning")
     log: os.path.join(working_dir, "logs/atlas_binning.log")
     benchmark: os.path.join(working_dir, "benchmarks/atlas_binning.bmk")
-    # conda:
-    #     'atlas'
+    conda:
+        'atlas'
     threads: THREADS
     params: 
         working_dir = working_dir,

@@ -16,7 +16,6 @@ from pathlib import Path
 from datetime import datetime
 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-
 # Configuration 
 #----------------------------------------------------------------------------#
 
@@ -24,7 +23,8 @@ now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 if config:
     #M5P CONFIG
     working_dir   = config["working_dir"]
-    fastq_dir     = config["fastq_dir"]
+    fastq_metagenomics        = config["fastq_metagenomics"]
+    fastq_metatranscriptomics = config["fastq_metatranscriptomics"]
     database_dir  = config["database_dir"]
     THREADS       = config["threads"]
     merged_reads  = config["merged_reads"]
@@ -42,7 +42,6 @@ include: "workflows/rules/clean_after_atlas.smk"
 include: "workflows/rules/run_bakta.smk"
 include: "workflows/rules/run_grist.smk"
 include: "workflows/rules/run_referenceseeker.smk"
-
 
 # ---- Rule all: run all targets
 rule all:

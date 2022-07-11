@@ -12,7 +12,7 @@ rule get_dram:
     output:
         os.path.join(working_dir, "logs/dram_setup_complete.log")
     params:
-        log_folder: os.path.join(working_dir, "logs/")
+        log_folder = os.path.join(working_dir, "logs/")
     log:
         os.path.join(working_dir, "logs/get_dram.log")
     shell:

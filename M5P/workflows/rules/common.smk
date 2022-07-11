@@ -8,12 +8,17 @@
 
 def COLLECT_ALL_INPUT():
     INPUTS = []
-    INPUTS.append(os.path.join(working_dir, "samples.tsv")) #rule atlas_init
-    if merged_reads:
-        INPUTS.append(os.path.join(working_dir, "logs/concatReads.log"))
-    INPUTS.append(os.path.join(working_dir, "logs/formatSamples.log"))
-    INPUTS.append(os.path.join(working_dir, "finished_genecatalog"))
-    INPUTS.append(os.path.join(working_dir, "finished_genomes"))
+    if config["experiment_type"] == "metagenomics":
+        #Config outputs for metagenomics
+        INPUTS.append(os.path.join(working_dir, "samples.tsv")) #rule atlas_init
+        if merged_reads:
+            INPUTS.append(os.path.join(working_dir, "logs/concatReads.log"))
+        INPUTS.append(os.path.join(working_dir, "logs/formatSamples.log"))
+        INPUTS.append(os.path.join(working_dir, "finished_genecatalog"))
+        INPUTS.append(os.path.join(working_dir, "finished_genomes"))
+    if config["experiment_type"] == "metatranscriptomics":
+        #Config outputs for metatranscriptomics
+        INPUTS.append(os.path.join(working_dir, "grist/reports")) #grist
 
     return INPUTS
 
@@ -33,3 +38,12 @@ def COLLECT_FORMAT_ARGS():
         return f"-s {os.path.join(working_dir, 'samples.tsv')} -m {metadata_path} {binarg}"
     else:
         return f"-s {os.path.join(working_dir, 'samples.tsv')} {binarg}"
+
+def COLLECT_SALMON_REFERENCE:
+    INPUTS=[]
+    if "metagenomics" in config["experiment_type"]:
+        #Config outputs for metagenomics
+        INPUTS.append(os.path.join(working_dir, "Genecatalog/gene_catalog.fna")) #rule atlas_genecatalog
+    elif config["experiment_type"] == "metatranscriptomics":
+        #Config outputs for metatranscriptomics
+        INPUTS.append(os.path.join(working_dir, "grist/reports/*.fna")) #grist
