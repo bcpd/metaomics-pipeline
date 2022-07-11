@@ -1,4 +1,4 @@
-# Required programs 
+# Required programs
 
 
 # Get and install miniconda:
@@ -18,7 +18,7 @@ sh get-docker.sh
 
 # Databases location
 ## We use a folder in the main home directory to store the databases files used by the different programs.
-## This folder is called  M5P_databases 
+## This folder is called  M5P_databases
 
 mkdir ~/M5P_databases
 
@@ -27,13 +27,13 @@ mkdir ~/M5P_databases
 ## These environments are the core of the pipeline. We can run the rules and point to them directly.
 
 ## Atlas
-conda install -y -c bioconda -c conda-forge metagenome-atlas
+conda install -y -c bioconda -c conda-forge metagenome-atlas=2.9
 
 
 ## Bakta
 conda create -n bakta
 conda activate bakta
-conda install -y -c conda-forge -c bioconda bakta
+conda install -y -c conda-forge -c bioconda bakta=1.4.2
 mkdir ~/M5P_databases/bakta
 bakta_db download --output ~/M5P_databases/bakta
 conda deactivate
@@ -48,7 +48,7 @@ conda deactivate
 cd ~
 
 ## Sourmash
-pip install sourmash
+pip install sourmash==4.3.0
 
 ## Grist
 conda create -y -n grist python=3.9 pip
@@ -64,7 +64,7 @@ cd ~
 ## Referenceseeker
 conda create -n referenceseeker
 conda activate referenceseeker
-conda install -y -c bioconda referenceseeker
+conda install -y -c bioconda referenceseeker=1.8.0
 mkdir ~/M5P_databases/referenceseeker
 cd ~/M5P_databases/referenceseeker
 wget -L https://zenodo.org/record/4415843/files/bacteria-refseq.tar.gz
