@@ -8,13 +8,14 @@ rule create_grist_config_file:
        samples_folder = fastq_dir2 # Metatranscriptomics reads
     params:
         grist_output_folder = os.path.join(working_dir, "grist"),
-        max_memory = config["max_memory"]
+        max_memory = config["max_memory"],
+        script = os.path.join(config["parent_dir"], "workflows/scripts/create_grist_config_file.py")
     output: os.path.join(working_dir, "grist_config.yaml")
     conda: 'M5P_test'
     log: os.path.join(working_dir, "log/create_grist_config_file.log")
     shell:
         "mkdir -p {params.grist_output_folder};"
-        "python workflows/scripts/create_grist_config_file.py -s {input.samples_folder} -d ~/M5P_databases/grist -o {output} -m {max_memory} 2> {log}"
+        "python {params.script} -s {input.samples_folder} -d ~/M5P_databases/grist -o {output} -m {max_memory} 2> {log}"
 
 rule run_grist:
     '''
