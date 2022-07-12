@@ -97,6 +97,31 @@ def main():
                     new_data["max_memory"] = val
                 else:
                     raise Exception("Requested memory exceeds available memory")
+            elif arg == "working_dir":
+                val = getattr(args, arg)
+                new_data["working_dir"] = val
+            elif arg == "fastq_metagenomics":
+                val = getattr(args, arg)
+                new_data["fastq_metagenomics"] = val
+            elif arg == "fastq_metatranscriptomics":
+                val = getattr(args, arg)
+                new_data["fastq_metatranscriptomics"] = val
+            elif arg == "merged_reads":
+                val = getattr(args, arg)
+                new_data["merged_reads"] = val
+            elif arg == "merged_prefix":
+                val = getattr(args, arg)
+                new_data["merged_prefix"] = val
+            elif arg == "metadata_path":
+                val = getattr(args, arg)
+                new_data["metadata_path"] = val
+            elif arg == "bin_all":
+                val = getattr(args, arg)
+                new_data["bin_all"] = val
+            elif arg == "jobs":
+                val = getattr(args, arg)
+                new_data["jobs"] = val
+
 #            else: #Uncomment to allow 
 #                new_data[arg] = val
 #           elif getattr(args, arg) is not None:
