@@ -66,6 +66,9 @@ def main():
     parser.add_argument("-m", "--metadata_path", type=str, help="Metadata file (path)")
     parser.add_argument("-t", "--threads", default= 2, type = int, help="The number of threads the pipeline is allowed to use (integer)")
     parser.add_argument("-M", "--max_memory", type = int, help = "The amount of memory provided to the assembler. Enter in byte format.")
+    parser.add_argument("-e", "--experiment_type", type = str, default="metagenomics",  help = "Either metagenomics (default), metatranscriptomics, or both")
+    parser.add_argument("-k", "--experimental_contrast", type = str, default="none",  help = "Experimental contrast as used in R formula")
+    parser.add_argument("-g", "--experimental_design", type = str, default="~treatment",  help = "Experimental design as used in R formula")
     parser.add_argument("-p", "--merged_prefix", default="MergedReads-001", type=str, help="Prefix for merged reads files (string)")
     parser.add_argument("-b", "--bin_all", type=bool, default = True, help="Put all reads files in same bin group (bool)")
     parser.add_argument("-j", "--jobs", default = 2, type = str, help = "number of jobs")
@@ -97,9 +100,22 @@ def main():
                     new_data["max_memory"] = val
                 else:
                     raise Exception("Requested memory exceeds available memory")
+            elif arg == "experiment_type":
+                val = getattr(args, arg)
+                if val in ["metagenomics", "metatranscriptomics", "both"]:
+                    experiment_type = val
+                    new_data["experiment_type"] = val
+                else:
+                    raise Exception("Experiment type not valid")
             elif arg == "working_dir":
                 val = getattr(args, arg)
                 new_data["working_dir"] = val
+            elif arg == "experimental_contrast":
+                val = getattr(args, arg)
+                new_data["experimental_contrast"] = val
+            elif arg == "experimental_design":
+                val = getattr(args, arg)
+                new_data["experimental_design"] = val
             elif arg == "fastq_metagenomics":
                 val = getattr(args, arg)
                 new_data["fastq_metagenomics"] = val
