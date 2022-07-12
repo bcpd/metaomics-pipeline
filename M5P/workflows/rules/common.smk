@@ -18,6 +18,7 @@ def COLLECT_ALL_INPUT():
         INPUTS.append(os.path.join(working_dir, "finished_genomes"))
         INPUTS.append(os.path.join(working_dir, "logs/DRAM_copy_results.log")) # DRAM
         INPUTS.append(os.path.join(working_dir, "logs/run_bakta.log")) # bakta
+        INPUTS.append(os.path.join(working_dir, "logs/run_referenceseeker.log")) # referenceseeker
     if config["experiment_type"] == "metatranscriptomics":
         #Config outputs for metatranscriptomics
         INPUTS.append(os.path.join(working_dir, "grist/reports")) #grist
