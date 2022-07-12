@@ -11,9 +11,10 @@ rule run_bakta:
         'bakta'
     log: os.path.join(working_dir, "log/run_bakta.log")
     params:
-        working_dir  = working_dir
+        working_dir  = working_dir,
+        script = os.path.join(config["parent_dir"], "workflows/scripts/run_bakta.sh")
     conda:
         'bakta'
     threads: THREADS
     shell:
-        "(workflows/scripts/run_bakta.sh -i {input} -d ~/M5P_databases/bakta -o {params.working_dir}) 2> {log}"
+        "(/bin/bash {params.script} -i {input} -d ~/M5P_databases/bakta -o {params.working_dir}) 2> {log}"
