@@ -41,7 +41,9 @@ include: "workflows/rules/custom_dram.smk"
 include: "workflows/rules/clean_after_atlas.smk"
 include: "workflows/rules/run_bakta.smk"
 include: "workflows/rules/run_grist.smk"
+include: "workflows/rules/custom_praxis.smk"
 include: "workflows/rules/run_referenceseeker.smk"
+
 
 # ---- Rule all: run all targets
 rule all:
