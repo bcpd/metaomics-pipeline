@@ -8,7 +8,7 @@ rule get_dram:
     to be run again, we do not need to redownload the databases.
     '''
     input:
-        atlas_complete= os.path.join(working_dir, "finished_genomes")
+        atlas_complete = os.path.join(working_dir, "finished_genomes")
     output:
         os.path.join(working_dir, "logs/dram_setup_complete.log")
     params:
