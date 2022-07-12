@@ -16,6 +16,7 @@ def COLLECT_ALL_INPUT():
         INPUTS.append(os.path.join(working_dir, "logs/formatSamples.log"))
         INPUTS.append(os.path.join(working_dir, "finished_genecatalog"))
         INPUTS.append(os.path.join(working_dir, "finished_genomes"))
+        INPUTS.append(os.path.join(working_dir, "logs/DRAM_copy_results.log")) # DRAM
     if config["experiment_type"] == "metatranscriptomics":
         #Config outputs for metatranscriptomics
         INPUTS.append(os.path.join(working_dir, "grist/reports")) #grist
