@@ -39,7 +39,7 @@ def COLLECT_FORMAT_ARGS():
     else:
         return f"-s {os.path.join(working_dir, 'samples.tsv')} {binarg}"
 
-def COLLECT_SALMON_REFERENCE:
+def COLLECT_SALMON_REFERENCE():
     INPUTS=[]
     if "metagenomics" in config["experiment_type"]:
         #Config outputs for metagenomics
