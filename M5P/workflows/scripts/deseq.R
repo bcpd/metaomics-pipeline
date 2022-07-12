@@ -10,22 +10,6 @@ suppressMessages(library("DESeq2"))
 
 
 parallel <- FALSE
-# if (snakemake@threads > 1) {
-#     library("BiocParallel")
-#     # setup parallelization
-#     register(MulticoreParam(snakemake@threads))
-#     parallel <- TRUE
-# }
-
-#Init script
-#########################################################################################################
-
-# log <- file(snakemake@log[[1]], open="wt")
-# sink(log)
-# sink(log, type="message")
-
-#debug file type # looks okay
-#write.table(snakemake@input[["counts"]], "input.table.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
 
 #Load data
 ##########################################################################################################
