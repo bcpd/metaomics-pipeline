@@ -4,7 +4,9 @@ rule run_bakta:
     Requires database directory, output directory, and input directory containing MAGs.
     Outputs one annotation file for all the MAGs.
     '''
-    input: os.path.join(working_dir, "finished_binning")
+    input:
+        binning_completed = os.path.join(working_dir, "finished_binning"),
+        genomes_folder = os.path.join(working_dir, "genomes/genomes")
     output: os.path.join(working_dir, "bakta.tsv")
     benchmark: os.path.join(working_dir, "benchmarks/bakta.bmk")
     conda:
@@ -17,4 +19,4 @@ rule run_bakta:
         'bakta'
     threads: THREADS
     shell:
-        "({params.script} -i {input} -d ~/M5P_databases/bakta -o {params.working_dir}) 2> {log}"
+        "({params.script} -i {input.genomes/genomes} -d ~/M5P_databases/bakta -o {params.working_dir}) 2> {log}"
