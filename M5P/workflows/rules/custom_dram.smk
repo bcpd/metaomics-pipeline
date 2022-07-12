@@ -45,7 +45,7 @@ rule annotate_genomes:
         """
         docker restart DRAM
         docker exec DRAM rm /genomes/*
-        for i in genome/annotations/genes/MAG*faa; do docker cp $i DRAM:/genomes;done
+        for i in genomes/annotations/genes/MAG*faa; do docker cp $i DRAM:/genomes;done
         docker cp {params.script} DRAM:/scripts
         docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_proteins.sh 2> {log}
         """
