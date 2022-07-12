@@ -9,7 +9,7 @@ rule run_referenceseeker:
     benchmark: os.path.join(working_dir, "benchmarks/refseeker.bmk")
     conda:
         'referenceseeker'
-    log: os.path.join(working_dir, "log/run_referenceseeker.log")
+    log: os.path.join(working_dir, "logs/run_referenceseeker.log")
     params:
         working_dir  = working_dir,
         script = os.path.join(config["parent_dir"], "workflows/scripts/run_referenceseeker.sh")
