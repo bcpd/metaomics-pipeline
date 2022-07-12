@@ -5,7 +5,7 @@ rule create_grist_config_file:
     Creates a configurations file with the location of the grist database and the raw reads
     """
     input:
-       samples_folder = fastq_dir2 # Metatranscriptomics reads
+       samples_folder = fastq_metatranscriptomics # Metatranscriptomics reads
     params:
         grist_output_folder = os.path.join(working_dir, "grist"),
         max_memory = config["max_memory"],
