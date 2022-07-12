@@ -22,6 +22,7 @@ def COLLECT_ALL_INPUT():
     if config["experiment_type"] == "metatranscriptomics":
         #Config outputs for metatranscriptomics
         INPUTS.append(os.path.join(working_dir, "grist/reports")) #grist
+        INPUTS.append(os.path.join(working_dir, "salmon/DESeq2.tsv") # praxis
 
     return INPUTS
 
