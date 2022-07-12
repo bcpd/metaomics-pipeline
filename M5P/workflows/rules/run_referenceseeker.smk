@@ -17,4 +17,4 @@ rule run_referenceseeker:
         'referenceseeker'
     threads: THREADS
     shell:
-        "(/bin/bash {params.script} -i {input} -d ~/M5P_databases/referenceseeker -o {params.working_dir}) 2> {log}"
+        "({params.script} -i {input} -d ~/M5P_databases/referenceseeker -o {params.working_dir}) 2> {log}"
