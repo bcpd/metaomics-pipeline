@@ -5,7 +5,7 @@ rule run_referenceseeker:
     Outputs one annotation file for all the MAGs and individually annotated MAGs.
     '''
     input: os.path.join(working_dir, "finished_binning")
-    output: os.path.join(working_dir, "metagenomics/taxonomic_annotations/refseeker.tsv")
+    output: os.path.join(working_dir, "refseeker.tsv")
     benchmark: os.path.join(working_dir, "benchmarks/refseeker.bmk")
     conda:
         'referenceseeker'
