@@ -11,15 +11,15 @@ rule concatReads:
     '''
     Use concatReads.py to merge read files  
     '''
-    input: fastq_dir
+    input: fastq_metagenomics
     output: 
         log = os.path.join(working_dir, "logs/concatReads.log"),
-        merged_out = expand(os.path.join(fastq_dir, "{merged_prefix}_R{n}.fastq.gz"), merged_prefix = merged_prefix, n = [1,2])
+        merged_out = expand(os.path.join(fastq_metagenomics, "{merged_prefix}_R{n}.fastq.gz"), merged_prefix = merged_prefix, n = [1,2])
     log: os.path.join(working_dir, "logs/concatReads.log")
     benchmark: os.path.join(working_dir, "benchmarks/concatReads.bmk")
     params:
         concat_reads = os.path.join(config["parent_dir"], "workflows/scripts/concatReads.py"),
-        prefix = os.path.join(fastq_dir, f"{merged_prefix}"),
+        prefix = os.path.join(fastq_metagenomics, f"{merged_prefix}"),
         d = 0,
         r = 0,
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -44,7 +44,7 @@ rule init_atlas:
     conda:
         "atlas"
     params:
-        fastq_dir    = fastq_dir,
+        fastq_dir    = fastq_metagenomics,
         #database_dir = database_dir,
         working_dir  = working_dir
     threads: THREADS
