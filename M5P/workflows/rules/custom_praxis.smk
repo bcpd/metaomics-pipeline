@@ -10,6 +10,7 @@ METHOD = "salmon"
 samples = "sample.tsv"
 contrast = config["experimental_contrast"]
 output_directory = config["working_dir"]
+project_name = "Microbial mixtures"
 
 rule salmon_index:
     """
@@ -35,7 +36,7 @@ rule salmon_quant:
         fastq_2= os.path.join(config["fastq_metatranscriptomics"], "{sample}_R2.fastq.gz"),
         salmon_dir = output_directory + "reference/salmon_quasi"
     output:
-        directory(os.path.join(working_dir, "/salmon/{sample}"))
+        directory(os.path.join(output_directory, "/salmon/{sample}"))
     threads: THREADS
     conda:
         'praxis'
@@ -53,20 +54,20 @@ rule salmon_quant_table:
     Generate a count table with salmon.
     """
     input:
-        expand(os.path.join(working_dir, "salmon/{sample}"), sample = sample)
+        expand(os.path.join(output_directory, "salmon/{sample}"), sample = sample)
     conda:
         'praxis'
     output:
-        os.path.join(working_dir, "salmon/counts.tsv")
+        os.path.join(output_directory, "salmon/counts.tsv")
     run:
         shell("salmon quantmerge --quants {input} --column numreads -o {output}")
 
 
 rule deseq2:
     input:
-        counts = os.path.join(working_dir, "salmon/counts.tsv")
+        counts = os.path.join(output_directory, "salmon/counts.tsv")
     output:
-        tables = os.path.join(working_dir, "salmon/DESeq2.tsv")
+        tables = os.path.join(output_directory, "salmon/DESeq2.tsv")
     params:
         samples = samples_table["SampleID"],
         data = config["samples"],
@@ -79,15 +80,15 @@ rule deseq2:
 
 rule report:
     input:
-        counts = os.path.join(working_dir, "salmon/counts.tsv"),
-        tables = expand(DE_out, contrasts = contrasts),
+        counts = os.path.join(output_directory, "salmon/counts.tsv"),
+        tables = expand(DE_out, contrasts = contrasts)
     output:
         dereport_html = "DE_Report.html"
     params:
         data = config["samples"],
         contrasts = contrasts,
-        ALIGNER = config["ALIGNER"],
-        METHOD = config["METHOD"],
+        ALIGNER = ALIGNER,
+        METHOD = METHOD,
         PROJECT = project_name
     script:
         "workflows/scripts/DE_report.Rmd"
