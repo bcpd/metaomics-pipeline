@@ -1,3 +1,4 @@
+---
 bin_all: true
 database_dir: ~/M5P_databases
 experiment_type: metagenomics
