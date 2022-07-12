@@ -29,6 +29,13 @@ mkdir ~/M5P_databases
 ## Atlas
 conda install -y -c bioconda -c conda-forge metagenome-atlas=2.9
 
+## GTDBTK
+## Atlas uses gtdbtk for classification of MAGs but sometimes it runs into a problem downloading it
+## So we download it directly and create a file that is later used to see if the db is present
+wget https://data.gtdb.ecogenomic.org/releases/release202/202.0/auxillary_files/gtdbtk_r202_data.tar.gz -P ~/M5P_databases/GTDB_V06/ --no-check-certificate
+tar xvzf ~/M5P_databases/GTDB_V06/gtdbtk_r202_data.tar.gz -C ~/M5P_databases/GTDB_V06/ --strip 1
+rm ~/M5P_databases/GTDB_V06/gtdbtk_r202_data.tar.gz
+touch ~/M5P_databases/GTDB_V06/downloaded_success
 
 ## Bakta
 conda create -n bakta
