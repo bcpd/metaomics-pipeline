@@ -9,7 +9,7 @@ rule run_bakta:
     benchmark: os.path.join(working_dir, "benchmarks/bakta.bmk")
     conda:
         'bakta'
-    log: os.path.join(working_dir, "log/run_bakta.log")
+    log: os.path.join(working_dir, "logs/run_bakta.log")
     params:
         working_dir  = working_dir,
         script = os.path.join(config["parent_dir"], "workflows/scripts/run_bakta.sh")
