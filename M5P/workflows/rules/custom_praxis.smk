@@ -72,7 +72,7 @@ rule deseq2:
 
 rule report:
     input:
-        counts = os.path.join(working_dir, "salmon/counts.tsv")
+        counts = os.path.join(working_dir, "salmon/counts.tsv"),
         tables = expand(DE_out, contrasts = contrasts),
     output:
         dereport_html = "DE_Report.html"
@@ -81,6 +81,6 @@ rule report:
         contrasts = contrasts,
         ALIGNER = config["ALIGNER"],
         METHOD = config["METHOD"],
-        PROJECT = project_name,
+        PROJECT = project_name
     script:
         "../scripts/DE_report.Rmd"
