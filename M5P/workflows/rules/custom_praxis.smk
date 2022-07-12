@@ -33,7 +33,7 @@ rule salmon_quant:
         directory(os.path.join(working_dir, "/salmon/{sample}"))
     threads: THREADS
     log:
-        "log/salmon/{sample}.log"
+        "logs/salmon/{sample}.log"
     benchmark:
         "benchmarks/salmon/{sample}.bmk"
     run:
@@ -58,6 +58,8 @@ rule deseq2:
         counts = os.path.join(working_dir, "salmon/counts.tsv")
     output:
         tables = os.path.join(working_dir, "salmon/DESeq2.tsv")
+    conda:
+        'praxis'
     params:
         samples = samples_table["SampleID"],
         data = config["samples"],
