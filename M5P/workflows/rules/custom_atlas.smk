@@ -19,7 +19,7 @@ rule concatReads:
     benchmark: os.path.join(working_dir, "benchmarks/concatReads.bmk")
     params:
         concat_reads = os.path.join(config["parent_dir"], "workflows/scripts/concatReads.py"),
-        prefix = os.path.join(fastq_metagenomics, f"{merged_prefix}"),
+        prefix = f"{merged_prefix}",
         d = 0,
         r = 0,
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
