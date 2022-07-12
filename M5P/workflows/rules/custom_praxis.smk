@@ -4,9 +4,12 @@ import itertools
 import pandas as pd
 
 
-THREADS = config["THREADS"]
-ALIGNER = config["ALIGNER"]
-METHOD = config["METHOD"]
+THREADS = config["threads"]
+ALIGNER = "bt2"
+METHOD = "salmon"
+samples = "sample.tsv"
+contrast = config["experimental_contrast"]
+output_directory = config["working_dir"]
 
 rule salmon_index:
     """
@@ -14,6 +17,8 @@ rule salmon_index:
     """
     input:
         fasta = COLLECT_SALMON_REFERENCE()
+    conda:
+        'praxis'
     output:
         directory(output_directory + "reference/salmon_quasi")
     threads: THREADS
@@ -32,6 +37,8 @@ rule salmon_quant:
     output:
         directory(os.path.join(working_dir, "/salmon/{sample}"))
     threads: THREADS
+    conda:
+        'praxis'
     log:
         "logs/salmon/{sample}.log"
     benchmark:
@@ -47,6 +54,8 @@ rule salmon_quant_table:
     """
     input:
         expand(os.path.join(working_dir, "salmon/{sample}"), sample = sample)
+    conda:
+        'praxis'
     output:
         os.path.join(working_dir, "salmon/counts.tsv")
     run:
@@ -58,16 +67,14 @@ rule deseq2:
         counts = os.path.join(working_dir, "salmon/counts.tsv")
     output:
         tables = os.path.join(working_dir, "salmon/DESeq2.tsv")
-    conda:
-        'praxis'
     params:
         samples = samples_table["SampleID"],
         data = config["samples"],
         contrasts = contrasts
     conda:
-        "/envs/deseq2.yaml"
+        "workflows/envs/deseq2.yaml"
     script:
-        "../scripts/deseq.R"
+        "workflows/scripts/deseq.R"
 
 
 rule report:
@@ -83,4 +90,4 @@ rule report:
         METHOD = config["METHOD"],
         PROJECT = project_name
     script:
-        "../scripts/DE_report.Rmd"
+        "workflows/scripts/DE_report.Rmd"
