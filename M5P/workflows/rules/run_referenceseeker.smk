@@ -4,7 +4,9 @@ rule run_referenceseeker:
     Requires database directory, output directory, and input directory containing MAGs.
     Outputs one annotation file for all the MAGs and individually annotated MAGs.
     '''
-    input: os.path.join(working_dir, "finished_binning")
+    input:
+        binning_completed = os.path.join(working_dir, "finished_binning"),
+        genomes_folder = os.path.join(working_dir, "genomes/genomes")
     output: os.path.join(working_dir, "refseeker.tsv")
     benchmark: os.path.join(working_dir, "benchmarks/refseeker.bmk")
     conda:
@@ -17,4 +19,4 @@ rule run_referenceseeker:
         'referenceseeker'
     threads: THREADS
     shell:
-        "({params.script} -i {input} -d ~/M5P_databases/referenceseeker -o {params.working_dir}) 2> {log}"
+        "({params.script} -i {input.genomes_folder} -d ~/M5P_databases/referenceseeker -o {params.working_dir}) 2> {log}"
