@@ -12,7 +12,7 @@ rule create_grist_config_file:
         script = os.path.join(config["parent_dir"], "workflows/scripts/create_grist_config_file.py")
     output: os.path.join(working_dir, "grist_config.yaml")
     conda: 'M5P_test'
-    log: os.path.join(working_dir, "log/create_grist_config_file.log")
+    log: os.path.join(working_dir, "logs/create_grist_config_file.log")
     shell:
         "mkdir -p {params.grist_output_folder};"
         "python {params.script} -s {input.samples_folder} -d ~/M5P_databases/grist -o {output} -m {max_memory} 2> {log}"
