@@ -79,11 +79,17 @@ rule deseq2:
 
 
 rule report:
+    """
+    Required R libraries
+    pander, ggplot2, stringr, EnhancedVolcano, reshape2, vegan
+    """
     input:
         counts = os.path.join(output_directory, "salmon/counts.tsv"),
         tables = expand(DE_out, contrasts = contrasts)
     output:
         dereport_html = "DE_Report.html"
+    conda:
+        'praxis'
     params:
         data = config["samples"],
         contrasts = contrasts,
