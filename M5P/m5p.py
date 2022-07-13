@@ -169,7 +169,7 @@ def main():
         snakefile=snakepath,
         jobs=args.jobs,
         parent_dir=parent_dir,
-        configfile=configfile),
+        configfile=configfile)
     print(f"Executing: {cmd}")
 
     #run snakemake command
