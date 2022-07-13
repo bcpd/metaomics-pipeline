@@ -7,7 +7,7 @@ rule run_referenceseeker:
     input:
         binning_completed = os.path.join(working_dir, "finished_binning"),
         genomes_folder = os.path.join(working_dir, "genomes/genomes")
-    output: os.path.join(working_dir, "logs/run_referenceseeker.log")
+    output: os.path.join(working_dir, "finished_referenceseeker")
     benchmark: os.path.join(working_dir, "benchmarks/refseeker.bmk")
     params:
         working_dir = working_dir
@@ -31,5 +31,6 @@ rule run_referenceseeker:
         rm *filename*
         mv refseeker.tsv ..
         cd ..
-        echo 'Refseeker complete' > {log}
+        echo 'Refseeker_complete' > {log}
+        touch {output}
         """

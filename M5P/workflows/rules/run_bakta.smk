@@ -7,7 +7,7 @@ rule run_bakta:
     input:
         binning_completed = os.path.join(working_dir, "finished_binning"),
         genomes_folder = os.path.join(working_dir, "genomes/genomes")
-    output: os.path.join(working_dir, "logs/run_bakta.log")
+    output: os.path.join(working_dir, "finished_bakta")
     benchmark: os.path.join(working_dir, "benchmarks/bakta.bmk")
     conda:
         'bakta'
@@ -39,4 +39,5 @@ rule run_bakta:
         mv bakta.tsv ..
         cd ..
         echo 'bakta completed' > {log}
+        touch {output}
         """
