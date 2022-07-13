@@ -24,8 +24,7 @@ rule run_bakta:
         cd bakta
         cp -r ../genomes/genomes/ .
         cd genomes
-        touch {log}
-        for i in *.fasta; do echo $i >> {log}; bakta --db ~/M5P_databases/bakta/db $i --output .. --threads {threads} >> {log}; done
+        for i in *.fasta; do bakta --db ~/M5P_databases/bakta/db $i --output .. --threads {threads}; done
         cd ..
         echo SRA$'\t'Sequence_Id$'\t'Type$'\t'start_position$'\t'end_position$'\t'Strand$'\t'Locus_Tag$'\t'Gene$'\t'Product$'\t'Product$'\t'DbXrefs > bakta.tsv
         for f in *.tsv; do
@@ -38,4 +37,6 @@ rule run_bakta:
         sed -i 's/^\t//g' bakta.tsv
         rm *filename*
         mv bakta.tsv {params.working_dir}
+        cd {params.working_dir}
+        echo 'bakta completed' > {log}
         """

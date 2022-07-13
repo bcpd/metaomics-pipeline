@@ -30,5 +30,6 @@ rule run_referenceseeker:
         sed -i 's/^\t//g' refseeker.tsv
         rm *filename*
         mv refseeker.tsv ..
-        touch {log}
+        cd {params.working_dir}
+        echo 'Refseeker complete' > {log}
         """
