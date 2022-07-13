@@ -13,7 +13,7 @@ rule run_bakta:
         'bakta'
     log: os.path.join(working_dir, "logs/run_bakta.log")
     params:
-        working_dir  = working_dir,
+        working_dir  = working_dir
     conda:
         'bakta'
     threads: config["threads"]
@@ -36,5 +36,5 @@ rule run_bakta:
         done
         sed -i 's/^\t//g' bakta.tsv
         rm *filename*
-        mv bakta.tsv ..
+        mv bakta.tsv {params.working_dir}
         """
