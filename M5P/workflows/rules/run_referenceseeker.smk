@@ -9,14 +9,26 @@ rule run_referenceseeker:
         genomes_folder = os.path.join(working_dir, "genomes/genomes")
     output: os.path.join(working_dir, "refseeker.tsv")
     benchmark: os.path.join(working_dir, "benchmarks/refseeker.bmk")
-    conda:
-        'referenceseeker'
-    log: os.path.join(working_dir, "logs/run_referenceseeker.log")
     params:
-        working_dir  = working_dir,
-        script = os.path.join(config["parent_dir"], "workflows/scripts/run_referenceseeker.sh")
+        working_dir = working_dir
+    log: os.path.join(working_dir, "logs/run_referenceseeker.log")
     conda:
         'referenceseeker'
-    threads: THREADS
+    threads: config["threads"]
     shell:
-        "({params.script} -i {input.genomes_folder} -d ~/M5P_databases/referenceseeker -o {params.working_dir}) 2> {log}"
+        """
+        cd {params.working_dir}
+        mkdir -p referenceseeker
+        cd referenceseeker
+        cp -r ../genomes/genomes/ .
+        cd genomes
+        for i in `ls *fasta|sed 's/.fasta//g'`;do referenceseeker ~/M5P_databases/referenceseeker/bacteria-refseq $i.fasta > ../$i.RS.tsv --threads {threads};done
+        cd ..
+        for a in *.tsv; do b=$(basename $a .RS.tsv);  sed -e '1,1d' $a | sed "s/^/\t$b /" > $b.filename.tsv; done
+        echo MAG_ID$'\t'ID$'\t'Mash_Distance$'\t'ANI$'\t'Con_DNA$'\t'Taxonomy_ID$'\t'Assembly_Status$'\t'Organism > refseeker.tsv
+        for j in *.filename.tsv; do if [ -s "$j" ]; then cat *filename* >> refseeker.tsv; fi; done
+        sed -i 's/^\t//g' refseeker.tsv
+        rm *filename*
+        mv refseeker.tsv ..
+        touch {log}
+        """
