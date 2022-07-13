@@ -37,6 +37,6 @@ rule run_bakta:
         sed -i 's/^\t//g' bakta.tsv
         rm *filename*
         mv bakta.tsv ..
-        cd {params.working_dir}
+        cd ..
         echo 'bakta completed' > {log}
         """
