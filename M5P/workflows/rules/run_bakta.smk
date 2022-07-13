@@ -14,9 +14,29 @@ rule run_bakta:
     log: os.path.join(working_dir, "logs/run_bakta.log")
     params:
         working_dir  = working_dir,
-        script = os.path.join(config["parent_dir"], "workflows/scripts/run_bakta.sh")
     conda:
         'bakta'
-    threads: THREADS
+    threads: config["threads"]
     shell:
         "({params.script} -i {input.genomes/genomes} -d ~/M5P_databases/bakta -o {params.working_dir}) 2> {log}"
+    shell:
+        """
+        cd {params.working_dir}
+        mkdir -p bakta
+        cd bakta
+        cp -r ../genomes/genomes/ .
+        cd genomes
+        for i in *.fasta; do echo $i >> {log}; bakta --db ~/M5P_databases/bakta/db $i --output .. --threads {threads} >> {log}; done
+        cd ..
+        echo SRA$'\t'Sequence_Id$'\t'Type$'\t'start_position$'\t'end_position$'\t'Strand$'\t'Locus_Tag$'\t'Gene$'\t'Product$'\t'Product$'\t'DbXrefs > bakta.tsv
+        for f in *.tsv; do
+        if [[ $f != *"hypotheticals"* ]] ; then
+            i=$(basename $f .tsv)
+            sed -e '1,3d' $f | sed "s/^/\t$i /" > $i.filename.tsv
+            cat *filename* >> bakta.tsv
+        fi
+        done
+        sed -i 's/^\t//g' bakta.tsv
+        rm *filename*
+        mv bakta.tsv ..
+        """
