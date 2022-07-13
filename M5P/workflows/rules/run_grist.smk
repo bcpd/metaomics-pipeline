@@ -15,7 +15,7 @@ rule create_grist_config_file:
     log: os.path.join(working_dir, "logs/create_grist_config_file.log")
     shell:
         "mkdir -p {params.grist_output_folder};"
-        "python {params.script} -s {input.samples_folder} -d ~/M5P_databases/grist -o {output} -m {max_memory} 2> {log}"
+        "python {params.script} -s {input.samples_folder} -d ~/M5P_databases/grist -o {output} -m {params.max_memory} 2> {log}"
 
 rule run_grist:
     '''
@@ -25,6 +25,6 @@ rule run_grist:
     output: directory(os.path.join(working_dir, "grist/reports"))
     conda: 'grist'
     log: os.path.join(working_dir, "logs/run_grist.log")
-    threads: THREADS
+    threads: config["threads"]
     shell:
         "(genome-grist run {input} summarize_gather summarize_mapping -j {threads} -p) 2> {log}"
