@@ -7,7 +7,7 @@ rule run_bakta:
     input:
         binning_completed = os.path.join(working_dir, "finished_binning"),
         genomes_folder = os.path.join(working_dir, "genomes/genomes")
-    output: os.path.join(working_dir, "bakta.tsv")
+    output: os.path.join(working_dir, "logs/run_bakta.log")
     benchmark: os.path.join(working_dir, "benchmarks/bakta.bmk")
     conda:
         'bakta'
@@ -24,6 +24,7 @@ rule run_bakta:
         cd bakta
         cp -r ../genomes/genomes/ .
         cd genomes
+        touch {log}
         for i in *.fasta; do echo $i >> {log}; bakta --db ~/M5P_databases/bakta/db $i --output .. --threads {threads} >> {log}; done
         cd ..
         echo SRA$'\t'Sequence_Id$'\t'Type$'\t'start_position$'\t'end_position$'\t'Strand$'\t'Locus_Tag$'\t'Gene$'\t'Product$'\t'Product$'\t'DbXrefs > bakta.tsv
