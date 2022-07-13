@@ -18,8 +18,6 @@ rule run_bakta:
         'bakta'
     threads: config["threads"]
     shell:
-        "({params.script} -i {input.genomes/genomes} -d ~/M5P_databases/bakta -o {params.working_dir}) 2> {log}"
-    shell:
         """
         cd {params.working_dir}
         mkdir -p bakta
