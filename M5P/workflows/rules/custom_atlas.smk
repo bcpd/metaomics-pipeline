@@ -127,7 +127,7 @@ rule atlas_binning:
     Config file explicitly. 
     Ensure assembly step is complete.
     Sample dirs 
-    Outputs: finished_bining
+    Outputs: finished_binning
     ''' 
     input: 
         config = os.path.join(working_dir, "config.yaml"),
