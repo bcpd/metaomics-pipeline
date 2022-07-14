@@ -7,9 +7,9 @@ rule create_folder_structure_metagenomics:
     ''' 
     input: 
         atlas_genecatalog_log = os.path.join(working_dir, "logs/atlas_genecatalog.log"),
-        atlas_gtdbtk = os.path.join(working_dir, "genomes/taxonomy/gtdb.log"),
+        atlas_gtdbtk_log = os.path.join(working_dir, "genomes/taxonomy/gtdb/gtdbtk.log"),
         refseeker_completed = os.path.join(working_dir, "refseeker.tsv"),
-        bakta_completed = os.path.join(working_dir, "batka.tsv"),
+        bakta_completed = os.path.join(working_dir, "bakta.tsv"),
         dram_completed = os.path.join(working_dir, "logs/DRAM_copy_results.log")
     output: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     log: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
@@ -33,33 +33,33 @@ rule create_folder_structure_metagenomics:
 
 rule reorganize_files_metagenomics:
     '''
-    Copied important files from Atlas 
-    ''' 
-    input: 
+    Copied important files from Atlas
+    '''
+    input:
         gene_catalog_log = os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log"),
-        atlas_gtdbtk_log = os.path.join(working_dir, "genomes/taxonomy/gtdb.log"),
+        atlas_gtdbtk_log = os.path.join(working_dir, "genomes/taxonomy/gtdb/gtdbtk.log"),
         refseeker_file = os.path.join(working_dir, "refseeker.tsv"),
         bakta_file = os.path.join(working_dir, "bakta.tsv"),
-        dram_file = os.path.join(working_dir, "/DRAM_copy_results.log"),
-    output: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
+        dram_file = os.path.join(working_dir, "logs/DRAM_copy_results.log")
+    output: os.path.join(working_dir, "finished_metagenomics_cleanup")
     log: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
     benchmark: os.path.join(working_dir, "benchmarks/Atlas_metagenomics_cleanup.bmk")
-    params: 
+    params:
         working_dir = working_dir
     shell:
         """
         cd {params.working_dir}
-        # Copy quality-controlled reads	
+        # Copy quality-controlled reads
         cp */sequence_quality_control/*fastq.gz metagenomics/trimmed_reads/
         # Copy genome bins and related reports
         cp genomes/genomes/*fasta metagenomics/MAGs/fasta
         cp genomes/checkm/completeness.tsv metagenomics/MAGs/reports
-        cp genome/counts/* metagenomics/MAGs/reports
+        cp genomes/counts/* metagenomics/MAGs/reports
 
         # Copy assemblies, predicted genes, predicted proteins, and related annotations
         cp */assembly/*final_contigs.fasta metagenomics/assemblies/
         cp {input.bakta_file} metagenomics/functional_annotations
-        cp genome/annotations/genes/MAG*f?a metagenomics/functional_annotations
+        cp genomes/annotations/genes/MAG*f?a metagenomics/functional_annotations
         cp DRAM/annotations/annotations.tsv  metagenomics/functional_annotations/dram_annotations.tsv
         cp DRAM/annotations/distill/product.tsv  metagenomics/functional_annotations/dram_product.tsv
         cp DRAM/annotations/distill/metabolism_summary.xlsx metagenomics/functional_annotations/dram_metabolism_summary.xlsx
@@ -67,9 +67,10 @@ rule reorganize_files_metagenomics:
         # Copying taxonomic annotations
         cp genomes/taxonomy/gtdb/classify/*summary.tsv metagenomics/taxonomic_annotations/gtdb-tk/
         cp {input.refseeker_file} metagenomics/taxonomic_annotations/referenceseeker
-        
+
         # Copy stats from atlas process
         cp -r stats logs/
-        cp logs/benchmarks/*bmk benchmarks
+        cp -r logs/benchmarks/ benchmarks
         echo 'Copied metagenomics files to final folder' > {log}
+        touch {output}
         """
