@@ -65,7 +65,7 @@ rule copy_DRAM_annotations:
     shell:
         """
         docker start DRAM || true
-        mkdir {params.output_folder}
+        mkdir -p {params.output_folder}
         docker cp DRAM:out/annotations {params.output_folder} ||true
         docker cp DRAM:logs/* /logs/ ||true
         docker stop DRAM     || true
