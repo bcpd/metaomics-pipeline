@@ -17,8 +17,8 @@ def COLLECT_ALL_INPUT():
         INPUTS.append(os.path.join(working_dir, "finished_genecatalog"))
         INPUTS.append(os.path.join(working_dir, "finished_genomes"))
         INPUTS.append(os.path.join(working_dir, "logs/DRAM_copy_results.log")) # DRAM
-        INPUTS.append(os.path.join(working_dir, "finished_bakta.log")) # bakta
-        INPUTS.append(os.path.join(working_dir, "finished__referenceseeker.log")) # referenceseeker
+        INPUTS.append(os.path.join(working_dir, "finished_bakta")) # bakta
+        INPUTS.append(os.path.join(working_dir, "finished_referenceseeker")) # referenceseeker
         INPUTS.append(os.path.join(working_dir, "finished_metagenomics_cleanup")) #cleanup
     if config["experiment_type"] == "metatranscriptomics":
         #Config outputs for metatranscriptomics
