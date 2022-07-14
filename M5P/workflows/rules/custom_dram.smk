@@ -27,7 +27,7 @@ rule get_dram:
         docker cp DRAM:/logs/dram_setup_complete.log {log_folder}
         docker cp DRAM:/logs/dram_setup_complete.log ~/M5P_databases
         echo 'Created DRAM container and setup databases' > {log}
-        docker stop DRAM
+        docker stop DRAM  || true
         """
 
 rule annotate_genomes:
@@ -35,20 +35,22 @@ rule annotate_genomes:
     Run DRAM inside the conda image, uses the predicted proteins as input
     '''
     input:
-       dram_setup_complete = os.path.join("~/M5P_databases/dram_setup_complete.log"),
+       #dram_setup_complete = os.path.join("~/databases/dram_setup_complete.log"),
        atlas_genome_complete = os.path.join(working_dir, "logs/atlas_genomes.log")
-    output: os.path.join(working_dir, "logs/DRAM_annotate.log")
+    output: os.path.join(working_dir, "finished_DRAM_annotate")
     params:
         script = os.path.join(config["parent_dir"], "workflows/scripts/DRAM_annotate_proteins.sh")
     log: os.path.join(working_dir, "logs/DRAM_annotate.log")
     shell:
         """
-        docker restart DRAM
-        docker exec DRAM rm /genomes/*
+        docker start DRAM || true
+        docker exec DRAM rm -f /genomes/* ||true
         for i in genomes/annotations/genes/MAG*faa; do docker cp $i DRAM:/genomes;done
-        docker cp {params.script} DRAM:/scripts
-        docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_proteins.sh 2> {log}
-        """
+        docker cp {params.script} DRAM:/scripts  || true
+        docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_proteins.sh || true
+        touch {output}
+        touch {log}
+        docker stop DRAM ||true
 
 
 rule copy_DRAM_annotations:
@@ -56,15 +58,16 @@ rule copy_DRAM_annotations:
     Copies the DRAM output files from the docker image to the local directory
     '''
     input: os.path.join(working_dir, "logs/DRAM_annotate.log")
-    output: os.path.join(working_dir, "logs/DRAM_copy_results.log")
+    output: os.path.join(working_dir, "finished_DRAM")
     params:
         output_folder= os.path.join(working_dir, "DRAM")
     log: os.path.join(working_dir, "logs/DRAM_copy_results.log")
     shell:
         """
+        docker start DRAM || true
         mkdir {params.output_folder}
-        docker cp DRAM:out/annotations {params.output_folder}
-        docker cp DRAM:logs/* /logs/
-        docker stop DRAM    
-        touch {log}
+        docker cp DRAM:out/annotations {params.output_folder} ||true
+        docker cp DRAM:logs/* /logs/ ||true
+        docker stop DRAM     || true
+        touch {output}
         """
