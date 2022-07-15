@@ -36,7 +36,7 @@ rule annotate_genomes:
     '''
     input:
        #dram_setup_complete = os.path.join("~/databases/dram_setup_complete.log"),
-       atlas_genome_complete = os.path.join(working_dir, "logs/atlas_genomes.log")
+       atlas_genome_complete = os.path.join(working_dir, "finished_genomes")
     output: os.path.join(working_dir, "finished_DRAM_annotate")
     params:
         script = os.path.join(config["parent_dir"], "workflows/scripts/DRAM_annotate_proteins.sh")
@@ -51,13 +51,14 @@ rule annotate_genomes:
         touch {output}
         touch {log}
         docker stop DRAM ||true
+        """
 
 
 rule copy_DRAM_annotations:
     '''
     Copies the DRAM output files from the docker image to the local directory
     '''
-    input: os.path.join(working_dir, "logs/DRAM_annotate.log")
+    input: os.path.join(working_dir, "finished_DRAM_annotate")
     output: os.path.join(working_dir, "finished_DRAM")
     params:
         output_folder= os.path.join(working_dir, "DRAM")

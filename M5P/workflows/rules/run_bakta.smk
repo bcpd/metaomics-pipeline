@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 rule run_bakta:
     '''
     Run bakta annotation.
@@ -5,8 +7,7 @@ rule run_bakta:
     Outputs one annotation file for all the MAGs.
     '''
     input:
-        binning_completed = os.path.join(working_dir, "finished_binning"),
-        genomes_folder = os.path.join(working_dir, "genomes/genomes")
+        genomes_folder = os.path.join(working_dir, "finished_genomes")
     output: os.path.join(working_dir, "finished_bakta")
     benchmark: os.path.join(working_dir, "benchmarks/bakta.bmk")
     conda:

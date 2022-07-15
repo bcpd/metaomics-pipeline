@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 rule run_referenceseeker:
     '''
     Run referenceseeker for taxonomic annotation.
@@ -5,8 +7,7 @@ rule run_referenceseeker:
     Outputs one annotation file for all the MAGs and individually annotated MAGs.
     '''
     input:
-        binning_completed = os.path.join(working_dir, "finished_binning"),
-        genomes_folder = os.path.join(working_dir, "genomes/genomes")
+        genomes_folder = os.path.join(working_dir, "finished_genomes")
     output: os.path.join(working_dir, "finished_referenceseeker")
     benchmark: os.path.join(working_dir, "benchmarks/refseeker.bmk")
     params:

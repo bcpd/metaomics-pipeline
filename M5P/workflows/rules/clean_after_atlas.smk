@@ -6,11 +6,12 @@ rule create_folder_structure_metagenomics:
     after running Atlas QC, assembly, binning, and annotation
     ''' 
     input: 
-        atlas_genecatalog_log = os.path.join(working_dir, "logs/atlas_genecatalog.log"),
+        atlas_genecatalog_log = os.path.join(working_dir, "finished_genecatalog"),
         atlas_gtdbtk_log = os.path.join(working_dir, "genomes/taxonomy/gtdb/gtdbtk.log"),
-        refseeker_completed = os.path.join(working_dir, "refseeker.tsv"),
-        bakta_completed = os.path.join(working_dir, "bakta.tsv"),
-        dram_completed = os.path.join(working_dir, "logs/DRAM_copy_results.log")
+        genomes_complete = os.path.join(working_dir, "finished_genomes"),
+        refseeker_completed = os.path.join(working_dir, "finished_referenceseeker"),
+        bakta_completed = os.path.join(working_dir, "finished_bakta"),
+        dram_completed = os.path.join(working_dir, "finished_DRAM")
     output: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     log: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     params: 
