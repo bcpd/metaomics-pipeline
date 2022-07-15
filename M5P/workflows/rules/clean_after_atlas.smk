@@ -6,8 +6,6 @@ rule create_folder_structure_metagenomics:
     after running Atlas QC, assembly, binning, and annotation
     ''' 
     input: 
-        atlas_genecatalog_log = os.path.join(working_dir, "finished_genecatalog"),
-        atlas_gtdbtk_log = os.path.join(working_dir, "genomes/taxonomy/gtdb/gtdbtk.log"),
         genomes_complete = os.path.join(working_dir, "finished_genomes"),
         refseeker_completed = os.path.join(working_dir, "finished_referenceseeker"),
         bakta_completed = os.path.join(working_dir, "finished_bakta"),
@@ -37,11 +35,14 @@ rule reorganize_files_metagenomics:
     Copied important files from Atlas
     '''
     input:
-        gene_catalog_log = os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log"),
-        atlas_gtdbtk_log = os.path.join(working_dir, "genomes/taxonomy/gtdb/gtdbtk.log"),
+        genomes_complete = os.path.join(working_dir, "finished_genomes"),
+        refseeker_completed = os.path.join(working_dir, "finished_referenceseeker"),
+        bakta_completed = os.path.join(working_dir, "finished_bakta"),
+        dram_completed = os.path.join(working_dir, "finished_DRAM"),
+        folders_created = os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log"),
+    params:
         refseeker_file = os.path.join(working_dir, "refseeker.tsv"),
         bakta_file = os.path.join(working_dir, "bakta.tsv"),
-        dram_file = os.path.join(working_dir, "logs/DRAM_copy_results.log")
     output: os.path.join(working_dir, "finished_metagenomics_cleanup")
     log: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
     benchmark: os.path.join(working_dir, "benchmarks/Atlas_metagenomics_cleanup.bmk")
@@ -59,7 +60,7 @@ rule reorganize_files_metagenomics:
 
         # Copy assemblies, predicted genes, predicted proteins, and related annotations
         cp */assembly/*final_contigs.fasta metagenomics/assemblies/
-        cp {input.bakta_file} metagenomics/functional_annotations
+        cp {params.bakta_file} metagenomics/functional_annotations
         cp genomes/annotations/genes/MAG*f?a metagenomics/functional_annotations
         cp DRAM/annotations/annotations.tsv  metagenomics/functional_annotations/dram_annotations.tsv
         cp DRAM/annotations/distill/product.tsv  metagenomics/functional_annotations/dram_product.tsv
@@ -67,7 +68,7 @@ rule reorganize_files_metagenomics:
 
         # Copying taxonomic annotations
         cp genomes/taxonomy/gtdb/classify/*summary.tsv metagenomics/taxonomic_annotations/gtdb-tk/
-        cp {input.refseeker_file} metagenomics/taxonomic_annotations/referenceseeker
+        cp {params.refseeker_file} metagenomics/taxonomic_annotations/referenceseeker
 
         # Copy stats from atlas process
         cp -r stats logs/
