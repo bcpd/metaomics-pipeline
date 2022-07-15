@@ -120,7 +120,6 @@ rule atlas_assembly:
         "touch {output}"
 
 
-
 rule atlas_binning:
     '''
     Run atlas binning. Provide path for
@@ -146,30 +145,6 @@ rule atlas_binning:
         "touch {output}"
 
 
-rule atlas_genecatalog:
-    '''
-    Run atlas annotation. Provide path for
-    Config file explicitly. 
-    Ensure binning step is complete.
-    Outputs: annotation files
-    ''' 
-    input: 
-        config = os.path.join(working_dir, "config.yaml"),
-        assembly_proof = os.path.join(working_dir, "finished_binning")
-    output: os.path.join(working_dir, "finished_genecatalog")
-    log: os.path.join(working_dir, "logs/atlas_genecatalog.log")
-    benchmark: os.path.join(working_dir, "benchmarks/atlas_genecatalog.bmk")
-    conda:
-        'atlas'
-    threads: THREADS
-    params: 
-        working_dir = working_dir,
-        mem = 128
-    shell:
-        "(atlas run genecatalog -j {threads} -w {params.working_dir} --max-mem {params.mem} --config-file {input.config}) 2> {log};"
-        "touch {output}"
-
-
 rule atlas_genomes:
     '''
     Run atlas genome. Provide path for
@@ -180,7 +155,7 @@ rule atlas_genomes:
     '''
     input: 
         config = os.path.join(working_dir, "config.yaml"),
-        genecatalog_proof = os.path.join(working_dir, "finished_genecatalog")
+        binning_proof = os.path.join(working_dir, "finished_binning")
     output: os.path.join(working_dir, "finished_genomes")
     log: os.path.join(working_dir, "logs/atlas_genomes.log")
     benchmark: os.path.join(working_dir, "benchmarks/atlas_genomes.bmk")
@@ -194,4 +169,31 @@ rule atlas_genomes:
     shell:
         'sed -i "s/^- dram/# - dram/" {input.config};'
         'sed -i "s/^- kegg_modules/# - kegg_modules/" {input.config};'
+        '(atlas run genomes -j {threads} -w {params.working_dir} --max-mem {params.mem} --omit-from run_dram --config-file {input.config}) 2> {log};'
+
+
+rule atlas_genecatalog:
+    '''
+    Run atlas annotation. Provide path for
+    Config file explicitly. 
+    Ensure binning step is complete.
+    Outputs: annotation files
+    ''' 
+    input: 
+        config = os.path.join(working_dir, "config.yaml"),
+        genomes_proof = os.path.join(working_dir, "finished_genomes")
+    output: os.path.join(working_dir, "finished_genecatalog")
+    log: os.path.join(working_dir, "logs/atlas_genecatalog.log")
+    benchmark: os.path.join(working_dir, "benchmarks/atlas_genecatalog.bmk")
+    conda:
+        'atlas'
+    threads: THREADS
+    params: 
+        working_dir = working_dir,
+        mem = 128
+    shell:
+        "(atlas run genecatalog -j {threads} -w {params.working_dir} --max-mem {params.mem} --config-file {input.config}) 2> {log};"
+        "touch {output}"
+
+   'sed -i "s/^- kegg_modules/# - kegg_modules/" {input.config};'
         '(atlas run genomes -j {threads} -w {params.working_dir} --max-mem {params.mem} --omit-from run_dram --config-file {input.config}) 2> {log};'
