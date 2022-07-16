@@ -44,7 +44,8 @@ rule annotate_genomes:
     shell:
         """
         docker start DRAM || true
-        docker exec DRAM rm -f /genomes/* ||true
+        docker exec DRAM rm -fr /genomes/ ||true
+        docker exec DRAM mkdir /genomes/ ||true
         for i in genomes/annotations/genes/MAG*faa; do docker cp $i DRAM:/genomes;done
         docker cp {params.script} DRAM:/scripts  || true
         docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_proteins.sh || true
@@ -71,4 +72,37 @@ rule copy_DRAM_annotations:
         docker cp DRAM:logs/* /logs/ ||true
         docker stop DRAM     || true
         touch {output}
+        """
+
+
+rule annotate_genomes2:
+    '''
+    Run DRAM inside the conda image, uses genomes generared by grist as input
+    '''
+    input:
+        finished_grist = os.path.join(working_dir, "finished_grist"),
+        grist_cleaned =  os.path.join(working_dir, "cleaned_after_grist")
+    output: os.path.join(working_dir, "finished_DRAM_annotate_reference_genomes")
+    params:
+        script = os.path.join(config["parent_dir"], "workflows/scripts/DRAM_annotate_genomes.sh"),
+        working_dir = working_dir,
+    log: "logs/DRAM_annotate.log"
+    shell:
+        """
+        cd {params.working_dir}
+        docker start DRAM || true
+        docker exec DRAM rm -fr /genomes/ ||true
+        docker exec DRAM mkdir /genomes/ ||true
+        docker exec DRAM rm -fr /out/ ||true
+        docker exec DRAM mkdir -p /out/ ||true
+
+        for i in reference_genomes/*fna; do docker cp $i DRAM:/genomes;done
+        docker cp {params.script} DRAM:/scripts  || true
+        docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_genomes.sh || true
+        docker cp DRAM:out/annotations reference_genomes ||true
+        docker cp DRAM:logs/* /logs/ ||true
+        touch {log}
+        cd -
+        touch {output}
+        docker stop DRAM ||true
         """
