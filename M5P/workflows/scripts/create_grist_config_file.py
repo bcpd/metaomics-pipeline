@@ -105,7 +105,7 @@ def main():
                 # If the fastq is the second pair
                 continue
 
-    print("Will use theese samples")
+    print("Will use these samples")
     print(samples)
 
     # Find databases in folder
