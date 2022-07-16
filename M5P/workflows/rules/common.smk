@@ -16,15 +16,16 @@ def COLLECT_ALL_INPUT():
         INPUTS.append(os.path.join(working_dir, "logs/formatSamples.log"))
         INPUTS.append(os.path.join(working_dir, "finished_genecatalog"))
         INPUTS.append(os.path.join(working_dir, "finished_genomes"))
-        INPUTS.append(os.path.join(working_dir, "logs/DRAM_copy_results.log")) # DRAM
+        INPUTS.append(os.path.join(working_dir, "finished_DRAM")) # DRAM
         INPUTS.append(os.path.join(working_dir, "finished_bakta")) # bakta
         INPUTS.append(os.path.join(working_dir, "finished_referenceseeker")) # referenceseeker
         INPUTS.append(os.path.join(working_dir, "finished_metagenomics_cleanup")) #cleanup
     if config["experiment_type"] == "metatranscriptomics":
         #Config outputs for metatranscriptomics
-        INPUTS.append(os.path.join(working_dir, "grist/reports")) #grist
-        INPUTS.append(os.path.join(working_dir, "salmon/DESeq2.tsv") # praxis
-
+        INPUTS.append(os.path.join(working_dir, "logs/create_grist_config_file.log"))
+        INPUTS.append(os.path.join(working_dir, "finished_grist")) #grist
+        INPUTS.append(os.path.join(working_dir, "cleaned_after_grist")) # clean after grist
+        INPUTS.append(os.path.join(working_dir, "finished_DRAM_annotate_reference_genomes")) # Annotate grist reference genomes
     return INPUTS
 
 def COLLECT_INIT_INPUT():
@@ -51,4 +52,4 @@ def COLLECT_SALMON_REFERENCE():
         INPUTS.append(os.path.join(working_dir, "Genecatalog/gene_catalog.fna")) #rule atlas_genecatalog
     elif config["experiment_type"] == "metatranscriptomics":
         #Config outputs for metatranscriptomics
-        INPUTS.append(os.path.join(working_dir, "grist/reports/*.fna")) #grist
+        INPUTS.append(os.path.join(working_dir, "reference_genomes/annotations/genes.fna")) #grist
