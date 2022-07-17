@@ -15,8 +15,8 @@ try:
     from pathlib import Path
 except ModuleNotFoundError:
     print("")
-    print("\033[93mLooks like a module wasn't found. Are you sure you've activated your conda environment?\033[0m")
-    print("\033[93mSuggestion: `conda actviate M5P`\033[0m")
+    print("\033[93mLooks like a module was not found. Are you sure you have activated your conda environment?\033[0m")
+    print("\033[93mSuggestion: `conda activate M5P`\033[0m")
     print("")
     sys.exit(1)
 
