@@ -1,41 +1,11 @@
 #!/usr/bin/python3
 
-rule get_dram:
-    '''
-    Installs DRAM in a docker image. This is to avoid issues with older versions of Ubuntu.    
-    Once the program and the database are installed, it copies a log file to the databases directory.
-    This log file (dram_setup_complete.log) is the output of the rule, so if it DRAM needs
-    to be run again, we do not need to redownload the databases.
-    '''
-    input:
-        atlas_complete = os.path.join(working_dir, "finished_genomes")
-    output:
-        os.path.join(working_dir, "logs/dram_setup_complete.log")
-    params:
-        log_folder = os.path.join(working_dir, "logs/"),
-        script = os.path.join(config["parent_dir"], "workflows/scripts/DRAM_setup.sh")
-    log:
-        os.path.join(working_dir, "logs/get_dram.log")
-    shell:
-        """
-        docker pull continuumio/miniconda3
-        docker run -i -d --name DRAM continuumio/miniconda3
-        docker exec DRAM mkdir -p data out scripts logs genomes proteins
-        docker cp {params.script} DRAM:/scripts
-        docker exec DRAM /bin/bash /scripts/DRAM_setup.sh
-        docker exec DRAM touch /logs/dram_setup_complete.log
-        docker cp DRAM:/logs/dram_setup_complete.log {log_folder}
-        docker cp DRAM:/logs/dram_setup_complete.log ~/M5P_databases
-        echo 'Created DRAM container and setup databases' > {log}
-        docker stop DRAM  || true
-        """
 
 rule annotate_genomes:
     '''
     Run DRAM inside the conda image, uses the predicted proteins as input
     '''
     input:
-       #dram_setup_complete = os.path.join("~/databases/dram_setup_complete.log"),
        atlas_genome_complete = os.path.join(working_dir, "finished_genomes")
     output: os.path.join(working_dir, "finished_DRAM_annotate")
     params:

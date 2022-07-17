@@ -79,5 +79,20 @@ tar -xzf *
 conda deactivate
 cd ~
 
+## DRAM
+## To correctly setup DRAM you need to have access to three scripts
+## that are located in the "M5P/workflows/scripts" folder
+## After the installation and setup we create an small empty file in the
+## M5P_databases folder to signal to the pipeline that he installation worked
+
+docker pull continuumio/miniconda3
+docker run -i -d --name DRAM continuumio/miniconda3
+docker exec DRAM mkdir -p data out scripts logs genomes proteins
+docker cp M5P/workflows/scripts/DRAM_setup.sh DRAM:/scripts
+docker cp M5P/workflows/scripts/DRAM_annotate_genomes.sh DRAM:/scripts
+docker cp M5P/workflows/scripts/DRAM_annotate_proteins.sh DRAM:/scripts
+docker exec DRAM /bin/bash /scripts/DRAM_setup.sh
+touch ~/M5P_databases/DRAM_installed
+
 ## M5P enviroment
 conda env create --name M5P --file M5P/workflows/envs/environment.yaml
