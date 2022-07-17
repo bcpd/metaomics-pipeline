@@ -32,6 +32,32 @@ def get_snakefile(file="Snakefile"):
             sys.exit("Unable to locate the Snakemake workflow file; tried %s" % sf)
     return sf
 
+# This function writes a template for the config file for the user is none is available
+def get_template():
+    m5P_config_template = {
+    'bin_all': 'true',
+    'database_dir': '~/M5P_databases',
+    'experiment_type': 'metagenomics',
+    'experimental_contrast': 'none',
+    'experimental_design': '~treatment',
+    'fastq_metagenomics': 'input_mg',
+    'fastq_metatranscriptomics':' input_mt/',
+    'genome': {
+        'find_genome_relative': 'false',
+        'genome_file': 'reference_file',
+        'genome_url': 'reference_url',
+        },
+    'mag_annotation': 'dram',
+    'max_memory': '1280000000000',
+    'merged_prefix': 'MergedReads-001',
+    'merged_reads': 'true',
+    'metadata_path': 'metadata.txt',
+    'threads': '2',
+    'working_dir': 'tets./'
+    }
+    with open("template_M5P_config.yaml", 'w') as outfile:
+        yaml.dump(m5P_config_template, outfile, default_flow_style=False)
+
 
 def main():
     print("\033[92m                                             ,,,.       ,,,                 \033[0m")
@@ -65,7 +91,7 @@ def main():
     parser.add_argument("-r", "--merged_reads", default= True, type=bool, help="Merge reads for co-assembly (True or False)")
     parser.add_argument("-m", "--metadata_path", type=str, help="Metadata file (path)")
     parser.add_argument("-t", "--threads", default= 2, type = int, help="The number of threads the pipeline is allowed to use (integer)")
-    parser.add_argument("-M", "--max_memory", type = int, help = "The amount of memory provided to the assembler. Enter in byte format.")
+    parser.add_argument("-M", "--max_memory", type = int, required=True, help = "The amount of memory provided to the assembler. Enter in byte format.")
     parser.add_argument("-e", "--experiment_type", type = str, default="metagenomics",  help = "Either metagenomics (default), metatranscriptomics, or both")
     parser.add_argument("-k", "--experimental_contrast", type = str, default="none",  help = "Experimental contrast as used in R formula")
     parser.add_argument("-g", "--experimental_design", type = str, default="~treatment",  help = "Experimental design as used in R formula")
@@ -73,7 +99,14 @@ def main():
     parser.add_argument("-b", "--bin_all", type=bool, default = True, help="Put all reads files in same bin group (bool)")
     parser.add_argument("-j", "--jobs", default = 2, type = str, help = "number of jobs")
     parser.add_argument("-c", "--configfile", default = "M5P_config.yaml", type=str, help = "optional yaml file containing all of the above configuration details.")
+    parser.add_argument("-a", "--getconfig", action='store_true', help = "Prints a yaml template with the default configuration.")
     args = parser.parse_args()
+
+    if args.getconfig == True:
+        print("A template configuration (template_M5P_config.yaml), has been writen to the current directory")
+        print("Please review and edit it before using it")
+        get_template()
+        sys.exit(1)
 
     if args.configfile:
         configfile = args.configfile
@@ -99,7 +132,7 @@ def main():
                     max_memory = val
                     new_data["max_memory"] = val
                 else:
-                    raise Exception("Requested memory exceeds available memory")
+                    raise Exception("Requested memory exceeds available memory, please change the value for the -M option")
             elif arg == "experiment_type":
                 val = getattr(args, arg)
                 if val in ["metagenomics", "metatranscriptomics", "both"]:
