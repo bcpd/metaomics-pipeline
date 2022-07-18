@@ -38,7 +38,7 @@ We suggest that you name the configuration file as *M5P_config.yaml*. Do not nam
 
 **Example use for metagenomics**
 
-`M5P -e metagenomics - w . -i input_folder -t 8 -j 6 -M 128000000 -m metadata.txt -e metagenomics`
+`M5P -e metagenomics - w . -i input_folder -t 8 -j 6 -M 128000000 -m metadata.tsv -e metagenomics`
 
 or 
 
