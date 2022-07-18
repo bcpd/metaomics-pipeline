@@ -232,7 +232,6 @@ def main():
 
         #Set paths (to pass on to snakemake as config)
         snakepath = Path(get_snakefile())
-#        snakepath = Path('/home/mixtures/miniconda3/envs/M5P_ec/lib/python3.6/site-packages/M5P-1.0-py3.6.egg/Snakefile ')
         parent_dir = snakepath.parent.absolute()
 
         #Build snakemake command
@@ -273,7 +272,6 @@ def main():
     
         #Set paths (to pass on to snakemake as config)   
         snakepath = Path(get_snakefile())
-#        snakepath = Path('/home/mixtures/miniconda3/envs/M5P_ec/lib/python3.6/site-packages/M5P-1.0-py3.6.egg/Snakefile ')
         parent_dir = snakepath.parent.absolute()
  
         #Build snakemake command
