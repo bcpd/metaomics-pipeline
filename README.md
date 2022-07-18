@@ -47,7 +47,7 @@ or
 
 **Example use for metatranscriptomics**
 
-`M5P -e metatranscriptomics -w . -x input_folder -t 8 -j 8 -M 128000000 -m metadata.txt`
+`M5P -e metatranscriptomics -w . -x input_folder -t 8 -j 8 -M 128000000
 
 
 
