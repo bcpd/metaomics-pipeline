@@ -99,14 +99,14 @@ def main():
     parser.add_argument("-b", "--bin_all", type=bool, default = True, help="Put all reads files in same bin group (bool)")
     parser.add_argument("-j", "--jobs", default = 2, type = str, help = "number of jobs")
     parser.add_argument("-c", "--configfile", default = "M5P_config.yaml", type=str, help = "optional yaml file containing all of the above configuration details.")
-    parser.add_argument("-a", "--getconfig", action='store_true', help = "Prints a yaml template with the default configuration.")
+    parser.add_argument("-a", "--getconfig", action='store_true', help = "Prints a yaml template with the default configuration. Then exits")
     args = parser.parse_args()
 
     if args.getconfig == True:
         print("A template configuration (template_M5P_config.yaml), has been writen to the current directory")
         print("Please review and edit it before using it")
         get_template()
-        sys.exit(1)
+        sys.exit(0)
 
     if args.configfile:
         configfile = args.configfile
