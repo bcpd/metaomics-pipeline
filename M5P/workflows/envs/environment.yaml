@@ -2,9 +2,11 @@ channels:
     - bioconda
     - conda-forge
 dependencies:
+    - snakemake
     - snakemake-minimal
     - python =3.6 #
     - jinja2 =2.10 ## Not sure if needed in the main environment
     - pandas =0.24.2
     - yaml
     - psutil
+    - salmon =0.12.0
