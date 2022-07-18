@@ -164,8 +164,6 @@ def update_config(args, config_data):
     return(config_data)
 
 
-
-
 def main():
     print("\033[92m                                             ,,,.       ,,,                 \033[0m")
     print("\033[92m                                         ,      %%%%     ,,,   ,            \033[0m")
@@ -233,8 +231,8 @@ def main():
             sys.exit(1)
 
         #Set paths (to pass on to snakemake as config)
-#        snakepath = Path(get_snakefile())
-        snakepath = Path('/home/mixtures/miniconda3/envs/M5P_ec/lib/python3.6/site-packages/M5P-1.0-py3.6.egg/Snakefile ')
+        snakepath = Path(get_snakefile())
+#        snakepath = Path('/home/mixtures/miniconda3/envs/M5P_ec/lib/python3.6/site-packages/M5P-1.0-py3.6.egg/Snakefile ')
         parent_dir = snakepath.parent.absolute()
 
         #Build snakemake command
@@ -252,10 +250,10 @@ def main():
         print(f"Executing: {cmd}")
 
         #run snakemake command
-#        try:    
-#            subprocess.check_call(cmd, shell=True)
-#        except subprocess.CalledProcessError as e:
-#            exit(1)
+        try:    
+            subprocess.check_call(cmd, shell=True)
+        except subprocess.CalledProcessError as e:
+            exit(1)
     else:  # no config file is used
         new_data = get_template()
         # Check that the arguments are valid, if absent, the default values would be used
@@ -274,8 +272,8 @@ def main():
             yaml_file.write(yaml.dump(new_data, default_flow_style=False))
     
         #Set paths (to pass on to snakemake as config)   
-#        snakepath = Path(get_snakefile())
-        snakepath = Path('/home/mixtures/miniconda3/envs/M5P_ec/lib/python3.6/site-packages/M5P-1.0-py3.6.egg/Snakefile ')
+        snakepath = Path(get_snakefile())
+#        snakepath = Path('/home/mixtures/miniconda3/envs/M5P_ec/lib/python3.6/site-packages/M5P-1.0-py3.6.egg/Snakefile ')
         parent_dir = snakepath.parent.absolute()
  
         #Build snakemake command
@@ -292,10 +290,10 @@ def main():
             configfile=configfile_fp)
         print(f"Executing: {cmd}")
         #run snakemake command
-#        try:    
-#            subprocess.check_call(cmd, shell=True)
-#        except subprocess.CalledProcessError as e:
-#            exit(1)
+        try:    
+            subprocess.check_call(cmd, shell=True)
+        except subprocess.CalledProcessError as e:
+            exit(1)
 
 if __name__ == '__main__':
     main()
