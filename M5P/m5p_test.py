@@ -48,72 +48,122 @@ def get_template():
         'genome_file': 'reference_file',
         'genome_url': 'reference_url',
         },
-    'jobs' = '8',
+    'jobs': '4',
     'mag_annotation': 'dram',
-    'max_memory': '1280000000000',
+    'max_memory': '128000000000',
     'merged_prefix': 'MergedReads-001',
     'merged_reads': 'true',
     'metadata_path': 'metadata.txt',
-    'threads': '8',
+    'threads': '4',
     'working_dir': './'
     }
     return(m5P_config_template)
 
-def validate_arguments(arguments, config_data):
+def validate_arguments(config_data):
       # Check for corect values for the arguments
-    for arg in vars(arguments):
-        if getattr(arguments, arg) is not None:
+    valid_statements = 1
+    for arg in config_data.keys():
+        if arg == "threads":
+            val = int(config_data[arg])
+            if val <= int(psutil.cpu_count()):
+                continue
+            else:
+                valid_statements = 0
+                print("Number of threads requested exceeds number of available cores.")
+        elif arg == "max_memory":
+            val = config_data[arg]
+            if val <= int(psutil.virtual_memory()[1]):
+                continue
+            else:
+                valid_statements = 0
+                print("Requested memory exceeds available memory, please change the value for the -M option")
+        elif arg == "experiment_type":
+            val = config_data[arg]
+            if val in ["metagenomics", "metatranscriptomics", "both"]:
+                continue
+            else:
+                valid_statements = 0
+                print("Experiment type not valid")
+        elif arg == "working_dir":
+            val = config_data[arg]
+            if os.path.exists(Path(val)):
+                continue
+            else:
+                valid_statements = 0
+                print("working directory does not exist")
+        elif arg == "experimental_contrast":
+            val = config_data[arg]
+        elif arg == "experimental_design":
+            val = config_data[arg]
+        elif arg == "fastq_metagenomics":
+            val = config_data[arg]
+        elif arg == "fastq_metatranscriptomics":
+            val = config_data[arg]
+        elif arg == "merged_reads":
+            val = config_data[arg]
+        elif arg == "merged_prefix":
+            val = config_data[arg]
+        elif arg == "metadata_path":
+            val = config_data[arg]
+        elif arg == "bin_all":
+            val = config_data[arg]
+        elif arg == "jobs":
+            val = int(config_data[arg])
+            if val <= int(psutil.cpu_count()):
+                jobs = val
+                config_data["jobs"] = val
+            else:
+                valid_statements = 0
+                print("Number of jobs requested exceeds number of available cores.")
+    return(valid_statements)
+
+def update_config(args, config_data):
+    for arg in vars(args):
+        if getattr(args, arg) is not None:
             if arg == "threads":
-                val = getattr(arguments, arg)
-                if val <= psutil.cpu_count():
-                    threads = val
-                    config_data["threads"] = val
-                else:
-                    raise Exception("Number of threads requested exceeds number of available cores.")
+                val = getattr(args, arg)
+                config_data["threads"] = val
             elif arg == "max_memory":
-                val = getattr(arguments, arg)
-                if val <= psutil.virtual_memory()[1]:
-                    max_memory = val
-                    config_data["max_memory"] = val
-                else:
-                    raise Exception("Requested memory exceeds available memory, please change the value for the -M option")
+                val = getattr(args, arg)
+                max_memory = val
+                config_data["max_memory"] = val
             elif arg == "experiment_type":
-                val = getattr(arguments, arg)
-                if val in ["metagenomics", "metatranscriptomics", "both"]:
-                    experiment_type = val
-                    config_data["experiment_type"] = val
-                else:
-                    raise Exception("Experiment type not valid")
+                val = getattr(args, arg)
+                experiment_type = val
+                config_data["experiment_type"] = val
             elif arg == "working_dir":
-                val = getattr(arguments, arg)
+                val = getattr(args, arg)
                 config_data["working_dir"] = val
             elif arg == "experimental_contrast":
-                val = getattr(arguments, arg)
+                val = getattr(args, arg)
                 config_data["experimental_contrast"] = val
             elif arg == "experimental_design":
-                val = getattr(arguments, arg)
+                val = getattr(args, arg)
                 config_data["experimental_design"] = val
             elif arg == "fastq_metagenomics":
-                val = getattr(arguments, arg)
+                val = getattr(args, arg)
                 config_data["fastq_metagenomics"] = val
             elif arg == "fastq_metatranscriptomics":
-                val = getattr(arguments, arg)
+                val = getattr(args, arg)
                 config_data["fastq_metatranscriptomics"] = val
             elif arg == "merged_reads":
-                val = getattr(arguments, arg)
+                val = getattr(args, arg)
                 config_data["merged_reads"] = val
             elif arg == "merged_prefix":
-                val = getattr(arguments, arg)
+                val = getattr(args, arg)
                 config_data["merged_prefix"] = val
             elif arg == "metadata_path":
-                val = getattr(arguments, arg)
+                val = getattr(args, arg)
                 config_data["metadata_path"] = val
             elif arg == "bin_all":
-                val = getattr(arguments, arg)
+                val = getattr(args, arg)
                 config_data["bin_all"] = val
             elif arg == "jobs":
-                val = getattr(arguments, arg)
+                val = getattr(args, arg)
                 config_data["jobs"] = val
+    return(config_data)
+
+
 
 
 def main():
@@ -147,15 +197,15 @@ def main():
 #    parser.add_argument("-d", "--database_dir", type= str, help="Directory containing ATLAS databases (path)")
     parser.add_argument("-r", "--merged_reads", default= True, type=bool, help="Merge reads for co-assembly (True or False)")
     parser.add_argument("-m", "--metadata_path", type=str, help="Metadata file (path)")
-    parser.add_argument("-t", "--threads", default= 2, type = int, help="The number of threads the pipeline is allowed to use (integer)")
+    parser.add_argument("-t", "--threads", default= 4, type = int, help="The number of threads the pipeline is allowed to use (integer)")
     parser.add_argument("-M", "--max_memory", type = int, help = "The amount of memory provided to the assembler. Enter in byte format.")
     parser.add_argument("-e", "--experiment_type", type = str, default="metagenomics",  help = "Either metagenomics (default), metatranscriptomics, or both")
     parser.add_argument("-k", "--experimental_contrast", type = str, default="none",  help = "Experimental contrast as used in R formula")
     parser.add_argument("-g", "--experimental_design", type = str, default="~treatment",  help = "Experimental design as used in R formula")
     parser.add_argument("-p", "--merged_prefix", default="MergedReads-001", type=str, help="Prefix for merged reads files (string)")
     parser.add_argument("-b", "--bin_all", type=bool, default = True, help="Put all reads files in same bin group (bool)")
-    parser.add_argument("-j", "--jobs", default = 2, type = str, help = "number of jobs")
-    parser.add_argument("-c", "--configfile", default = "M5P_config.yaml", type=str, help = "optional yaml file containing all of the above configuration details.")
+    parser.add_argument("-j", "--jobs", default = 4, type = int, help = "number of jobs")
+    parser.add_argument("-c", "--configfile", action='store', type=str, help = "optional yaml file containing all of the above configuration details.")
     parser.add_argument("-a", "--getconfig", action='store_true', help = "Prints a yaml template with the default configuration. Then exits")
     args = parser.parse_args()
 
@@ -171,11 +221,16 @@ def main():
     # If config file is used, validate arguments and then run
     if args.configfile:
         configfile_fp = args.configfile
+        print("Using configuration file: %s" %(configfile_fp))
         stream = open(configfile_fp, "r")
         original_data = yaml.load(stream, yaml.FullLoader)
-
-        validate_arguments(args, original_data)
-        print("Arguments are valid")
+        new_data = copy.deepcopy(original_data)
+        is_it_valid = validate_arguments(new_data)
+        if is_it_valid == 1:
+            print("Arguments are valid")
+        else:
+            print("Arguments provided in the configuration file are invalid")
+            sys.exit(1)
 
         #Set paths (to pass on to snakemake as config)
 #        snakepath = Path(get_snakefile())
@@ -201,11 +256,18 @@ def main():
 #            subprocess.check_call(cmd, shell=True)
 #        except subprocess.CalledProcessError as e:
 #            exit(1)
-    else: 
+    else:  # no config file is used
         new_data = get_template()
         # Check that the arguments are valid, if absent, the default values would be used
-        validate_arguments(args, new_data)
-        print("Arguments are valid")
+        new_data = update_config(args, new_data)
+        print(new_data)
+        is_it_valid = validate_arguments(new_data)
+        if is_it_valid == 1:
+            print("Arguments are valid")
+        else:
+            print("Arguments provided in the configuration file are invalid")
+            sys.exit(1)
+
         configfile_fp = "M5P_config.yaml"
         # Open and create an image of the Snakemake config
         with open(configfile_fp, 'w') as yaml_file:
