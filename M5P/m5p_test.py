@@ -48,17 +48,18 @@ def get_template():
         'genome_file': 'reference_file',
         'genome_url': 'reference_url',
         },
+    'jobs' = '8',
     'mag_annotation': 'dram',
     'max_memory': '1280000000000',
     'merged_prefix': 'MergedReads-001',
     'merged_reads': 'true',
     'metadata_path': 'metadata.txt',
-    'threads': '2',
+    'threads': '8',
     'working_dir': './'
     }
     return(m5P_config_template)
 
-def test_arguments(arguments):
+def validate_arguments(arguments, config_data):
       # Check for corect values for the arguments
     for arg in vars(arguments):
         if getattr(arguments, arg) is not None:
@@ -66,53 +67,53 @@ def test_arguments(arguments):
                 val = getattr(arguments, arg)
                 if val <= psutil.cpu_count():
                     threads = val
-                    new_data["threads"] = val
+                    config_data["threads"] = val
                 else:
                     raise Exception("Number of threads requested exceeds number of available cores.")
             elif arg == "max_memory":
                 val = getattr(arguments, arg)
                 if val <= psutil.virtual_memory()[1]:
                     max_memory = val
-                    new_data["max_memory"] = val
+                    config_data["max_memory"] = val
                 else:
                     raise Exception("Requested memory exceeds available memory, please change the value for the -M option")
             elif arg == "experiment_type":
                 val = getattr(arguments, arg)
                 if val in ["metagenomics", "metatranscriptomics", "both"]:
                     experiment_type = val
-                    new_data["experiment_type"] = val
+                    config_data["experiment_type"] = val
                 else:
                     raise Exception("Experiment type not valid")
             elif arg == "working_dir":
                 val = getattr(arguments, arg)
-                new_data["working_dir"] = val
+                config_data["working_dir"] = val
             elif arg == "experimental_contrast":
                 val = getattr(arguments, arg)
-                new_data["experimental_contrast"] = val
+                config_data["experimental_contrast"] = val
             elif arg == "experimental_design":
                 val = getattr(arguments, arg)
-                new_data["experimental_design"] = val
+                config_data["experimental_design"] = val
             elif arg == "fastq_metagenomics":
                 val = getattr(arguments, arg)
-                new_data["fastq_metagenomics"] = val
+                config_data["fastq_metagenomics"] = val
             elif arg == "fastq_metatranscriptomics":
                 val = getattr(arguments, arg)
-                new_data["fastq_metatranscriptomics"] = val
+                config_data["fastq_metatranscriptomics"] = val
             elif arg == "merged_reads":
                 val = getattr(arguments, arg)
-                new_data["merged_reads"] = val
+                config_data["merged_reads"] = val
             elif arg == "merged_prefix":
                 val = getattr(arguments, arg)
-                new_data["merged_prefix"] = val
+                config_data["merged_prefix"] = val
             elif arg == "metadata_path":
                 val = getattr(arguments, arg)
-                new_data["metadata_path"] = val
+                config_data["metadata_path"] = val
             elif arg == "bin_all":
                 val = getattr(arguments, arg)
-                new_data["bin_all"] = val
+                config_data["bin_all"] = val
             elif arg == "jobs":
                 val = getattr(arguments, arg)
-                new_data["jobs"] = val
+                config_data["jobs"] = val
 
 
 def main():
@@ -169,14 +170,16 @@ def main():
 
     # If config file is used, validate arguments and then run
     if args.configfile:
-        configfile = args.configfile
-        stream = open(configfile, "r")
+        configfile_fp = args.configfile
+        stream = open(configfile_fp, "r")
         original_data = yaml.load(stream, yaml.FullLoader)
 
-        validate_arguments(args)
+        validate_arguments(args, original_data)
+        print("Arguments are valid")
 
         #Set paths (to pass on to snakemake as config)
-        snakepath = Path(get_snakefile())
+#        snakepath = Path(get_snakefile())
+        snakepath = Path('/home/mixtures/miniconda3/envs/M5P_ec/lib/python3.6/site-packages/M5P-1.0-py3.6.egg/Snakefile ')
         parent_dir = snakepath.parent.absolute()
 
         #Build snakemake command
@@ -188,27 +191,29 @@ def main():
             "--configfile {configfile}"
             ).format(
             snakefile=snakepath,
-            jobs=args.jobs,
+            jobs=original_data["jobs"],
             parent_dir=parent_dir,
-            configfile=configfile)
+            configfile=configfile_fp)
         print(f"Executing: {cmd}")
 
         #run snakemake command
-        try:    
-            subprocess.check_call(cmd, shell=True)
-        except subprocess.CalledProcessError as e:
-            exit(1)
+#        try:    
+#            subprocess.check_call(cmd, shell=True)
+#        except subprocess.CalledProcessError as e:
+#            exit(1)
     else: 
         new_data = get_template()
         # Check that the arguments are valid, if absent, the default values would be used
-        validate_arguments(args)
-        configfile = "M5P_config.yaml"
+        validate_arguments(args, new_data)
+        print("Arguments are valid")
+        configfile_fp = "M5P_config.yaml"
         # Open and create an image of the Snakemake config
-        with open(configfile, 'w') as yaml_file:
+        with open(configfile_fp, 'w') as yaml_file:
             yaml_file.write(yaml.dump(new_data, default_flow_style=False))
     
         #Set paths (to pass on to snakemake as config)   
-        snakepath = Path(get_snakefile())
+#        snakepath = Path(get_snakefile())
+        snakepath = Path('/home/mixtures/miniconda3/envs/M5P_ec/lib/python3.6/site-packages/M5P-1.0-py3.6.egg/Snakefile ')
         parent_dir = snakepath.parent.absolute()
  
         #Build snakemake command
@@ -222,13 +227,13 @@ def main():
             snakefile=snakepath,
             jobs=args.jobs,
             parent_dir=parent_dir,
-            configfile=configfile)
+            configfile=configfile_fp)
         print(f"Executing: {cmd}")
         #run snakemake command
-        try:    
-            subprocess.check_call(cmd, shell=True)
-        except subprocess.CalledProcessError as e:
-            exit(1)
+#        try:    
+#            subprocess.check_call(cmd, shell=True)
+#        except subprocess.CalledProcessError as e:
+#            exit(1)
 
 if __name__ == '__main__':
     main()
