@@ -36,20 +36,18 @@ You can run the pipeline by specifying the different parameters or by using an e
 We suggest that you name the configuration file as *M5P_config.yaml*. Do not name it as *config.yaml* because a file with that name is created in the process for one of the components.
 
 
+**Example use for metagenomics**
 
-
-Example use for metagenomics
-
-M5P -e metagenomics - w . -i input_folder -t 8 -j 6 -M 128000000 -m metadata.txt -e metagenomics
+`M5P -e metagenomics - w . -i input_folder -t 8 -j 6 -M 128000000 -m metadata.txt -e metagenomics`
 
 or 
 
-M5P -c M5P_config.yaml
+`M5P -c M5P_config.yaml`
 
 
-Example use for metatranscriptomics
+**Example use for metatranscriptomics**
 
-M5P -e metatranscriptomics -w . -x input_folder -t 8 -j 8 -M 128000000 -m metadata.txt 
+`M5P -e metatranscriptomics -w . -x input_folder -t 8 -j 8 -M 128000000 -m metadata.txt`
 
 
 

@@ -1,4 +1,4 @@
-## Initiation scripts for automation of Atlas-Metagenomes
+## Initiation scripts for automation of M5P
 
 ### concatReads.py
 
