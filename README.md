@@ -30,7 +30,7 @@ Snakemake-based workflow for the taxonomic and functional annotation of metageno
 
 ## Instructions
 
-The first step is to activate the M5P conda environments to have access to the required libraries (`conda activate M5P`). Then, decide if you want to run the metagenomics pipeline or the metatranscriptomics one. For combined options see below. 
+The first step is to activate the M5P conda environments to have access to the required libraries (`conda activate M5P`). Then, decide if you want to run the metagenomics pipeline or the metatranscriptomics one. 
 
 You can run the pipeline by specifying the different parameters or by using an editable configuration file e.g. `M5P -c M5P_config.yaml`. The configuration file is included in the repository. A template that you can edit can be created using the command `M5P -a`.
 We suggest that you name the configuration file as *M5P_config.yaml*. Do not name it as *config.yaml* because a file with that name is created in the process for one of the components.
@@ -38,7 +38,7 @@ We suggest that you name the configuration file as *M5P_config.yaml*. Do not nam
 
 **Example use for metagenomics**
 
-`M5P -e metagenomics - w . -i input_folder -t 8 -j 6 -M 128000000 -m metadata.tsv -e metagenomics`
+`M5P -e metagenomics - w . -i input_folder -t 8 -j 6 -M 128000000 -m exampleMetadata.tsv -e metagenomics`
 
 or 
 
@@ -49,7 +49,7 @@ or
 
 `M5P -e metatranscriptomics -w . -x input_folder -t 8 -j 8 -M 128000000`
 
-
+Note: for running differential abundance tests with DESeq2, please enable the relevant options using the M5P_config.yaml file.
 
 
 
