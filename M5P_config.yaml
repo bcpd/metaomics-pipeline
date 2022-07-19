@@ -4,7 +4,7 @@ experiment_type: metagenomics
 #experimental_contrast: none
 #experimental_design: ~treatment
 fastq_metagenomics: input_mg
-fastq_metatranscriptomics: input_mt/
+fastq_metatranscriptomics: input_mt
 genome:
   find_genome_relative: false
   genome_file: reference_file

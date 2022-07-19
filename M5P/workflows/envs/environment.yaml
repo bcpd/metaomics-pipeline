@@ -8,3 +8,4 @@ dependencies:
     - pandas =0.24.2
     - yaml
     - psutil
+    - salmon =0.12.0
