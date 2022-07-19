@@ -1,8 +1,8 @@
 bin_all: true
 database_dir: ~/M5P_databases
 experiment_type: metagenomics
-experimental_contrast: none
-experimental_design: ~treatment
+#experimental_contrast: none
+#experimental_design: ~treatment
 fastq_metagenomics: input_mg
 fastq_metatranscriptomics: input_mt/
 genome:
@@ -13,6 +13,7 @@ mag_annotation: dram
 max_memory: 1280000000000
 merged_prefix: MergedReads-001
 merged_reads: true
-metadata_path: metadata.txt
+metadata_path: metadata.tsv
+samples: samples.txt
 threads: 2
 working_dir: ./

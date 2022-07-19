@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# D. Levy-Booth 2019-02-22
+# Levy-Booth, Dimitriu
 # For use with snakemake
 
 #Load Libraries
@@ -17,21 +17,25 @@ parallel <- FALSE
 for(count_table in snakemake@input[["counts"]]) {
   counts <- read.table(count_table, header=TRUE, row.names = 1, check.names=FALSE)
   coldata <- read.table(snakemake@params[["data"]], header=TRUE, check.names=FALSE)
-  all_conditions <- snakemake@params[["contrasts"]]
+  #all_conditions <- snakemake@params[["contrasts"]]
+  #all_conditions <- snakemake@params[["design"]]
 
 #Format data
 ##########################################################################################################
   counts <- as.matrix(counts); mode(counts) <- "integer"
   counts[is.na(counts)] <- 0
 
-  cont_out <- strsplit(as.character(all_conditions),'_')
-  cont_out <- data.frame(do.call(rbind, cont_out))
+  all_conditions <- unique(coldata$treatment)
+
+  cont_out <- data.frame(t(combn(all_conditions, 2)))
+  #cont_out <- strsplit(as.character(all_conditions),'_')
+  #cont_out <- data.frame(do.call(rbind, cont_out))
 
 #Init DESeq2
 ##########################################################################################################
-  dds <- DESeqDataSetFromMatrix(countData=counts,
-                                colData=coldata,
-                                design=~ Condition)
+  dds <- DESeqDataSetFromMatrix(countData = counts,
+                                colData = coldata,
+                                design = ~ treatment)
 
   # remove uninformative columns
   dds <- dds[ rowSums(counts(dds)) > 1, ]
