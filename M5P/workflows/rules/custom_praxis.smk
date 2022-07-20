@@ -9,8 +9,8 @@ import pandas as pd
 THREADS = config["threads"]
 ALIGNER = "bt2"
 METHOD = "salmon"
-samples = "sample.tsv"
-contrast = config["experimental_contrast"]
+#contrasts = config["experimental_contrast"]
+#design = config["experimental_design"]
 output_directory = config["working_dir"]
 project_name = "Microbial mixtures"
 
@@ -34,8 +34,8 @@ rule salmon_quant:
     Generate directories containing count files with salmon (quasi mode).
     """
     input:
-        fastq_1= os.path.join(config["fastq_metatranscriptomics"], "{sample}_R1.fastq.gz"),
-        fastq_2= os.path.join(config["fastq_metatranscriptomics"], "{sample}_R2.fastq.gz"),
+        fastq_1= os.path.join(config["fastq_metatranscriptomics"], "{sample}_R1_001.fastq.gz"),
+        fastq_2= os.path.join(config["fastq_metatranscriptomics"], "{sample}_R2_001.fastq.gz"),
         salmon_dir = output_directory + "reference/salmon_quasi"
     output:
         directory(os.path.join(output_directory, "/salmon/{sample}"))
@@ -71,9 +71,10 @@ rule deseq2:
     output:
         tables = os.path.join(output_directory, "salmon/DESeq2.tsv")
     params:
-        samples = samples_table["SampleID"],
+        samples = samples_table["SampleName"],
         data = config["samples"],
-        contrasts = contrasts
+        #contrasts = contrasts
+        #design = design
     conda:
         "workflows/envs/deseq2.yaml"
     script:
@@ -94,7 +95,7 @@ rule report:
         'praxis'
     params:
         data = config["samples"],
-        contrasts = contrasts,
+        #contrasts = contrasts,
         ALIGNER = ALIGNER,
         METHOD = METHOD,
         PROJECT = project_name

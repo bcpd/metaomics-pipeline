@@ -1,0 +1,4 @@
+SampleName	treatment
+Mock_T0_1_S1	A
+Mock_T0_2_S2	A
+Mock_T0_3_S3	B
