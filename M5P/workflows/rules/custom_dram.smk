@@ -16,6 +16,10 @@ rule annotate_genomes:
         docker start DRAM || true
         docker exec DRAM rm -fr /genomes/ ||true
         docker exec DRAM mkdir /genomes/ ||true
+        docker exec DRAM rm -fr /out/ ||true
+        docker exec DRAM mkdir -p /out/ ||true
+        docker exec DRAM rm -fr /logs/ ||true
+        docker exec DRAM mkdir -p /logs/ ||true
         for i in genomes/annotations/genes/MAG*faa; do docker cp $i DRAM:/genomes;done
         docker cp {params.script} DRAM:/scripts  || true
         docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_proteins.sh || true
@@ -65,7 +69,8 @@ rule annotate_genomes2:
         docker exec DRAM mkdir /genomes/ ||true
         docker exec DRAM rm -fr /out/ ||true
         docker exec DRAM mkdir -p /out/ ||true
-
+        docker exec DRAM rm -fr /logs/ ||true
+        docker exec DRAM mkdir -p /logs/ ||true
         for i in reference_genomes/*fna; do docker cp $i DRAM:/genomes;done
         docker cp {params.script} DRAM:/scripts  || true
         docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_genomes.sh || true
