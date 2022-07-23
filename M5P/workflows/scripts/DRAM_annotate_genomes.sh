@@ -3,7 +3,7 @@ source ./etc/profile.d/conda.sh
 conda activate DRAM
 
 # Run dram annotate
-DRAM.py annotate -i '/genomes/*fna'  -o /out/annotations/ --threads 10 --min_contig_size 1000 --verbose &> /logs/dram_annotation.log
+DRAM.py annotate -i '/genomes/*.fna'  -o /out/annotations/ --threads 10 --min_contig_size 1000 --verbose &> /logs/dram_annotation.log
 
 # Run dram distill
 if [ -f /out/annotations/rrnas.tsv ] && [ -f /out/annotations/trnas.tsv ]
