@@ -13,7 +13,7 @@ rule create_folder_structure_metagenomics:
     output: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     log: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     params: 
-        working_dir = working_dir,
+        working_dir = working_dir
     shell:
         """
         cd {params.working_dir}
