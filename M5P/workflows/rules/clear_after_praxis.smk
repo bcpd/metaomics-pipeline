@@ -61,3 +61,34 @@ rule salmon_quant_table:
         cd {params.working_dir}
         salmon quantmerge --quants salmon/* --column numreads -o salmon/counts.tsv > {log}
         """
+
+
+#rule deseq2:
+#    input:
+#        counts = os.path.join(working_dir, "salmon/counts.tsv")
+#    output:
+#        tables = os.path.join(working_dir, "salmon/DESeq2.tsv")
+#    params:
+#        samples = samples_table["SampleID"],
+#        data = config["samples"],
+#        contrasts = contrasts
+#    conda:
+#        "workflows/envs/deseq2.yaml"
+#    script:
+#        "workflows/scripts/deseq.R"
+
+
+#rule report:
+#    input:
+#        counts = os.path.join(output_directory, "salmon/counts.tsv"),
+#        tables = expand(DE_out, contrasts = contrasts)
+#    output:
+#        dereport_html = "DE_Report.html"
+#    params:
+#        data = config["samples"],
+#        contrasts = contrasts,
+#        ALIGNER = ALIGNER,
+#        METHOD = METHOD,
+#        PROJECT = project_name
+#    script:
+#        "workflows/scripts/DE_report.Rmd"
