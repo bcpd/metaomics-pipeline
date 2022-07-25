@@ -26,6 +26,11 @@ def COLLECT_ALL_INPUT():
         INPUTS.append(os.path.join(working_dir, "finished_grist")) #grist
         INPUTS.append(os.path.join(working_dir, "cleaned_after_grist")) # clean after grist
         INPUTS.append(os.path.join(working_dir, "finished_DRAM_annotate_reference_genomes")) # Annotate grist reference genomes
+        INPUTS.append(os.path.join(working_dir, "finished_salmon_index"))
+        INPUTS.append(os.path.join(working_dir, "finished_salmon_quant"))
+        INPUTS.append(os.path.join(working_dir, "salmon/counts.tsv")) # All mapping to salmon
+        INPUTS.append(os.path.join(working_dir, "logs/Praxis_cleanup.log"))
+
     return INPUTS
 
 def COLLECT_INIT_INPUT():
