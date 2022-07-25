@@ -1,43 +1,63 @@
-#!/usr/bin/python3
 
-rule create_folder_structure_metatranscriptomics:
-    '''
-    Creates and organized folder structure to store the important files
-    after running praxis
-    ''' 
-    input: 
-        config = os.path.join(working_dir, "logs/praxis.log")
-    output: os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log")
-    params: 
-        working_dir = working_dir,
-    log: os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log")
-    shell:
-        """
-        cd {params.working_dir}
-        mkdir metatranscriptomics
-        mkdir metatranscriptomics/trimmed_reads
-        mkdir metatranscriptomics/grist
-        mkdir metatranscriptomics/transcript_counts
-        mkdir metatranscriptomics/interleaved_reads
-        touch {log}
-        """
+import os
+from pathlib import Path
+import itertools
+import pandas as pd
 
 
-rule reorganize_files_transcriptomic:
-    '''
-    Copied important files from Praxis process
-    ''' 
+THREADS = config["threads"]
+ALIGNER = "bt2"
+METHOD = "salmon"
+samples = "sample.tsv"
+contrast = config["experimental_contrast"]
+output_directory = config["working_dir"]
+project_name = "Microbial mixtures"
+
+rule salmon_index:
+    """
+    Index a reference with salmon.
+    """
     input:
-      creation_log = os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log"),
-      praxis_log = (working_dir, "logs/praxis.log")
-    output: os.path.join(working_dir, "logs/Praxis_cleanup.log")
-    log: os.path.join(working_dir, "logs/Praxis_cleanup.log")
-    benchmark: os.path.join(working_dir, "benchmarks/Praxis_cleanup.bmk")
-    params: 
-        working_dir = working_dir,
+        dram_output = os.path.join(working_dir, "finished_DRAM_annotate_reference_genomes")
+    params:
+        index = os.path.join(working_dir, "reference/salmon_quasi"),
+        fasta = os.path.join(working_dir, "reference_genomes/annotations/genes.fna")
+    output: os.path.join(working_dir, "finished_salmon_index")
+    threads: THREADS
+    shell:
+        "salmon index -t {params.fasta} -i {params.index} --type quasi -k 31; touch {output}"
+
+
+rule salmon_quant2:
+    """
+    Generate directories containing count files with salmon (quasi mode).
+    """
+    input:
+        fastq_dir = config["fastq_metatranscriptomics"],
+        salmon_index = os.path.join(working_dir, "finished_salmon_index")
+    output:
+        os.path.join(working_dir, "finished_salmon_quant")
+    params:
+        working_dir = working_dir
+    threads: THREADS
+    shell:
+        """
+
+
+rule salmon_quant_table:
+    """
+    Generate a count table with salmon.
+    """
+    input:
+        os.path.join(working_dir, "finished_salmon_quant")
+    params:
+        working_dir = working_dir
+    log:
+        "logs/salmon_quant_table.log"
+    output:
+        os.path.join(working_dir, "salmon/counts.tsv")
     shell:
         """
         cd {params.working_dir}
-        # Copy files
-        echo 'Copied metatranscriptomics files to final folder' > {log}
+        salmon quantmerge --quants salmon/* --column numreads -o salmon/counts.tsv > {log}
         """
