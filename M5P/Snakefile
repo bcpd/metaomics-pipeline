@@ -43,6 +43,7 @@ include: "workflows/rules/run_bakta.smk"
 include: "workflows/rules/run_grist.smk"
 include: "workflows/rules/custom_praxis.smk"
 include: "workflows/rules/run_referenceseeker.smk"
+include: "workflows/rules/clean_after_praxis.smk"
 
 
 # ---- Rule all: run all targets
