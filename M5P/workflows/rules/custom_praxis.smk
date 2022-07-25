@@ -50,6 +50,26 @@ rule salmon_quant:
         shell("salmon quant -i {input.salmon_dir} -l A -p {threads} --validateMappings \
         -1 {input.fastq_1} -2 {input.fastq_2} -o {output} 2> {log}")
 
+rule salmon_quant2:
+    """
+    Generate directories containing count files with salmon (quasi mode).
+    """
+    input:
+        fastq_dir = fastq_metatranscriptomics,
+        salmon_index = os.path.join(working_dir, "finished_salmon_index")
+    output:
+        directory(os.path.join(working_dir, "finished_salmon_quant"))
+    params:
+        working_dir = working_dir
+    threads: threads
+    shell:
+        """
+        for i in {input.folder}/*fastq.gz;do cp $i {working_dir};done
+        cd {params.working_dir}
+        for i in `ls *R1_001.fastq.gz|sed 's/_R1_001.fastq.gz//g'`;do \
+        salmon quant -i reference/salmon_quasi -l A -p 10 --validateMappings -1 ${{i}}_R1_001.fastq.gz -2 ${{i}}_R2_001.fastq.gz -o salmon/${{i}} ;done
+        """
+
 
 rule salmon_quant_table:
     """
