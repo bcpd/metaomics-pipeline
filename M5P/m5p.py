@@ -71,7 +71,7 @@ def validate_arguments(config_data):
                 valid_statements = 0
                 print("Number of threads requested exceeds number of available cores.")
         elif arg == "max_memory":
-            val = config_data[arg]
+            val = int(config_data[arg])
             if val <= int(psutil.virtual_memory()[1]):
                 continue
             else:
@@ -257,7 +257,7 @@ def main():
         new_data = get_template()
         # Check that the arguments are valid, if absent, the default values would be used
         new_data = update_config(args, new_data)
-        print(new_data)
+        #print(new_data)
         is_it_valid = validate_arguments(new_data)
         if is_it_valid == 1:
             print("Arguments are valid")
