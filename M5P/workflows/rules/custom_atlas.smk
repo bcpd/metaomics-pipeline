@@ -171,6 +171,7 @@ rule atlas_genomes:
         'sed -i "s/^- dram/# - dram/" {input.config};'
         'sed -i "s/^- kegg_modules/# - kegg_modules/" {input.config};'
         '(atlas run genomes -j {threads} -w {params.working_dir} --max-mem {params.mem} --omit-from run_dram --config-file {input.config}) 2> {log};'
+        'touch {output}'
 
 
 rule atlas_genecatalog:
@@ -195,6 +196,3 @@ rule atlas_genecatalog:
     shell:
         "(atlas run genecatalog -j {threads} -w {params.working_dir} --max-mem {params.mem} --config-file {input.config}) 2> {log};"
         "touch {output}"
-
-   'sed -i "s/^- kegg_modules/# - kegg_modules/" {input.config};'
-        '(atlas run genomes -j {threads} -w {params.working_dir} --max-mem {params.mem} --omit-from run_dram --config-file {input.config}) 2> {log};'
