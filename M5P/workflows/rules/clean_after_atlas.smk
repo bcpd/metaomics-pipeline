@@ -41,6 +41,7 @@ rule reorganize_files_metagenomics:
         dram_completed = os.path.join(working_dir, "finished_DRAM"),
         folders_created = os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log"),
     params:
+        working_dir = working_dir,
         refseeker_file = os.path.join(working_dir, "refseeker.tsv"),
         bakta_file = os.path.join(working_dir, "bakta.tsv"),
     output: os.path.join(working_dir, "finished_metagenomics_cleanup")
