@@ -12,22 +12,22 @@ rule create_folder_structure_metagenomics:
         dram_completed = os.path.join(working_dir, "finished_DRAM")
     output: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     log: os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
-    params: 
+    params:
         working_dir = working_dir
     shell:
         """
         cd {params.working_dir}
-        mkdir metagenomics
-        mkdir metagenomics/trimmed_reads
-        mkdir metagenomics/assemblies
-        mkdir metagenomics/MAGs
-        mkdir metagenomics/taxonomic_annotations
-        mkdir metagenomics/taxonomic_annotations/gtdb-tk
-        mkdir metagenomics/taxonomic_annotations/referenceseeker
-        mkdir metagenomics/MAGs/fasta
-        mkdir metagenomics/MAGs/reports
-        mkdir metagenomics/functional_annotations
-        mkdir metagenomics/functional_annotations/GFF3
+        mkdir -p metagenomics
+        mkdir -p metagenomics/trimmed_reads
+        mkdir -p metagenomics/assemblies
+        mkdir -p metagenomics/MAGs
+        mkdir -p metagenomics/taxonomic_annotations
+        mkdir -p metagenomics/taxonomic_annotations/gtdb-tk
+        mkdir -p metagenomics/taxonomic_annotations/referenceseeker
+        mkdir -p metagenomics/MAGs/fasta
+        mkdir -p metagenomics/MAGs/reports
+        mkdir -p metagenomics/functional_annotations
+        mkdir -p metagenomics/functional_annotations/GFF3
         """
 
 rule reorganize_files_metagenomics:
@@ -39,7 +39,7 @@ rule reorganize_files_metagenomics:
         refseeker_completed = os.path.join(working_dir, "finished_referenceseeker"),
         bakta_completed = os.path.join(working_dir, "finished_bakta"),
         dram_completed = os.path.join(working_dir, "finished_DRAM"),
-        folders_created = os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log"),
+        folders_created = os.path.join(working_dir, "logs/Creation_output_structure_metagenomics.log")
     params:
         working_dir = working_dir,
         refseeker_file = os.path.join(working_dir, "refseeker.tsv"),
