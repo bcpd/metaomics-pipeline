@@ -28,6 +28,7 @@ rule create_folder_structure_metagenomics:
         mkdir -p metagenomics/MAGs/reports
         mkdir -p metagenomics/functional_annotations
         mkdir -p metagenomics/functional_annotations/GFF3
+        touch {log}
         """
 
 rule reorganize_files_metagenomics:
@@ -62,6 +63,10 @@ rule reorganize_files_metagenomics:
         # Copy assemblies, predicted genes, predicted proteins, and related annotations
         cp */assembly/*final_contigs.fasta metagenomics/assemblies/
         cp {params.bakta_file} metagenomics/functional_annotations
+        cp bakta/*.tsv metagenomics/functional_annotations
+        cp bakta/*.txt metagenomics/functional_annotations
+        cp bakta/*.json metagenomics/functional_annotations
+        cp bakta/*.gff3 metagenomics/functional_annotations/GFF3
         cp genomes/annotations/genes/MAG*f?a metagenomics/functional_annotations
         cp DRAM/annotations/annotations.tsv  metagenomics/functional_annotations/dram_annotations.tsv
         cp DRAM/annotations/distill/product.tsv  metagenomics/functional_annotations/dram_product.tsv
