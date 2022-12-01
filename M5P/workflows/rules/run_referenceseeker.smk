@@ -32,6 +32,6 @@ rule run_referenceseeker:
         rm *filename*
         mv refseeker.tsv ..
         cd ..
-        echo 'Refseeker_complete' > {log}
+        #echo 'Refseeker_complete' > {log}
         touch {output}
         """

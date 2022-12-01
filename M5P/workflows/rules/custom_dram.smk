@@ -24,7 +24,7 @@ rule annotate_genomes:
         docker cp {params.script} DRAM:/scripts  || true
         docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_proteins.sh || true
         touch {output}
-        touch {log}
+        #touch {log}
         docker stop DRAM ||true
         """
 
@@ -43,7 +43,7 @@ rule copy_DRAM_annotations:
         docker start DRAM || true
         mkdir -p {params.output_folder}
         docker cp DRAM:out/annotations {params.output_folder} ||true
-        docker cp DRAM:logs/* /logs/ ||true
+        docker cp DRAM:logs/ . ||true
         docker stop DRAM     || true
         touch {output}
         """
@@ -76,7 +76,7 @@ rule annotate_genomes2:
         docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_genomes.sh || true
         docker cp DRAM:out/annotations reference_genomes ||true
         docker cp DRAM:logs/* /logs/ ||true
-        touch {log}
+        #touch {log}
         cd -
         touch {output}
         docker stop DRAM ||true
