@@ -23,7 +23,7 @@ rule annotate_genomes:
         for i in genomes/annotations/genes/MAG*faa; do docker cp $i DRAM:/genomes;done
         docker cp {params.script} DRAM:/scripts  || true
         docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_proteins.sh || true
-        touch {output}
+        touch {output} 
         #touch {log}
         docker stop DRAM ||true
         """
@@ -75,7 +75,7 @@ rule annotate_genomes2:
         docker cp {params.script} DRAM:/scripts  || true
         docker exec -t DRAM /bin/bash /scripts/DRAM_annotate_genomes.sh || true
         docker cp DRAM:out/annotations reference_genomes ||true
-        docker cp DRAM:logs/* /logs/ ||true
+        docker cp DRAM:logs/ . ||true
         #touch {log}
         cd -
         touch {output}
