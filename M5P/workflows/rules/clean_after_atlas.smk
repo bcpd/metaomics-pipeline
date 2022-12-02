@@ -79,6 +79,6 @@ rule reorganize_files_metagenomics:
         # Copy stats from atlas process
         cp -r stats logs/
         cp -r logs/benchmarks/ benchmarks
-        echo 'Copied metagenomics files to final folder' > {log}
+        #echo 'Copied metagenomics files to final folder' > {log}
         touch {output}
         """
