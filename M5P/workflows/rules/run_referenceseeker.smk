@@ -18,7 +18,7 @@ rule run_referenceseeker:
     threads: config["threads"]
     shell:
         """
-        cd {params.working_dir}
+        #cd {params.working_dir}
         mkdir -p referenceseeker
         cd referenceseeker
         cp -r ../genomes/genomes/ .

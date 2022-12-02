@@ -20,7 +20,7 @@ rule run_bakta:
     threads: config["threads"]
     shell:
         """
-        cd {params.working_dir}
+        #cd {params.working_dir}
         mkdir -p bakta
         cd bakta
         cp -r ../genomes/genomes/ .
@@ -39,6 +39,6 @@ rule run_bakta:
         rm *filename*
         mv bakta.tsv ..
         cd ..
-        echo 'bakta completed' > {log}
+        #echo 'bakta completed' > {log}
         touch {output}
         """
