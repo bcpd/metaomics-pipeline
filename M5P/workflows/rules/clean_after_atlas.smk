@@ -44,7 +44,7 @@ rule reorganize_files_metagenomics:
     params:
         working_dir = working_dir,
         refseeker_file = os.path.join(working_dir, "refseeker.tsv"),
-        bakta_file = os.path.join(working_dir, "bakta.tsv"),
+        bakta_file = os.path.join(working_dir, "bakta.tsv")
     output: os.path.join(working_dir, "finished_metagenomics_cleanup")
     log: os.path.join(working_dir, "logs/Atlas_metagenomics_cleanup.log")
     benchmark: os.path.join(working_dir, "benchmarks/Atlas_metagenomics_cleanup.bmk")
