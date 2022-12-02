@@ -47,7 +47,7 @@ rule salmon_quant2:
         cd {params.working_dir}
         for i in `ls *R1_001.fastq.gz|sed 's/_R1_001.fastq.gz//g'`;do \
         salmon quant -i reference/salmon_quasi -l A -p {threads} --validateMappings -1 ${{i}}_R1_001.fastq.gz -2 ${{i}}_R2_001.fastq.gz -o salmon/${{i}} ;done
-        touch finished_salmon_quant
+        touch {output}
         """
 
 

@@ -5,8 +5,7 @@ rule create_folder_structure_metatranscriptomics:
     Creates and organized folder structure to store the important files
     after running praxis
     ''' 
-    input: 
-        config = os.path.join(working_dir, "logs/praxis.log")
+    input: os.path.join(working_dir, "logs/salmon_quant_table.log")
     output: os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log")
     params: 
         working_dir = working_dir
@@ -14,11 +13,11 @@ rule create_folder_structure_metatranscriptomics:
     shell:
         """
         cd {params.working_dir}
-        mkdir metatranscriptomics
-        mkdir metatranscriptomics/trimmed_reads
-        mkdir metatranscriptomics/reference_genomes
-        mkdir metatranscriptomics/transcript_counts
-        mkdir metatranscriptomics/logs
+        mkdir -p metatranscriptomics
+        mkdir -p metatranscriptomics/trimmed_reads
+        mkdir -p metatranscriptomics/reference_genomes
+        mkdir -p metatranscriptomics/transcript_counts
+        mkdir -p metatranscriptomics/logs
         touch {log}
         """
 
