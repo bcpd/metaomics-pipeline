@@ -17,7 +17,7 @@ rule run_bakta:
         working_dir  = working_dir
     conda:
         'bakta'
-    threads: config["threads"]
+    threads: int(config["threads"])
     shell:
         """
         #cd {params.working_dir}
