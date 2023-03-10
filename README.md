@@ -14,11 +14,11 @@ Snakemake-based workflow for the taxonomic and functional annotation of metageno
 - [genome-grist](https://github.com/dib-lab/genome-grist)
 
 ## Installation:
+- Run `bash setup.sh` to create environments and download databases
 - Clone the M5P repository, ie: `gh repo clone MicrobiomeInsights/metaomics-pipeline`
 - Alternatively you can download the code and unzip it in an installation folder using `unzip metaomics-pipeline'
 - Change into the repo: `cd metaomics-pipeline`
-- Install the M5P CLI: `python setup.py install`
-- Run `bash setup.sh` to create environments and download databases
+- Install the M5P command line interface: `python setup.py install`
 
 ## Resource requirements:
 - OS: Linux (Ubuntu >= 14.04 LTS).
