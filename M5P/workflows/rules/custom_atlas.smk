@@ -48,7 +48,7 @@ rule init_atlas:
         fastq_dir    = fastq_metagenomics,
         #database_dir = database_dir,
         working_dir  = working_dir
-    threads: THREADS
+    threads: int(THREADS)
     shell:
         "(atlas init --threads {threads} -w {params.working_dir} --db-dir ~/M5P_databases {params.fastq_dir}) 2> {log}"
 
