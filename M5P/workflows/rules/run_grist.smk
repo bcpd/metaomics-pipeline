@@ -56,7 +56,7 @@ rule run_grist:
     output: os.path.join(working_dir, "finished_grist")# "finished_grist"
     conda: 'grist'
     log: "logs/run_grist.log"
-    threads: config["threads"]
+    threads: int(config["threads"])
     shell:
         """
         cd {params.working_dir}
