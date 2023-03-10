@@ -95,4 +95,4 @@ docker exec DRAM /bin/bash /scripts/DRAM_setup.sh
 touch ~/M5P_databases/DRAM_installed
 
 ## M5P enviroment
-conda env create --name M5P --file M5P/workflows/envs/environment.yaml
+mamba env create --name M5P --file M5P/workflows/envs/environment.yaml
