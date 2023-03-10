@@ -15,7 +15,7 @@ rule run_referenceseeker:
     log: os.path.join(working_dir, "logs/run_referenceseeker.log")
     conda:
         'referenceseeker'
-    threads: config["threads"]
+    threads: int(config["threads"])
     shell:
         """
         #cd {params.working_dir}

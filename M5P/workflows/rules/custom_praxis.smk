@@ -5,8 +5,7 @@ from pathlib import Path
 import itertools
 import pandas as pd
 
-
-THREADS = config["threads"]
+THREADS = int(config["threads"])
 ALIGNER = "bt2"
 METHOD = "salmon"
 #contrasts = config["experimental_contrast"]
@@ -40,7 +39,7 @@ rule salmon_quant2:
         os.path.join(working_dir, "finished_salmon_quant")
     params:
         working_dir = working_dir
-    threads: THREADS
+    threads: int(THREADS)
     shell:
         """
         for i in {input.fastq_dir}/*fastq.gz;do cp $i {params.working_dir};done
