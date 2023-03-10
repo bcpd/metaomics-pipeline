@@ -67,7 +67,6 @@ rule run_grist:
 
 
 rule clean_after_grist:
-
     """
     Cleans folders after running grist, reorganized files
     """
@@ -84,7 +83,7 @@ rule clean_after_grist:
         mv genomes reference_genomes
         mv grist/reports logs
         mv grist/abundtrim .
-        rm -fr grist temp create_grist_config_file.py input  genbank_cache
+        rm -fr grist temp create_grist_config_file.py input genbank_cache
         echo 'clean_after_grist' > {log}
         cd -
         touch {output}
