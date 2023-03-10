@@ -50,6 +50,7 @@ or
 `M5P -e metatranscriptomics -w . -x input_folder -t 8 -j 8 -M 128000000`
 
 Note: for running differential abundance tests with DESeq2, please enable the relevant options using the M5P_config.yaml file. The samples.txt file should be located in the main directory and formatted as shown in the repository file -- i.e., the column names should be "SampleName" and "treatment".
+Samples should follow the format <sample_name>_R?.fastq.gz or <sample_name>_R?.fq.gz
 
 
 ## Usage:
