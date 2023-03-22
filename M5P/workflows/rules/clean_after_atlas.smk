@@ -68,7 +68,7 @@ rule reorganize_files_metagenomics:
         cp bakta/*.json metagenomics/functional_annotations
         cp bakta/*.gff3 metagenomics/functional_annotations/GFF3
         cp genomes/annotations/genes/MAG*f?a metagenomics/functional_annotations
-        cp DRAM/annotations/*  metagenomics/functional_annotations/
+        cp -r DRAM/annotations/*  metagenomics/functional_annotations/
         
         # Copying taxonomic annotations
         cp genomes/taxonomy/gtdb/classify/*summary.tsv metagenomics/taxonomic_annotations/gtdb-tk/
