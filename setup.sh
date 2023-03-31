@@ -27,7 +27,10 @@ mkdir ~/M5P_databases
 ## These environments are the core of the pipeline. We can run the rules and point to them directly.
 
 ## Atlas
+conda create -n atlas
+conda activate atlas
 conda install -y -c bioconda -c conda-forge metagenome-atlas=2.9
+conda deactivate
 
 ## GTDBTK
 ## Atlas uses gtdbtk for classification of MAGs but sometimes it runs into a problem downloading it
