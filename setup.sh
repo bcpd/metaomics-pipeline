@@ -51,7 +51,7 @@ conda deactivate
 ## Praxis
 git clone https://github.com/davidlevybooth/Praxis.git
 cd Praxis
-conda env create --name Praxis --file envs/environment.yaml
+mamba env create --name Praxis --file envs/environment.yaml
 conda activate Praxis
 python setup.py install
 conda deactivate
