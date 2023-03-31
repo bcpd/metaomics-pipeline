@@ -29,7 +29,7 @@ mkdir ~/M5P_databases
 ## Atlas
 conda create -n atlas
 conda activate atlas
-conda install -y -c bioconda -c conda-forge metagenome-atlas=2.9
+mamba install -y -c bioconda -c conda-forge metagenome-atlas=2.9
 conda deactivate
 
 ## GTDBTK
