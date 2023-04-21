@@ -12,6 +12,8 @@ Snakemake-based workflow for the taxonomic and functional annotation of metageno
 - [Referenceseeker](https://github.com/oschwengers/referenceseeker)
 - [sourmash](https://github.com/sourmash-bio/sourmash)
 - [genome-grist](https://github.com/dib-lab/genome-grist)
+- [dRep]](https://github.com/MrOlm/drep)
+
 
 ## Installation:
 - Run `bash setup.sh` to create environments and download databases

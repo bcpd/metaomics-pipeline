@@ -97,5 +97,9 @@ docker cp M5P/workflows/scripts/DRAM_annotate_proteins.sh DRAM:/scripts
 docker exec DRAM /bin/bash /scripts/DRAM_setup.sh
 touch ~/M5P_databases/DRAM_installed
 
+## dRep enviroment
+mamba env create --name drep --file M5P/workflows/envs/drep.yaml
+
+
 ## M5P enviroment
 mamba env create --name M5P --file M5P/workflows/envs/environment.yaml
