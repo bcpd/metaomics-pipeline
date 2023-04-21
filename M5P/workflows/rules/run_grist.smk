@@ -66,11 +66,39 @@ rule run_grist:
         """
 
 
+rule run_dereplicate_genomes:
+    '''
+    Dereplicates genomes from grist and by the user, by default there are no user-provided genomes
+    '''
+    input:
+        os.path.join(working_dir, "finished_grist")# "finished_grist",
+        grist_genome_folder = os.path.join(working_dir, 'grist/genomes'),
+        user_genomes = config.get("genome.genome_file", [])
+    params:
+        threads = THREADS,
+        working_dir = working_dir
+    output: os.path.join(working_dir, "finished_genome_dereplication")# "finished_grist"
+    conda: 'drep'
+    log: "logs/run_genome_replication.log"
+    threads: int(config["threads"])
+    shell:
+    shell:
+        """
+        cd {params.working_dir}
+        mkdir -p derep_genomes genomes
+        cp -r grist/genomes .
+        # Copy genomes from user to genomes folder if exist
+        cp {user_genomes}/
+        gunzip genomes/*gz
+        dRep dereplicate derep_genomes/ -g genomes/*a -p {threads}
+        """
+
+
 rule clean_after_grist:
     """
     Cleans folders after running grist, reorganized files
     """
-    input: os.path.join(working_dir, "finished_grist")
+    input: os.path.join(working_dir, "finished_genome_dereplication")
     params:
         working_dir = working_dir
     output: os.path.join(working_dir, "cleaned_after_grist")
