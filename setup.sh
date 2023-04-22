@@ -99,7 +99,20 @@ touch ~/M5P_databases/DRAM_installed
 
 ## dRep enviroment
 mamba env create --name drep --file M5P/workflows/envs/drep.yaml
+conda activate drep
+mamba install -y -c bioconda checkm-genome
+wget -L https://github.com/marbl/Mash/releases/download/v2.3/mash-Linux64-v2.3.tar
+tar -xvf mash-Linux64-v2.3.tar
+cp mash-Linux64-v2.3/mash $CONDA_PREFIX/bin
+wget -L https://ani.jgi.doe.gov/download_files/ANIcalculator_v1.tgz
+tar -xvf ANIcalculator_v1.tgz
+cp ANIcalculator_v1/ANIcalculator $CONDA_PREFIX/bin
+cp ANIcalculator_v1/nsimscan $CONDA_PREFIX/bin
+conda deactivate
 
+
+
+conda deactivate
 
 ## M5P enviroment
 mamba env create --name M5P --file M5P/workflows/envs/environment.yaml
