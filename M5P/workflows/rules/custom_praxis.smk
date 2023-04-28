@@ -59,7 +59,7 @@ rule salmon_quant_table:
     params:
         working_dir = working_dir
     log:
-        "logs/salmon_quant_table.log"
+        os.path.join(working_dir, "logs/salmon_quant_table.log")
     output:
         os.path.join(working_dir, "salmon/counts.tsv")
     shell:
