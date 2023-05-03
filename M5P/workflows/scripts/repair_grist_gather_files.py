@@ -4,7 +4,7 @@
 
 import os
 import gzip
-#import sys
+import sys
 import argparse
 import urllib.request
 from urllib.error import HTTPError

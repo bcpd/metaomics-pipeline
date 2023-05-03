@@ -60,7 +60,7 @@ rule run_grist_gather:
     shell:
         """
         cd {params.working_dir}
-        (genome-grist run grist_config.yaml gatjer_reads -j {threads} ) 2> {log}
+        (genome-grist run grist_config.yaml gather_reads -j {threads} ) 2> {log}
         touch {output}
         """
 
@@ -85,8 +85,7 @@ rule run_grist:
     '''
     Finishes the grist process
     '''
-    #input: os.path.join(working_dir, "grist_config_created")
-    input: "logs/create_grist_config_file.log"
+    input: "os.path.join(working_dir, "finished_grist_repair")
     params:
         config = os.path.join(working_dir, 'grist_config.yaml'),
         working_dir = working_dir
@@ -101,7 +100,6 @@ rule run_grist:
         cd -
         touch {output}
         """
-
 
 
 rule run_dereplicate_genomes:
