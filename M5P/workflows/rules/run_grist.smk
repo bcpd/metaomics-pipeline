@@ -44,9 +44,46 @@ rule create_grist_config_file:
         touch {log}
         """
 
+rule run_grist_gather:
+    '''
+    Runs grist gather
+    '''
+    #input: os.path.join(working_dir, "grist_config_created")
+    input: "logs/create_grist_config_file.log"
+    params:
+        config = os.path.join(working_dir, 'grist_config.yaml'),
+        working_dir = working_dir
+    output: os.path.join(working_dir, "finished_grist_gather")# "finished_grist"
+    conda: 'grist'
+    log: "logs/run_grist_gather.log"
+    threads: int(config["threads"])
+    shell:
+        """
+        cd {params.working_dir}
+        (genome-grist run grist_config.yaml gatjer_reads -j {threads} ) 2> {log}
+        touch {output}
+        """
+
+rule run_grist_repair:
+    '''
+    Removes unavailable genomes from grist gather results
+    '''
+    input: os.path.join(working_dir, "finished_grist_gather"),
+    script = os.path.join(config["parent_dir"], "workflows/scripts/repair_grist_gather_files.py"),
+    output: os.path.join(working_dir, "finished_grist_repair")# "finished_grist"
+    conda: 'grist'
+    log: "logs/run_grist_repair.log"
+    shell:
+        """
+        cd {params.working_dir}
+        cp {script} .
+        python repair_grist_gather_files.py  --grist_output_folder 2> {log}
+        touch {output}
+        """
+
 rule run_grist:
     '''
-    Runs grist using raw sequences
+    Finishes the grist process
     '''
     #input: os.path.join(working_dir, "grist_config_created")
     input: "logs/create_grist_config_file.log"
@@ -66,9 +103,10 @@ rule run_grist:
         """
 
 
+
 rule run_dereplicate_genomes:
     '''
-    Dereplicates genomes from grist and by the user, by default there are no user-provided genomes
+    Dereplicates genomes that come from Grist and from the user, by default there are no user-provided genomes
     '''
     input:
         os.path.join(working_dir, "finished_grist")# "finished_grist",
@@ -77,7 +115,7 @@ rule run_dereplicate_genomes:
     params:
         threads = THREADS,
         working_dir = working_dir
-    output: os.path.join(working_dir, "finished_genome_dereplication")# "finished_grist"
+    output: os.path.join(working_dir, "finished_genome_dereplication")# "finished dereplication"
     conda: 'drep'
     log: "logs/run_genome_replication.log"
     threads: int(config["threads"])
