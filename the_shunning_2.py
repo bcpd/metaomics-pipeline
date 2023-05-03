@@ -20,6 +20,43 @@ def load_csv(filename):
         for row in r:
             yield row
 
+def url_for_accession(accession):
+    accsplit = accession.strip().split("_")
+    assert len(accsplit) == 2, f"ERROR: '{accession}' should have precisely one underscore!"
+
+    db, acc = accsplit
+    if '.' in acc:
+        number, version = acc.split(".")
+    else:
+        number, version = acc, '1'
+    number = "/".join([number[p : p + 3] for p in range(0, len(number), 3)])
+    url = f"https://ftp.ncbi.nlm.nih.gov/genomes/all/{db}/{number}"
+    print(f"opening directory: {url}", file=sys.stderr)
+
+    with urllib.request.urlopen(url) as response:
+        all_names = response.read()
+
+    print("done!", file=sys.stderr)
+
+    all_names = all_names.decode("utf-8")
+
+    full_name = None
+    for line in all_names.splitlines():
+        if line.startswith(f'<a href='):
+            name=line.split('"')[1][:-1]
+            db_, acc_, *_ = name.split("_")
+            if db_ == db and acc_.startswith(acc):
+                full_name = name
+                break
+
+    if full_name is None:
+        return None
+    else:
+        url = "htt" + url[3:]
+        return (
+            f"{url}/{full_name}/{full_name}_genomic.fna.gz")
+
+
 def filterFile(inputFileName, outputFileName, unwanted_list):
     #input file reader
     infile = gzip.open(inputFileName, "rt")
@@ -47,51 +84,64 @@ def filterFile(inputFileName, outputFileName, unwanted_list):
 def main():
     #Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--grist_output_folder', dest='grist_dir', type=str, required=True,
-        help='list of bracken files.')
-    parser.add_argument('--output', dest='output',
-        default='',required=False,
-        help='Names of the genbank accessions that do not work')
+    parser.add_argument('--grist_output_folder', dest='grist_dir', type=str, required=True, help='list of bracken files.')
     args = parser.parse_args()
-    genbank_dir = args.genbank_dir
-    genbank_dir = genbank_dir.rstrip("\\/")
-#    print(genbank_dir)
     grist_dir = args.grist_dir
     grist_dir = grist_dir.rstrip("\\/")
 #   
     unavailable_genomes = []
-    list_of_files = []
-    for file in os.listdir(genbank_dir):
-        if file.endswith('.info.csv'):
-            list_of_files.append(file)
-        else:
-            continue
-#    print(list_of_files)
-    for input_file in list_of_files:
- #       print(input_file)
-        rows = list(load_csv(genbank_dir + "/" + input_file))
-        assert len(rows) == 1
-        row = rows[0]
-        ident = row['ident']
-        url = row['genome_url']
-        name = row['display_name']
-        print(f"Reading {input_file} ")
-        try:
-            with urllib.request.urlopen(url) as response:
-                content = response.read()
-                print(f"Found a genome for {ident}")
-        except urllib.request.HTTPError:
-            print(f"Cannot download genome from URL:\n  {url}", file=sys.stderr)
-            #raise Exception("Genbank genome not found")
-            unavailable_genomes.append(ident)
-    if len(unavailable_genomes) >0:
-        print(f"\nThese genomes are not available: {unavailable_genomes}")
 
     list_of_prefetch = []
     for file in os.listdir(grist_dir + "/gather"):
         if file.endswith('.prefetch.csv.gz'):
             list_of_prefetch.append(file)
-    #print(list_of_prefetch)
+
+    for prefetch in list_of_prefetch:
+        rows = list(load_csv(grist_dir + "/gather/" + prefetch))
+        for row in rows:
+            ident = row['match_name']
+            accession = ident.split(' ')[0]
+            accsplit = accession.strip().split("_")
+            assert len(accsplit) == 2, f"ERROR: '{accession}' should have precisely one underscore!"
+            db, acc = accsplit
+            if '.' in acc:
+                number, version = acc.split(".")
+            else:
+                number, version = acc, '1'
+            number = "/".join([number[p : p + 3] for p in range(0, len(number), 3)])
+            url = f"https://ftp.ncbi.nlm.nih.gov/genomes/all/{db}/{number}"
+            with urllib.request.urlopen(url) as response:
+                all_names = response.read()
+            all_names = all_names.decode("utf-8")
+            full_name = None
+            for line in all_names.splitlines():
+                if line.startswith(f'<a href='):
+                    name=line.split('"')[1][:-1]
+                    db_, acc_, *_ = name.split("_")
+                    if db_ == db and acc_.startswith(acc):
+                        full_name = name
+                        break
+
+            if full_name is None:
+                final_url = None
+            else:
+                final_url = "htt" + url[3:]
+                final_url = (f"{url}/{full_name}/{full_name}_genomic.fna.gz")
+
+            #print(f"opening directory: {url}", file=sys.stderr)
+            try:
+                with urllib.request.urlopen(final_url) as response:
+                    content = response.read()
+                    print(f"Found a genome for {ident}")
+            except urllib.request.HTTPError:
+                print(f"Cannot download genome from URL:\n  {final_url}", file=sys.stderr)
+                #raise Exception("Genbank genome not found")
+                if ident not in unavailable_genomes:
+                    unavailable_genomes.append(ident)
+
+    if len(unavailable_genomes) >0:
+        print(f"\nThese genomes are not available: {unavailable_genomes}")
+
     for prefetch in list_of_prefetch:
         prefetch_in = grist_dir + "/gather/" + prefetch
         prefetch_out = grist_dir + "/temp_" + prefetch
@@ -103,6 +153,10 @@ def main():
         replacement_command_2 = 'mv ' + prefetch_out + ' ' + grist_dir + '/gather/' + prefetch
         print(replacement_command_2)
         # os.system(replacement_command_2)
+
+    if len(unavailable_genomes) >0:
+        print(f"\nThese genomes are not available: {unavailable_genomes}")
+
 
 
 
