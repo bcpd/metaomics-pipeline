@@ -100,6 +100,8 @@ touch ~/M5P_databases/DRAM_installed
 ## dRep enviroment
 mamba env create --name drep --file M5P/workflows/envs/drep.yaml
 conda activate drep
+# After installation, we recommend testing the access to the different required programs using drep check_dependecies
+
 mamba install -y -c bioconda checkm-genome
 wget -L https://github.com/marbl/Mash/releases/download/v2.3/mash-Linux64-v2.3.tar
 tar -xvf mash-Linux64-v2.3.tar
@@ -110,9 +112,13 @@ cp ANIcalculator_v1/ANIcalculator $CONDA_PREFIX/bin
 cp ANIcalculator_v1/nsimscan $CONDA_PREFIX/bin
 conda deactivate
 
-
-
-conda deactivate
-
 ## M5P enviroment
 mamba env create --name M5P --file M5P/workflows/envs/environment.yaml
+# conda activate M5P
+# Get zip file with m5p code
+# unzip zip file
+# Enter folder `cd metaomics-pipeline-main`
+# Install: `python setup.py install`
+# conda deactivate
+
+
