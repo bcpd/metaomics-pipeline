@@ -43,7 +43,7 @@ def get_template():
     'experimental_design': '~treatment',
     'fastq_metagenomics': 'input_mg',
     'fastq_metatranscriptomics':' input_mt/',
-    'genome': 'genome_folder',
+    'genome': 'None',
     'jobs': '4',
     'mag_annotation': 'dram',
     'max_memory': '128000000000',
@@ -194,7 +194,7 @@ def main():
     parser.add_argument("-i", "--fastq_metagenomics", type=str, help="Directory containing metagenomics fastq files (path)")
     parser.add_argument("-x", "--fastq_metatranscriptomics", type=str, help="Directory containing metatranscriptomics fastq files (path)")
 #    parser.add_argument("-d", "--database_dir", type= str, help="Directory containing ATLAS databases (path)")
-    parser.add_argument("-r", "--merged_reads", default= True, type=bool, help="Merge reads for co-assembly (True or False)")
+    parser.add_argument("-r", "--merged_reads", default=True, type=bool, help="Merge reads for co-assembly (True or False)")
     parser.add_argument("-m", "--metadata_path", type=str, help="Metadata file (path)")
     parser.add_argument("-t", "--threads", default= 4, type = int, help="The number of threads the pipeline is allowed to use (integer)")
     parser.add_argument("-M", "--max_memory", type = int, help = "The amount of memory provided to the assembler. Enter in byte format.")
@@ -204,7 +204,7 @@ def main():
     parser.add_argument("-p", "--merged_prefix", default="MergedReads-001", type=str, help="Prefix for merged reads files (string)")
     parser.add_argument("-b", "--bin_all", type=bool, default = True, help="Put all reads files in same bin group (bool)")
     parser.add_argument("-j", "--jobs", default = 4, type = int, help = "number of jobs")
-    parser.add_argument("-f", "--genome", type=str, help = "optional folder with genomes used for metatranscriptomics mapping.")
+    parser.add_argument("-f", "--genome", default="None", type=str, help = "optional folder with genomes used for metatranscriptomics mapping.")
     parser.add_argument("-c", "--configfile", action='store', type=str, help = "optional yaml file containing all of the above configuration details.")
     parser.add_argument("-a", "--getconfig", action='store_true', help = "Prints a yaml template with the default configuration. Then exits")
     args = parser.parse_args()
