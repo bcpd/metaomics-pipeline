@@ -164,6 +164,8 @@ rule clean_after_grist:
         for i in `ls *fna|sed 's/.fna//g';do mv ${i}.fna ${i}.fasta;done
         cd -
         mv grist/reports logs
+        mv grist/*trim .
+
         echo 'clean_after_grist' > {log}
         touch {output}
         """
