@@ -108,32 +108,27 @@ rule get_genomes_for_dereplication:
     input:
         os.path.join(working_dir, "finished_grist")# "finished_grist",
         grist_genome_folder = os.path.join(working_dir, 'grist/genomes'),
-        user_genomes = config.get("genome.genome_file", [])
+        user_genomes = config.get("genome", [])
     params:
-        working_dir = working_dir
-    output:
-        output: os.path.join(working_dir, "finished_genome_copying")
+        working_dir = working_dir,
+    output: os.path.join(working_dir, "finished_genome_copying")
     run:
-        if len(input.user_genomes) == 0:
-            shell("cd {params.working_dir}")
-            shell("mkdir -p temp_genomes_folder")
-            shell("cp grist/genomes/* temp_genomes_folder")
-            shell("touch {output}")
+        shell("cd params.working_dir")
+        shell("mkdir -p temp_genomes_folder")
+        if input.user_genomes == "None" :
+            shell("cp grist/genomes/*fna.gz temp_genomes_folder")
         else:
-            shell("cd {params.working_dir}")
-            shell("mkdir -p temp_genomes_folder")
             shell("cp grist/genomes/* temp_genomes_folder")
-            shell("touch {output}")
+            shell("cp input.user_genomes/* temp_genomes_folder")
+        shell("gunzip temp_genomes_folder/*gz")
+        shell("touch output")
 
 
 rule run_dereplicate_genomes:
     '''
     Dereplicates genomes that come from Grist and from the user, by default there are no user-provided genomes
     '''
-    input:
-        os.path.join(working_dir, "finished_grist")# "finished_grist",
-        grist_genome_folder = os.path.join(working_dir, 'grist/genomes'),
-        user_genomes = config.get("genome.genome_file", [])
+    input: os.path.join(working_dir, "finished_genome_copying")
     params:
         threads = THREADS,
         working_dir = working_dir
@@ -145,12 +140,8 @@ rule run_dereplicate_genomes:
     shell:
         """
         cd {params.working_dir}
-        mkdir -p derep_genomes genomes
-        cp -r grist/genomes/ .
-        # Copy genomes from user to genomes folder if exist
-        cp {user_genomes}/
-        gunzip genomes/*gz
-        dRep dereplicate derep_genomes/ -g genomes/*a -p {threads}
+        (dRep dereplicate derep_genomes/ -g temp_genomes_folder/ -p {threads}) 2> {log}
+        cp derep_genomes/log/logger.log {log}
         touch {output}
         """
 
@@ -167,13 +158,12 @@ rule clean_after_grist:
     shell:
         """
         cd {params.working_dir}
-        mv grist/genomes .
-        gunzip genomes/*gz
-        mv genomes reference_genomes
-        mv grist/reports logs
-        mv grist/abundtrim .
-        rm -fr grist temp create_grist_config_file.py input genbank_cache
-        echo 'clean_after_grist' > {log}
+        mkdir -p reference_genomes
+        cp derep_genomes/dereplicated_genomes/* reference_genomes
+        cd reference_genomes
+        for i in `ls *fna|sed 's/.fna//g';do mv ${i}.fna ${i}.fasta;done
         cd -
+        mv grist/reports logs
+        echo 'clean_after_grist' > {log}
         touch {output}
         """
