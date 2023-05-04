@@ -42,7 +42,7 @@ def get_template():
     'experimental_contrast': 'none',
     'experimental_design': '~treatment',
     'fastq_metagenomics': 'input_mg',
-    'fastq_metatranscriptomics':' input_mt/',
+    'fastq_metatranscriptomics':'input_mt/',
     'genome': 'None',
     'jobs': '4',
     'mag_annotation': 'dram',

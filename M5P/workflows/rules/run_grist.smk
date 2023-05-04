@@ -45,15 +45,14 @@ rule create_grist_config_file:
         """
 
 rule run_grist_gather:
-    '''
+    """
     Runs grist gather
-    '''
-    #input: os.path.join(working_dir, "grist_config_created")
+    """
     input: "logs/create_grist_config_file.log"
     params:
-        config = os.path.join(working_dir, 'grist_config.yaml'),
+        config = os.path.join(working_dir, "grist_config.yaml"),
         working_dir = working_dir
-    output: os.path.join(working_dir, "finished_grist_gather")# "finished_grist"
+    output: os.path.join(working_dir, "finished_grist_gather")
     conda: 'grist'
     log: "logs/run_grist_gather.log"
     threads: int(config["threads"])
@@ -65,31 +64,33 @@ rule run_grist_gather:
         """
 
 rule run_grist_repair:
-    '''
+    """
     Removes unavailable genomes from grist gather results
-    '''
-    input: os.path.join(working_dir, "finished_grist_gather"),
-    script = os.path.join(config["parent_dir"], "workflows/scripts/repair_grist_gather_files.py"),
-    output: os.path.join(working_dir, "finished_grist_repair")# "finished_grist"
+    """
+    input: os.path.join(working_dir, "finished_grist_gather")
+    params:
+        working_dir = working_dir,
+        script: os.path.join(config["parent_dir"], "workflows/scripts/repair_grist_gather_files.py")
+    output: os.path.join(working_dir, "finished_grist_repair")
     conda: 'grist'
     log: "logs/run_grist_repair.log"
     shell:
         """
         cd {params.working_dir}
-        cp {script} .
-        python repair_grist_gather_files.py  --grist_output_folder 2> {log}
+        cp {params.script} .
+        python repair_grist_gather_files.py --grist_output_folder grist 2> {log}
         touch {output}
         """
 
 rule run_grist:
-    '''
+    """
     Finishes the grist process
-    '''
-    input: "os.path.join(working_dir, "finished_grist_repair")
+    """
+    input: os.path.join(working_dir, "finished_grist_repair")
     params:
         config = os.path.join(working_dir, 'grist_config.yaml'),
         working_dir = working_dir
-    output: os.path.join(working_dir, "finished_grist")# "finished_grist"
+    output: os.path.join(working_dir, "finished_grist")
     conda: 'grist'
     log: "logs/run_grist.log"
     threads: int(config["threads"])
@@ -102,35 +103,33 @@ rule run_grist:
         """
 
 rule get_genomes_for_dereplication:
-    """"
+    """
     Get genomes from user or from grist
     """
     input:
-        os.path.join(working_dir, "finished_grist")# "finished_grist",
-        grist_genome_folder = os.path.join(working_dir, 'grist/genomes'),
-        user_genomes = config.get("genome", [])
+        os.path.join(working_dir, "finished_grist"),
     params:
+        user_genomes = config.get("genome")
         working_dir = working_dir,
     output: os.path.join(working_dir, "finished_genome_copying")
     run:
         shell("cd params.working_dir")
         shell("mkdir -p temp_genomes_folder")
-        if input.user_genomes == "None" :
-            shell("cp grist/genomes/*fna.gz temp_genomes_folder")
+        shell("cp grist/genomes/*fna.gz temp_genomes_folder")
+        if params.user_genomes == "None" :
+            continue
         else:
-            shell("cp grist/genomes/* temp_genomes_folder")
             shell("cp input.user_genomes/* temp_genomes_folder")
         shell("gunzip temp_genomes_folder/*gz")
         shell("touch output")
 
 
 rule run_dereplicate_genomes:
-    '''
+    """
     Dereplicates genomes that come from Grist and from the user, by default there are no user-provided genomes
-    '''
+    """
     input: os.path.join(working_dir, "finished_genome_copying")
     params:
-        threads = THREADS,
         working_dir = working_dir
     output: os.path.join(working_dir, "finished_genome_dereplication")# "finished dereplication"
     conda: 'drep'
