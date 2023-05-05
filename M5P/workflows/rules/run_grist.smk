@@ -70,7 +70,7 @@ rule run_grist_repair:
     input: os.path.join(working_dir, "finished_grist_gather")
     params:
         working_dir = working_dir,
-        script: os.path.join(config["parent_dir"], "workflows/scripts/repair_grist_gather_files.py")
+        script = os.path.join(config["parent_dir"], "workflows/scripts/repair_grist_gather_files.py")
     output: os.path.join(working_dir, "finished_grist_repair")
     conda: 'grist'
     log: "logs/run_grist_repair.log"
@@ -106,8 +106,7 @@ rule get_genomes_for_dereplication:
     """
     Get genomes from user or from grist
     """
-    input:
-        os.path.join(working_dir, "finished_grist"),
+    input: os.path.join(working_dir, "finished_grist"),
     params:
         user_genomes = config.get("genome"),
         working_dir = working_dir,
@@ -116,9 +115,7 @@ rule get_genomes_for_dereplication:
         shell("cd params.working_dir")
         shell("mkdir -p temp_genomes_folder")
         shell("cp grist/genomes/*fna.gz temp_genomes_folder")
-        if params.user_genomes == "None" :
-            continue
-        else:
+        if params.user_genomes != "None" :
             shell("cp input.user_genomes/* temp_genomes_folder")
         shell("gunzip temp_genomes_folder/*gz")
         shell("touch output")
@@ -135,7 +132,6 @@ rule run_dereplicate_genomes:
     conda: 'drep'
     log: "logs/run_genome_replication.log"
     threads: int(config["threads"])
-    shell:
     shell:
         """
         cd {params.working_dir}
