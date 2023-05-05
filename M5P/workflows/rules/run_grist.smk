@@ -109,7 +109,7 @@ rule get_genomes_for_dereplication:
     input:
         os.path.join(working_dir, "finished_grist"),
     params:
-        user_genomes = config.get("genome")
+        user_genomes = config.get("genome"),
         working_dir = working_dir,
     output: os.path.join(working_dir, "finished_genome_copying")
     run:
@@ -164,7 +164,6 @@ rule clean_after_grist:
         cd -
         mv grist/reports logs
         mv grist/*trim .
-
         echo 'clean_after_grist' > {log}
         touch {output}
         """
