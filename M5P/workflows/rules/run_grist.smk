@@ -102,23 +102,36 @@ rule run_grist:
         touch {output}
         """
 
+genome=config['genome']
+if (os.path.exists(genome)):
+    rule copy_user_genomes:
+        input: config['genome']
+        params:
+            working_dir = working_dir
+        output: os.path.join(working_dir, "copied_user_genomes")
+        shell:
+            """
+            cd {params.working_dir}
+            cp -r {input}/* temp_genomes_folder
+            touch {output}
+            """
+
 rule get_genomes_for_dereplication:
     """
     Get genomes from user or from grist
     """
     input: os.path.join(working_dir, "finished_grist"),
     params:
-        user_genomes = config.get("genome"),
-        working_dir = working_dir,
+        working_dir = working_dir
     output: os.path.join(working_dir, "finished_genome_copying")
-    run:
-        shell("cd params.working_dir")
-        shell("mkdir -p temp_genomes_folder")
-        shell("cp grist/genomes/*fna.gz temp_genomes_folder")
-        if params.user_genomes != "None" :
-            shell("cp input.user_genomes/* temp_genomes_folder")
-        shell("gunzip temp_genomes_folder/*gz")
-        shell("touch output")
+    shell:
+        """
+        cd {params.working_dir}
+        mkdir -p temp_genomes_folder
+        cp grist/genomes/*fna.gz temp_genomes_folder
+        gunzip temp_genomes_folder/*gz
+        touch {output}
+        """
 
 
 rule run_dereplicate_genomes:
@@ -135,7 +148,7 @@ rule run_dereplicate_genomes:
     shell:
         """
         cd {params.working_dir}
-        (dRep dereplicate derep_genomes/ -g temp_genomes_folder/ -p {threads}) 2> {log}
+        (dRep dereplicate derep_genomes/ -g temp_genomes_folder/* -p {threads}) 2> {log}
         cp derep_genomes/log/logger.log {log}
         touch {output}
         """
