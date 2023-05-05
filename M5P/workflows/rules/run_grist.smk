@@ -169,7 +169,7 @@ rule clean_after_grist:
         mkdir -p reference_genomes
         cp derep_genomes/dereplicated_genomes/* reference_genomes
         cd reference_genomes
-        for i in `ls *fna|sed 's/.fna//g';do mv ${i}.fna ${i}.fasta;done
+        for i in `ls *fna|sed 's/.fna//g'`;do mv ${{i}}.fna ${{i}}.fasta;done
         cd -
         mv grist/reports logs
         mv grist/*trim .
