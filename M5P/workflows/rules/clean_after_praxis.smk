@@ -4,7 +4,7 @@ rule create_folder_structure_metatranscriptomics:
     '''
     Creates and organized folder structure to store the important files
     after running praxis
-    ''' 
+    '''
     input: os.path.join(working_dir, "logs/salmon_quant_table.log")
     output: os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log")
     params: 
@@ -25,10 +25,10 @@ rule create_folder_structure_metatranscriptomics:
 rule reorganize_files_transcriptomic:
     '''
     Copied important files from Praxis process
-    ''' 
+    '''
     input:
         creation_log = os.path.join(working_dir, "logs/Creation_output_structure_metatranscriptomics.log"),
-        praxis_log = (working_dir, "logs/praxis.log")
+        praxis_log = os.path.join(working_dir, "logs/salmon_quant_table.log")
     output: os.path.join(working_dir, "logs/Praxis_cleanup.log")
     log: os.path.join(working_dir, "logs/Praxis_cleanup.log")
     benchmark: os.path.join(working_dir, "benchmarks/Praxis_cleanup.bmk")
@@ -38,7 +38,7 @@ rule reorganize_files_transcriptomic:
         """
         cd {params.working_dir}
         # Copy files
-        mv abundtrim/* metatranscriptomics/trimmed_reads
+        mv *trim/* metatranscriptomics/trimmed_reads
         cp -r reference_genomes/* metatranscriptomics/reference_genomes
         cp -r salmon/* metatranscriptomics/transcript_counts
         echo 'Copied metatranscriptomics files to final folder' > logs/Praxis_cleanup.log

@@ -86,7 +86,7 @@ rule atlas_qc:
     benchmark: os.path.join(working_dir, "benchmarks/atlas_qc.bmk")
     conda:
         'atlas'
-    threads: THREADS
+    threads: int(THREADS)
     params: 
         working_dir = working_dir,
         mem = 128
@@ -112,7 +112,7 @@ rule atlas_assembly:
     benchmark: os.path.join(working_dir, "benchmarks/atlas_assembly.bmk")
     conda:
         'atlas'
-    threads: THREADS
+    threads: int(THREADS)
     params: 
         working_dir = working_dir,
         mem = 128
@@ -137,7 +137,7 @@ rule atlas_binning:
     benchmark: os.path.join(working_dir, "benchmarks/atlas_binning.bmk")
     conda:
         'atlas'
-    threads: THREADS
+    threads: int(THREADS)
     params: 
         working_dir = working_dir,
         mem = 128
@@ -162,7 +162,7 @@ rule atlas_genomes:
     benchmark: os.path.join(working_dir, "benchmarks/atlas_genomes.bmk")
     conda:
         'atlas'
-    threads: THREADS
+    threads: int(THREADS)
     params: 
         working_dir = working_dir,
         mem = 128
@@ -188,7 +188,7 @@ rule atlas_genecatalog:
     benchmark: os.path.join(working_dir, "benchmarks/atlas_genecatalog.bmk")
     conda:
         'atlas'
-    threads: THREADS
+    threads: int(THREADS)
     params: 
         working_dir = working_dir,
         mem = 128

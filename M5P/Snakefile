@@ -22,15 +22,16 @@ now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 #Load config from M5P yaml
 if config:
     #M5P CONFIG
-    working_dir   = config["working_dir"]
-    fastq_metagenomics        = config["fastq_metagenomics"]
+    working_dir = config["working_dir"]
+    fastq_metagenomics = config["fastq_metagenomics"]
     fastq_metatranscriptomics = config["fastq_metatranscriptomics"]
+    genome = config["genome"]
     database_dir  = config["database_dir"]
-    THREADS       = config["threads"]
+    THREADS = config["threads"]
     merged_reads  = config["merged_reads"]
     merged_prefix = config["merged_prefix"]
     metadata_path = config["metadata_path"]
-    bin_all       = config["bin_all"]
+    bin_all = config["bin_all"]
 else:
     raise ImportError("Error: no config parameters were provided.")
 

@@ -119,16 +119,21 @@ def main():
         print("There were no databases in the folder ")
         print(usage)
         sys.exit(1)
-    # Create empty list to store names of databases
+
+# Create empty list to store names of databases
     my_grist_databases = []
     for db in dbs_list:
         if db.endswith('.zip'):
             my_grist_databases.append(databases_folder + '/' + db)
             continue
         else:
-            print("I was expecting zip files for databases files")
-            print(usage)
-            sys.exit(1)
+            print(f"Skipping {db}, not a zip file")
+
+# Check that at least one zip file was added 
+    if(len(my_grist_databases) == 0):
+        print("No zip file was found in the grist databases folder")
+        print(usage)
+        sys.exit(1)
 
     # Write results into yaml file
     # Samples should be stored inside the raw folder inside the grist folder
