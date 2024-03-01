@@ -62,6 +62,7 @@ def main():
     for file in os.listdir(grist_dir + "/gather"):
         if file.endswith('.prefetch.csv.gz'):
             list_of_prefetch.append(file)
+    list_of_prefetch = list(set(list_of_prefetch))
 
     for prefetch in list_of_prefetch:
         print(f"Working on file {prefetch}")
@@ -74,16 +75,17 @@ def main():
         for row in read:
             ident = row[6]
             accession_id = ident.split(' ')[0]
-            #print(accession_id)
-            if accession_id == "match_name" or does_genome_exist(accession_id):
-#                print(f"genome {accession_id} exist")
-                write.writerow(row)
+            if accession_id in unavailable_genomes:
+                continue
             else:
-                print(f"A genome for {accession_id} is not available")
-                if accession_id not in unavailable_genomes:
-                    unavailable_genomes.append(accession_id)
+                if accession_id == "match_name" or does_genome_exist(accession_id):
+                    write.writerow(row)
                 else:
-                    continue
+                    print(f"A genome for {accession_id} is not available")
+                    if accession_id not in unavailable_genomes:
+                        unavailable_genomes.append(accession_id)
+                    else:
+                        continue
         infile.close()
         outfile.close()
         # replacement line
