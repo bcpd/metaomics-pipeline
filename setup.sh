@@ -64,6 +64,7 @@ pip install sourmash==4.3.0
 conda create -y -n grist python=3.9 pip
 conda activate grist
 python -m pip install genome-grist
+pip3 install pulp==2.7.0
 mkdir ~/M5P_databases/grist
 cd ~/M5P_databases/grist
 # Get Grist database GTDB R07-RS207 all genomes (318k)

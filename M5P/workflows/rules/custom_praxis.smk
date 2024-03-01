@@ -66,4 +66,5 @@ rule salmon_quant_table:
         """
         cd {params.working_dir}
         salmon quantmerge --quants salmon/* --column numreads -o salmon/counts.tsv > {log}
+        touch {output}
         """
