@@ -23,7 +23,7 @@ def COLLECT_ALL_INPUT():
     if config["experiment_type"] == "metatranscriptomics":
         #Config outputs for metatranscriptomics
         INPUTS.append(os.path.join(working_dir, "logs/create_grist_config_file.log"))
-        INPUTS.append(os.path.join(working_dir, "finished_grist")) #grist
+        INPUTS.append(os.path.join(working_dir, "finished_grist_gather")) #grist
         INPUTS.append(os.path.join(working_dir, "cleaned_after_grist")) # clean after grist
         INPUTS.append(os.path.join(working_dir, "finished_DRAM_annotate_reference_genomes")) # Annotate grist reference genomes
         INPUTS.append(os.path.join(working_dir, "finished_salmon_index"))
