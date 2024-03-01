@@ -2,7 +2,7 @@
 
 rule prepare_grist_folders:
     """
-    Creates folders in a structure that grist can use
+    Creates folders in a strucutre that grist can use
     """
     input:
         samples_folder  = fastq_metatranscriptomics
@@ -44,7 +44,6 @@ rule create_grist_config_file:
         touch {log}
         """
 
-
 rule run_grist_gather:
     """
     Runs grist gather
@@ -63,7 +62,6 @@ rule run_grist_gather:
         (genome-grist run grist_config.yaml gather_reads -j {threads} ) 2> {log}
         touch {output}
         """
-
 
 rule run_grist_repair:
     """
@@ -84,7 +82,6 @@ rule run_grist_repair:
         touch {output}
         """
 
-
 rule run_grist:
     """
     Finishes the grist process
@@ -104,7 +101,6 @@ rule run_grist:
         cd -
         touch {output}
         """
-
 
 genome=config['genome']
 if (os.path.exists(genome)):
