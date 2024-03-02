@@ -91,6 +91,7 @@ cd ~
 docker pull continuumio/miniconda3
 docker run -i -d --name DRAM continuumio/miniconda3
 docker exec DRAM mkdir -p data out scripts logs genomes proteins
+docker cp M5P/workflows/envs/dram.yaml DRAM:/scripts
 docker cp M5P/workflows/scripts/DRAM_setup.sh DRAM:/scripts
 docker cp M5P/workflows/scripts/DRAM_annotate_genomes.sh DRAM:/scripts
 docker cp M5P/workflows/scripts/DRAM_annotate_proteins.sh DRAM:/scripts
