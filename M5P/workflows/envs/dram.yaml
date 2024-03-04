@@ -1,0 +1,24 @@
+channels:
+   - conda-forge
+   - bioconda
+dependencies:
+   - python==3.10.12
+   - pandas==1.5.2
+   - pytest==7.4.1
+   - scikit-bio==0.5.7
+   - prodigal==2.6.3
+   - mmseqs2==13.45111
+   - hmmer==3.3.2
+   - trnascan-se==2.0.12
+   - scipy==1.8.1
+   - sqlalchemy=2.0.20
+   - barrnap==0.9
+   - altair =4.2.0
+   - openpyxl==3.1.2
+   - networkx==2.8.8
+   - ruby==3.2.2
+   - parallel==20230722
+   - dram==1.4.6
+   - pip
+   - pip:
+      - DRAM-bio==1.5.0
