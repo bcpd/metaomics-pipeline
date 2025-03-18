@@ -1,6 +1,6 @@
-# M5P: **MBI Microbial Mixtures Metagenomics and Metatranscriptomics pipeline**
+# M4P: **Microbial Mixtures Metagenomics and Metatranscriptomics Pipeline**
 
-Snakemake-based workflow for the taxonomic and functional annotation of metagenomics and metatranscriptomics datasets.
+Snakemake-based workflow for the taxonomic and functional annotation of metagenomics and metatranscriptomics datasets. It is best suited to low-complexity samples.
 
 ## Dependencies:
 - Docker
