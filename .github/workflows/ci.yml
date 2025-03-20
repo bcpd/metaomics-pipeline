@@ -37,6 +37,7 @@ jobs:
         shell: bash -l {0}
         run: |
           conda activate M5P
+          pip install flake8
           # Run flake8 on the entire repository
           flake8 .
       
