@@ -1,9 +1,4 @@
-# .github/workflows/ci.yml
-# This workflow runs on every push and pull request to the main branch.
-# It checks out the repository, sets up a conda environment, installs the package,
-# runs tests using pytest, and performs linting with flake8.
-
-name: MP4 CI
+name: M4P CI
 
 on:
   push:
@@ -12,39 +7,40 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
+      # Step 1: Check out the repository code.
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Miniconda and create/activate the conda environment
-      # Here, we use your environment file from M5P/workflows/envs/environment.yaml.
-      - name: Set up Miniconda
+      # Step 2: Set up Miniconda and create/activate the M5P environment.
+      - name: Setup Miniconda
         uses: conda-incubator/setup-miniconda@v2
         with:
-          # Do not auto-activate the base environment
-          auto-activate-base: false
-          # Path to your conda environment file; adjust if needed.
-          environment-file: M5P/workflows/envs/environment.yaml
-          # Name of the environment to activate (here we use "M5P")
+          auto-update-conda: true
+          python-version: 3.9
           activate-environment: M5P
+          # If you have an environment file, uncomment the line below:
+          # environment-file: environment.yml
 
-      # Step 3: Install your package and additional testing tools
-      - name: Install package and dependencies
+      # Step 3: Install additional dependencies (e.g., those in requirements.txt).
+      - name: Install additional dependencies
         run: |
-          # Install your package in editable mode
-          pip install -e .
-          # Install testing and linting tools
-          pip install pytest flake8
+          conda activate M5P
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      # Step 4: Run tests using pytest (adjust the command if needed)
+      # Step 4: Lint the code using flake8.
+      - name: Lint code
+        run: |
+          conda activate M5P
+          # Run flake8 on the entire repository
+          flake8 .
+      
+      # Step 5: Run your test suite.
       - name: Run tests
         run: |
-          pytest --maxfail=1 --disable-warnings -q
+          conda activate M5P
+          pytest
 
-      # Step 5: Lint the codebase with flake8
-      - name: Lint code with flake8
-        run: flake8 .
