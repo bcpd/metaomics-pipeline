@@ -42,6 +42,7 @@ jobs:
       
       # Step 5: Run your test suite.
       - name: Run tests
+        shell: bash -l {0}
         run: |
           conda activate M5P
           pytest
