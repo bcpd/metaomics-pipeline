@@ -34,6 +34,7 @@ jobs:
 
       # Step 4: Lint the code using flake8.
       - name: Lint code
+        shell: bash -l {0}
         run: |
           conda activate M5P
           # Run flake8 on the entire repository
