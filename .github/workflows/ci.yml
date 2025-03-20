@@ -1,0 +1,50 @@
+# .github/workflows/ci.yml
+# This workflow runs on every push and pull request to the main branch.
+# It checks out the repository, sets up a conda environment, installs the package,
+# runs tests using pytest, and performs linting with flake8.
+
+name: MP4 CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Miniconda and create/activate the conda environment
+      # Here, we use your environment file from M5P/workflows/envs/environment.yaml.
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          # Do not auto-activate the base environment
+          auto-activate-base: false
+          # Path to your conda environment file; adjust if needed.
+          environment-file: M5P/workflows/envs/environment.yaml
+          # Name of the environment to activate (here we use "M5P")
+          activate-environment: M5P
+
+      # Step 3: Install your package and additional testing tools
+      - name: Install package and dependencies
+        run: |
+          # Install your package in editable mode
+          pip install -e .
+          # Install testing and linting tools
+          pip install pytest flake8
+
+      # Step 4: Run tests using pytest (adjust the command if needed)
+      - name: Run tests
+        run: |
+          pytest --maxfail=1 --disable-warnings -q
+
+      # Step 5: Lint the codebase with flake8
+      - name: Lint code with flake8
+        run: flake8 .
