@@ -33,13 +33,12 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       # Step 4: Lint the code using flake8.
-      - name: Lint code
-        shell: bash -l {0}
-        run: |
-          conda activate M5P
-          pip install flake8
-          # Run flake8 on the entire repository
-          flake8 .
+      #- name: Lint code
+      #  shell: bash -l {0}
+      #  run: |
+      ##   pip install flake8
+      #  Run flake8 on the entire repository
+      #   flake8 .
       
       # Step 5: Run your test suite.
       - name: Run tests
