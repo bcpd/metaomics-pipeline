@@ -45,5 +45,6 @@ jobs:
         shell: bash -l {0}
         run: |
           conda activate M5P
+          pip install pytest 
           pytest
 
